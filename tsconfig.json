@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "declarationDir": "./dist/types",
+    "declarationMap": true,
+    "downlevelIteration": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "lib": ["ES6", "DOM"],
+    "module": "ES6",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "strict": true,
+    "target": "es6",
+    "typeRoots": ["node_modules/@types"]
+  },
+  "include": ["src"]
+}

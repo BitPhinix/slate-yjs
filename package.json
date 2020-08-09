@@ -1,0 +1,89 @@
+{
+  "name": "slate-yjs",
+  "version": "0.0.0",
+  "description": "",
+  "keywords": [],
+  "main": "dist/umd/slate-yjs.js",
+  "module": "dist/es6/slate-yjs.js",
+  "typings": "dist/types/slate-yjs.d.ts",
+  "files": [
+    "dist"
+  ],
+  "author": "Eric Meier <eric@barbra.io>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BitPhinix/slate-yjs.git"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "scripts": {
+    "lint": "eslint 'src/**/*.{js,ts,tsx}' --quiet --fix",
+    "build": "rimraf dist && npm run build:esm & npm run build:umd",
+    "build:esm": "tsc -p tsconfig.json --outDir dist/esm --target ES6 --module ES6",
+    "build:umd": "tsc -p tsconfig.json --outDir dist/umd --target ES6 --module UMD",
+    "test": "jest --coverage",
+    "test:watch": "jest --coverage --watch",
+    "test:prod": "npm run lint && npm run test -- --no-cache"
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "ts-jest"
+    },
+    "testEnvironment": "node",
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/test/"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 90,
+        "functions": 95,
+        "lines": 95,
+        "statements": 95
+      }
+    },
+    "collectCoverageFrom": [
+      "src/*.{js,ts}"
+    ]
+  },
+  "prettier": {
+    "singleQuote": true
+  },
+  "devDependencies": {
+    "@types/jest": "^23.3.2",
+    "@types/lodash": "^4.14.159",
+    "@types/node": "^10.11.0",
+    "@types/shelljs": "^0.8.8",
+    "@typescript-eslint/eslint-plugin": "^3.8.0",
+    "@typescript-eslint/parser": "^3.8.0",
+    "eslint": "^7.6.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "esrever": "^0.2.0",
+    "jest": "^26.2.2",
+    "jest-config": "^26.2.2",
+    "prettier": "^1.19.1",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^26.1.4",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.9.7"
+  },
+  "dependencies": {
+    "lodash": "^4.17.19",
+    "slate": "^0.58.4",
+    "y-websocket": "^1.3.2",
+    "yjs": "^13.3.2"
+  },
+  "bugs": {
+    "url": "https://github.com/BitPhinix/slate-yjs/issues"
+  },
+  "homepage": "https://github.com/BitPhinix/slate-yjs#readme"
+}
