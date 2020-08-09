@@ -1,6 +1,6 @@
 import { Editor } from 'slate';
 import { WebsocketProvider } from 'y-websocket';
-import { YJsEditor, YJsEditorOptions } from './yjsEditor';
+import { YJsEditor } from './yjsEditor';
 
 export interface WebsocketEditor extends Editor {
   connect: () => void;
@@ -8,9 +8,22 @@ export interface WebsocketEditor extends Editor {
   websocketProvider: WebsocketProvider;
 }
 
+export type WebsocketEditorOptions = {
+  roomName: string;
+  endpoint: string;
+  onConnect?: () => void;
+  onDisconnect?: () => void;
+} & NonNullable<ConstructorParameters<typeof WebsocketProvider>[3]>;
+
 export const withWebsocket = <T extends YJsEditor>(
   editor: T,
-  { endpoint, roomName, onConnect, onDisconnect, ...options }: YJsEditorOptions
+  {
+    endpoint,
+    roomName,
+    onConnect,
+    onDisconnect,
+    ...options
+  }: WebsocketEditorOptions
 ): T & WebsocketEditor => {
   const e = editor as T & WebsocketEditor;
 

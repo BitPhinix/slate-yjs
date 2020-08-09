@@ -1,5 +1,4 @@
 import { Editor, Operation } from 'slate';
-import { WebsocketProvider } from 'y-websocket';
 import * as Y from 'yjs';
 import { applySlateOps as applySlateOperations } from '../apply';
 import { toSlateOps } from '../convert';
@@ -10,13 +9,6 @@ export interface YJsEditor extends Editor {
   doc: Y.Doc;
   syncDoc: SyncDoc;
 }
-
-export type YJsEditorOptions = {
-  roomName: string;
-  endpoint: string;
-  onConnect?: () => void;
-  onDisconnect?: () => void;
-} & NonNullable<ConstructorParameters<typeof WebsocketProvider>[3]>;
 
 const YJsEditor = {
   /**
