@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2017",
+    "target": "ES6",
     "outDir": "dist/main",
     "rootDir": "src",
     "moduleResolution": "node",
@@ -19,6 +19,7 @@
     "noUnusedParameters": true /* Report errors on unused parameters. */,
     "noImplicitReturns": true /* Report error when not all code paths in function return a value. */,
     "noFallthroughCasesInSwitch": true /* Report errors for fallthrough cases in switch statement. */,
+    "forceConsistentCasingInFileNames": true,
 
     /* Debugging Options */
     "traceResolution": false /* Report module resolution log messages. */,
@@ -26,8 +27,7 @@
     "listFiles": false /* Print names of files part of the compilation. */,
     "pretty": true /* Stylize errors and messages using color and context. */,
 
-    "lib": ["es2017", "dom"],
-    "types": ["node"]
+    "lib": ["ES2017", "DOM"]
   },
   "include": ["src"]
 }
