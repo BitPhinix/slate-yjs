@@ -1,11 +1,16 @@
 {
   "name": "slate-yjs",
-  "version": "0.0.3",
-  "description": "",
-  "keywords": [],
-  "main": "dist/umd/slate-yjs.js",
-  "module": "dist/es6/slate-yjs.js",
-  "typings": "dist/types/slate-yjs.d.ts",
+  "version": "0.0.4",
+  "description": "YJS bindings for Slate.",
+  "keywords": [
+    "slate",
+    "slatejs",
+    "yjs",
+    "y-websocket"
+  ],
+  "main": "dist/main/index.js",
+  "typings": "dist/main/index.d.ts",
+  "module": "dist/module/index.js",
   "files": [
     "dist"
   ],
@@ -21,9 +26,9 @@
   "scripts": {
     "lint": "eslint 'src/**/*.{js,ts,tsx}' --quiet",
     "fix": "eslint 'src/**/*.{js,ts,tsx}' --quiet --fix",
-    "build": "rimraf dist && npm run build:esm & npm run build:umd",
-    "build:esm": "tsc -p tsconfig.json --outDir dist/esm --target ES6 --module ES6",
-    "build:umd": "tsc -p tsconfig.json --outDir dist/umd --target ES6 --module UMD",
+    "build": "rimraf dist && npm run build:main & npm run build:module",
+    "build:main": "tsc -p tsconfig.json",
+    "build:module": "tsc -p tsconfig.module.json",
     "test": "jest --coverage",
     "test:watch": "jest --coverage --watch"
   },

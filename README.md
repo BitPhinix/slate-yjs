@@ -1,6 +1,6 @@
 # Slate YJS
 
-YJS binding for Slate.
+YJS bindings for Slate.
 
 Heavily inspired by [slate-collaboritve](https://github.com/cudr/slate-collaborative)
 
