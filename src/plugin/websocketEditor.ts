@@ -5,6 +5,7 @@ import { YJsEditor } from './yjsEditor';
 export interface WebsocketEditor extends Editor {
   connect: () => void;
   disconnect: () => void;
+  destroy: () => void;
   websocketProvider: WebsocketProvider;
 }
 
@@ -48,6 +49,10 @@ export const withWebsocket = <T extends YJsEditor>(
 
   e.disconnect = () => {
     e.websocketProvider.disconnect();
+  };
+
+  e.destroy = () => {
+    e.websocketProvider.destroy();
   };
 
   return e;
