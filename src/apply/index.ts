@@ -6,7 +6,7 @@ import { ApplyFunc, OpMapper } from './types';
 
 const nullOp: ApplyFunc = (doc: SyncDoc) => doc;
 
-const opType: OpMapper = {
+const opMappers: OpMapper = {
   ...text,
   ...node,
 
@@ -22,8 +22,7 @@ const opType: OpMapper = {
  */
 const applySlateOp = (doc: SyncDoc, op: Operation): SyncDoc => {
   try {
-    // Not sure why this is necessary but typescript get confused where with the op type.
-    const apply = opType[op.type] as ApplyFunc<typeof op>;
+    const apply = opMappers[op.type] as ApplyFunc<typeof op>;
     if (!apply) {
       throw new Error(`Unknown operation: ${op.type}`);
     }

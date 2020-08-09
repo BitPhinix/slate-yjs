@@ -14,13 +14,15 @@ export interface YJsEditor extends Editor {
 export interface WebsocketEditor extends Editor {
   connect: () => void;
   disconnect: () => void;
-  websocketProvider?: WebsocketProvider;
+  websocketProvider: WebsocketProvider;
 }
 
-export interface YJsEditorOptions {
+export type YJsEditorOptions = {
   roomName: string;
   endpoint: string;
-}
+  onConnect?: () => void;
+  onDisconnect?: () => void;
+} & NonNullable<ConstructorParameters<typeof WebsocketProvider>[3]>;
 
 const YJsEditor = {
   /**
@@ -59,21 +61,31 @@ const YJsEditor = {
 
 export const withWebsocket = <T extends YJsEditor>(
   editor: T,
-  { endpoint, roomName, ...options }: YJsEditorOptions
+  { endpoint, roomName, onConnect, onDisconnect, ...options }: YJsEditorOptions
 ): T & WebsocketEditor => {
   const e = editor as T & WebsocketEditor;
 
-  e.connect = () => {
-    if (!e.websocketProvider) {
-      e.websocketProvider = new WebsocketProvider(endpoint, roomName, e.doc, options);
+  e.websocketProvider = new WebsocketProvider(endpoint, roomName, e.doc, {
+    connect: false,
+    ...options
+  });
+
+  e.websocketProvider.on('status', (event: { status: string }) => {
+    if (event.status === 'connected' && onConnect) {
+      onConnect();
     }
+
+    if (event.status === 'disconnected' && onDisconnect) {
+      onDisconnect();
+    }
+  });
+
+  e.connect = () => {
+    e.websocketProvider.connect();
   };
 
   e.disconnect = () => {
-    if (e.websocketProvider) {
-      e.websocketProvider.destroy();
-      e.websocketProvider = undefined;
-    }
+    e.websocketProvider.disconnect();
   };
 
   return e;

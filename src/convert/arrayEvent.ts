@@ -9,10 +9,14 @@ import { toSlateNode, toSlatePath } from '../utils/convert';
  *
  * @param event
  */
-export const arrayEvent = (event: Y.YArrayEvent<SyncElement>): NodeOperation[] => {
+export const arrayEvent = (
+  event: Y.YArrayEvent<SyncElement>
+): NodeOperation[] => {
   const eventTargetPath = toSlatePath(event.path);
 
-  const createOpMatter = (type: 'insert_node' | 'remove_node') => (item: Y.Item): NodeOperation => {
+  const createOpMatter = (type: 'insert_node' | 'remove_node') => (
+    item: Y.Item
+  ): NodeOperation => {
     const { content } = item;
 
     if (!(content instanceof Y.ContentType)) {
@@ -31,12 +35,14 @@ export const arrayEvent = (event: Y.YArrayEvent<SyncElement>): NodeOperation[] =
   const sortFunc = (a: NodeOperation, b: NodeOperation) =>
     a.path[a.path.length - 1] > b.path[b.path.length - 1] ? 1 : 0;
 
-  const removeOps = Array.from(event.changes.deleted.values(), createOpMatter('remove_node')).sort(
-    sortFunc
-  );
-  const addOps = Array.from(event.changes.added.values(), createOpMatter('insert_node')).sort(
-    sortFunc
-  );
+  const removeOps = Array.from(
+    event.changes.deleted.values(),
+    createOpMatter('remove_node')
+  ).sort(sortFunc);
+  const addOps = Array.from(
+    event.changes.added.values(),
+    createOpMatter('insert_node')
+  ).sort(sortFunc);
 
   return [...removeOps, ...addOps];
 };

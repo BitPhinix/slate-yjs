@@ -4,7 +4,10 @@ import { SyncElement } from '../model';
 import { toSlatePath } from '../utils/convert';
 
 type MapAction = { action: 'add' | 'update' | 'delete'; oldValue: any };
-type SetNodeOperationProperties = Pick<SetNodeOperation, 'newProperties' | 'properties'>;
+type SetNodeOperationProperties = Pick<
+  SetNodeOperation,
+  'newProperties' | 'properties'
+>;
 
 /**
  * Converts a YJS Map event into Slate operations.
@@ -12,7 +15,9 @@ type SetNodeOperationProperties = Pick<SetNodeOperation, 'newProperties' | 'prop
  * @param event
  */
 export const mapEvent = (event: Y.YMapEvent<any>): SetNodeOperation[] => {
-  const convertMapOp = (actionEntry: [string, MapAction]): SetNodeOperationProperties => {
+  const convertMapOp = (
+    actionEntry: [string, MapAction]
+  ): SetNodeOperationProperties => {
     const [key, action] = actionEntry;
     const targetElement = event.target as SyncElement;
 

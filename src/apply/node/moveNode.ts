@@ -14,7 +14,10 @@ const moveNode: ApplyFunc<MoveNodeOperation> = (doc, op) => {
   const [from, fromIndex] = getParent(doc, op.path);
   const [to, toIndex] = getParent(doc, op.newPath);
 
-  if (SyncNode.getText(from) !== undefined || SyncNode.getText(to) !== undefined) {
+  if (
+    SyncNode.getText(from) !== undefined ||
+    SyncNode.getText(to) !== undefined
+  ) {
     throw new TypeError("Can't move node as child of a text node");
   }
 

@@ -1,2 +1,2 @@
-export * from './clone'
-export * from './convert'
+export * from './clone';
+export * from './convert';

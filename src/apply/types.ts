@@ -1,8 +1,11 @@
 import { Operation } from 'slate';
 import { SyncDoc } from '../model';
 
-export type ApplyFunc<O extends Operation = Operation> = (syncDoc: SyncDoc, op: O) => SyncDoc;
+export type ApplyFunc<O extends Operation = Operation> = (
+  syncDoc: SyncDoc,
+  op: O
+) => SyncDoc;
 
-export type OpMapper<Ops extends Operation = Operation> = {
-  [K in Ops['type']]: Ops extends { type: K } ? ApplyFunc<Ops> : never;
+export type OpMapper<O extends Operation = Operation> = {
+  [K in O['type']]: O extends { type: K } ? ApplyFunc<O> : never;
 };
