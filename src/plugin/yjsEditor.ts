@@ -11,12 +11,6 @@ export interface YJsEditor extends Editor {
   syncDoc: SyncDoc;
 }
 
-export interface WebsocketEditor extends Editor {
-  connect: () => void;
-  disconnect: () => void;
-  websocketProvider: WebsocketProvider;
-}
-
 export type YJsEditorOptions = {
   roomName: string;
   endpoint: string;
@@ -57,38 +51,6 @@ const YJsEditor = {
 
     Promise.resolve().then(() => (e.isRemote = false));
   }
-};
-
-export const withWebsocket = <T extends YJsEditor>(
-  editor: T,
-  { endpoint, roomName, onConnect, onDisconnect, ...options }: YJsEditorOptions
-): T & WebsocketEditor => {
-  const e = editor as T & WebsocketEditor;
-
-  e.websocketProvider = new WebsocketProvider(endpoint, roomName, e.doc, {
-    connect: false,
-    ...options
-  });
-
-  e.websocketProvider.on('status', (event: { status: string }) => {
-    if (event.status === 'connected' && onConnect) {
-      onConnect();
-    }
-
-    if (event.status === 'disconnected' && onDisconnect) {
-      onDisconnect();
-    }
-  });
-
-  e.connect = () => {
-    e.websocketProvider.connect();
-  };
-
-  e.disconnect = () => {
-    e.websocketProvider.disconnect();
-  };
-
-  return e;
 };
 
 export const withYJs = <T extends Editor>(editor: T): T & YJsEditor => {
