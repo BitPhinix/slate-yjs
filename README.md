@@ -1,7 +1,13 @@
 # Slate YJS
 
-YJS bindings for Slate.
+YJs bindings for Slate.
 
 Heavily inspired by [slate-collaboritve](https://github.com/cudr/slate-collaborative)
 
-This repo is a WIP but the basic implementation is complete and should work.
+# Usage
+
+Take a look at the example project [here](https://github.com/BitPhinix/slate-yjs-example)
+
+# Docs
+
+The docs currently are WIP
