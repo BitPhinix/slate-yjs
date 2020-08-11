@@ -1,6 +1,6 @@
-# Slate YJS
+# Slate Yjs
 
-(Experimental) YJs bindings for Slate.
+(Experimental) Yjs bindings for Slate.
 
 Heavily inspired by [slate-collaboritve](https://github.com/cudr/slate-collaborative)
 
@@ -20,7 +20,7 @@ Via yarn:
 yarn add slate-yjs
 ```
 
-# Why use Slate YJS instead of slate-collaborative?
+# Why use Slate Yjs instead of slate-collaborative?
 
 Performance. slate-collaboritve works well for small documents but causes 20 seconds plus load times on larger documents which slate-yjs can load in a fraction of a second.
 
@@ -28,14 +28,14 @@ For a more in-depth comparison take a look at this [benchmark](https://github.co
 
 # API
 
-## YJsClient
+## YjsClient
 
 Adding a 2-way binding from the editor to a yjs document is as easy as:
 
 ```js
-import { withYJs } from 'slate-yjs';
+import { withYjs } from 'slate-yjs';
 
-const yjsEditor = withYJs(editor);
+const yjsEditor = withYjs(editor);
 
 // The 2-way bound sync doc
 console.log(yjsEditor.syncDoc);
@@ -43,7 +43,7 @@ console.log(yjsEditor.syncDoc);
 
 ## WebsocketClient
 
-Slate YJs comes with built in support for [y-websocket](https://github.com/yjs/y-websocket):
+Slate Yjs comes with built in support for [y-websocket](https://github.com/yjs/y-websocket):
 
 ```js
 import { WebsocketEditorOptions, withWebsocket } from 'slate-yjs';

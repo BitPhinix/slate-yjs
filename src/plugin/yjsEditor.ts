@@ -4,17 +4,17 @@ import { applySlateOps as applySlateOperations } from '../apply';
 import { toSlateOps } from '../convert';
 import { SyncDoc, SyncElement } from '../model';
 
-export interface YJsEditor extends Editor {
+export interface YjsEditor extends Editor {
   isRemote: boolean;
   doc: Y.Doc;
   syncDoc: SyncDoc;
 }
 
-const YJsEditor = {
+const YjsEditor = {
   /**
-   * Apply slate ops to YJs
+   * Apply slate ops to Yjs
    */
-  applySlateOps: (e: YJsEditor, operations: Operation[]) => {
+  applySlateOps: (e: YjsEditor, operations: Operation[]) => {
     try {
       e.doc.transact(() => {
         applySlateOperations(e.syncDoc, operations);
@@ -25,9 +25,9 @@ const YJsEditor = {
   },
 
   /**
-   * Apply YJs events to slate
+   * Apply Yjs events to slate
    */
-  applyEvents: (e: YJsEditor, events: Y.YEvent[]) => {
+  applyEvents: (e: YjsEditor, events: Y.YEvent[]) => {
     const remoteEvents = events.filter(event => !event.transaction.local);
     if (remoteEvents.length == 0) {
       return;
@@ -45,14 +45,14 @@ const YJsEditor = {
   }
 };
 
-export const withYJs = <T extends Editor>(editor: T): T & YJsEditor => {
-  const e = editor as T & YJsEditor;
+export const withYjs = <T extends Editor>(editor: T): T & YjsEditor => {
+  const e = editor as T & YjsEditor;
 
   const doc = new Y.Doc();
   const syncDoc = doc.getArray<SyncElement>('content');
 
   syncDoc.observeDeep(events => {
-    YJsEditor.applyEvents(e, events);
+    YjsEditor.applyEvents(e, events);
   });
 
   e.doc = doc;
@@ -62,7 +62,7 @@ export const withYJs = <T extends Editor>(editor: T): T & YJsEditor => {
   const { onChange } = editor;
   e.onChange = () => {
     if (!e.isRemote) {
-      YJsEditor.applySlateOps(e, e.operations);
+      YjsEditor.applySlateOps(e, e.operations);
     }
 
     if (onChange) {
