@@ -10,7 +10,7 @@ type SetNodeOperationProperties = Pick<
 >;
 
 /**
- * Converts a YJS Map event into Slate operations.
+ * Converts a Yjs Map event into Slate operations.
  *
  * @param event
  */
@@ -38,7 +38,7 @@ export const mapEvent = (event: Y.YMapEvent<any>): SetNodeOperation[] => {
     };
   };
 
-  // YJS typings are incomplete so we need to use this hacky workaround.
+  // Yjs typings are incomplete so we need to use this hacky workaround.
   const keys = (event.changes as any).keys as Map<string, MapAction>;
   const changes = Array.from(keys.entries(), convertMapOp);
 

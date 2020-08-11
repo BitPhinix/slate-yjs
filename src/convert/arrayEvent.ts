@@ -5,7 +5,7 @@ import { getArrayPosition } from '../path';
 import { toSlateNode, toSlatePath } from '../utils/convert';
 
 /**
- * Converts a YJS Array event into Slate operations.
+ * Converts a Yjs Array event into Slate operations.
  *
  * @param event
  */

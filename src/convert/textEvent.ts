@@ -12,7 +12,7 @@ const getOffset = (item: Y.Item): number => {
 };
 
 /**
- * Converts a YJS Text event into Slate operations.
+ * Converts a Yjs Text event into Slate operations.
  *
  * @param event
  */
