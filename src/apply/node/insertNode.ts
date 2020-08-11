@@ -13,13 +13,9 @@ import { ApplyFunc } from '../types';
 const insertNode: ApplyFunc<InsertNodeOperation> = (doc, op) => {
   const [parent, index] = getParent(doc, op.path);
 
-  if (SyncNode.getText(parent) !== undefined) {
-    throw new TypeError("Can't insert node into text node");
-  }
-
   const children = SyncNode.getChildren(parent);
-  if (!children) {
-    throw new TypeError('');
+  if (SyncNode.getText(parent) !== undefined || !children) {
+    throw new TypeError("Can't insert node into text node");
   }
 
   SyncNode.getChildren(parent)!.insert(index, [toSyncElement(op.node)]);
