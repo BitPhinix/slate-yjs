@@ -1,0 +1,20 @@
+name: 🧪 test
+
+on: [push]
+
+jobs:
+  release:
+    name: 🧪 test
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📜 checkout
+        uses: actions/checkout@v1
+      - name: 🟢 node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+          registry-url: https://registry.npmjs.org/
+      - name: 📥 install
+        run: npm i
+      - name: 🧪 test
+        run: npm run test
