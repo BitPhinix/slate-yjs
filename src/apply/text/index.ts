@@ -5,7 +5,7 @@ import { removeText } from './removeText';
 
 const mappers: OpMapper<TextOperation> = {
   insert_text: insertText,
-  remove_text: removeText
+  remove_text: removeText,
 };
 
 export default mappers;

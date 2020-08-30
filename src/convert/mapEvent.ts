@@ -23,7 +23,7 @@ export const mapEvent = (event: Y.YMapEvent<any>): SetNodeOperation[] => {
 
     return {
       newProperties: { [key]: targetElement.get(key) },
-      properties: { [key]: action.oldValue }
+      properties: { [key]: action.oldValue },
     };
   };
 
@@ -34,7 +34,7 @@ export const mapEvent = (event: Y.YMapEvent<any>): SetNodeOperation[] => {
     return {
       ...op,
       newProperties: { ...op.newProperties, ...props.newProperties },
-      properties: { ...op.properties, ...props.properties }
+      properties: { ...op.properties, ...props.properties },
     };
   };
 
@@ -46,7 +46,7 @@ export const mapEvent = (event: Y.YMapEvent<any>): SetNodeOperation[] => {
     type: 'set_node',
     newProperties: {},
     properties: {},
-    path: toSlatePath(event.path)
+    path: toSlatePath(event.path),
   };
 
   // Combine changes into a single set node operation

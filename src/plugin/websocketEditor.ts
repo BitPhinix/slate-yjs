@@ -30,7 +30,7 @@ export const withWebsocket = <T extends YjsEditor>(
 
   e.websocketProvider = new WebsocketProvider(endpoint, roomName, e.doc, {
     connect: false,
-    ...options
+    ...options,
   });
 
   e.websocketProvider.on('status', (event: { status: string }) => {

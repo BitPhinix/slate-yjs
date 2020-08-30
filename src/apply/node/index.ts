@@ -13,7 +13,7 @@ const mapper: OpMapper<NodeOperation> = {
   move_node: moveNode,
   remove_node: removeNode,
   set_node: setNode,
-  split_node: splitNode
+  split_node: splitNode,
 };
 
 export default mapper;
