@@ -82,5 +82,5 @@ export const toSyncElement = (node: Node): SyncElement => {
  * @param path
  */
 export const toSlatePath = (path: (string | number)[]): Path => {
-  return path.filter(node => typeof node === 'number') as Path;
+  return path.filter((node) => typeof node === 'number') as Path;
 };

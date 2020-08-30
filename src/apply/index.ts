@@ -11,7 +11,7 @@ const opMappers: OpMapper = {
   ...node,
 
   // SetSelection is currently a null op since we don't support cursors
-  set_selection: nullOp
+  set_selection: nullOp,
 };
 
 /**

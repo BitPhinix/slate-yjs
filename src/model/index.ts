@@ -11,7 +11,7 @@ export const SyncElement = {
 
   getChildren(element: SyncElement): Y.Array<SyncElement> | undefined {
     return element?.get('children');
-  }
+  },
 };
 
 export const SyncNode = {
@@ -29,5 +29,5 @@ export const SyncNode = {
     }
 
     return SyncElement.getText(node);
-  }
+  },
 };
