@@ -28,7 +28,7 @@ const YjsEditor = {
    * Apply Yjs events to slate
    */
   applyEvents: (e: YjsEditor, events: Y.YEvent[]) => {
-    const remoteEvents = events.filter(event => !event.transaction.local);
+    const remoteEvents = events.filter((event) => !event.transaction.local);
     if (remoteEvents.length == 0) {
       return;
     }
@@ -36,13 +36,13 @@ const YjsEditor = {
     e.isRemote = true;
 
     Editor.withoutNormalizing(e, () => {
-      toSlateOps(remoteEvents).forEach(op => {
+      toSlateOps(remoteEvents).forEach((op) => {
         e.apply(op);
       });
     });
 
     Promise.resolve().then(() => (e.isRemote = false));
-  }
+  },
 };
 
 export const withYjs = <T extends Editor>(editor: T): T & YjsEditor => {
@@ -51,7 +51,7 @@ export const withYjs = <T extends Editor>(editor: T): T & YjsEditor => {
   const doc = new Y.Doc();
   const syncDoc = doc.getArray<SyncElement>('content');
 
-  syncDoc.observeDeep(events => {
+  syncDoc.observeDeep((events) => {
     YjsEditor.applyEvents(e, events);
   });
 

@@ -31,7 +31,7 @@ export const textEvent = (event: Y.YTextEvent): TextOperation[] => {
       type: type,
       offset: getOffset(item),
       text: content.str,
-      path: eventTargetPath
+      path: eventTargetPath,
     };
   };
 
