@@ -45,7 +45,7 @@
     "esrever": "0.2.0",
     "jest": "26.4.2",
     "jest-config": "26.4.2",
-    "prettier": "2.1.1",
+    "prettier": "2.1.2",
     "rimraf": "3.0.2",
     "ts-jest": "26.3.0",
     "ts-node": "9.0.0",
