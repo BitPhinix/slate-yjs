@@ -33,7 +33,7 @@
     "test:watch": "jest --coverage --watch"
   },
   "devDependencies": {
-    "@types/jest": "26.0.10",
+    "@types/jest": "26.0.14",
     "@types/lodash": "4.14.161",
     "@types/node": "10.17.28",
     "@types/shelljs": "0.8.8",
