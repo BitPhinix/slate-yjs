@@ -1,12 +1,12 @@
 import { createEditor } from 'slate';
-import { YjsTestEditor, withYjsTest } from './yjsTestEditor';
+import { TestEditor, withTest } from './testEditor';
 import { toSlateDoc } from '../src';
 
 describe('test', () => {
   it('test', async () => {
     // Create source document, make some edits, extract the resulting Yjs updates.
-    const src = withYjsTest(createEditor());
-    await YjsTestEditor.applySlateOpsToSlate(src, [
+    const src = withTest(createEditor());
+    await TestEditor.applySlateOpsToSlate(src, [
       {
         type: 'insert_node',
         path: [0],
@@ -20,11 +20,11 @@ describe('test', () => {
         text: 'test',
       },
     ]);
-    const updates = YjsTestEditor.getCapturedYjsUpdates(src);
+    const updates = TestEditor.getCapturedYjsUpdates(src);
 
     // Apply those Yjs updates against a different editor.
-    const dst = withYjsTest(createEditor());
-    YjsTestEditor.applyYjsUpdatesToYjs(dst, updates);
+    const dst = withTest(createEditor());
+    TestEditor.applyYjsUpdatesToYjs(dst, updates);
 
     expect(toSlateDoc(dst.syncDoc)).toEqual(toSlateDoc(src.syncDoc));
     expect(dst.children).toEqual(src.children);
