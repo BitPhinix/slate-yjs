@@ -10,7 +10,7 @@ export interface YjsEditor extends Editor {
   syncDoc: SyncDoc;
 }
 
-const YjsEditor = {
+export const YjsEditor = {
   /**
    * Apply slate ops to Yjs
    */
