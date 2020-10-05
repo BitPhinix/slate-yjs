@@ -1,13 +1,10 @@
 import { Editor, Operation } from 'slate';
+import { YjsEditor } from '../src/plugin/yjsEditor';
 import * as Y from 'yjs';
 import { applySlateOps as applySlateOperations } from '../src/apply';
-import { toSlateOps } from '../src/convert';
-import { SyncDoc, SyncElement } from '../src/model';
+import { SyncElement } from '../src/model';
 
-export interface TestEditor extends Editor {
-  isRemote: boolean;
-  doc: Y.Doc;
-  syncDoc: SyncDoc;
+export interface TestEditor extends YjsEditor {
   shouldCaptureYjsUpdates: boolean;
   capturedYjsUpdates: Uint8Array[];
   onChangeComplete: () => void;
@@ -21,26 +18,6 @@ export const TestEditor = {
     e.doc.transact(() => {
       applySlateOperations(e.syncDoc, operations);
     });
-  },
-
-  /**
-   * Apply Yjs events to slate
-   */
-  applyYjsEventsToSlate: (e: TestEditor, events: Y.YEvent[]) => {
-    const remoteEvents = events.filter((event) => !event.transaction.local);
-    if (remoteEvents.length == 0) {
-      return;
-    }
-
-    e.isRemote = true;
-
-    Editor.withoutNormalizing(e, () => {
-      toSlateOps(remoteEvents).forEach((op) => {
-        e.apply(op);
-      });
-    });
-
-    Promise.resolve().then(() => (e.isRemote = false));
   },
 
   /**
@@ -124,7 +101,7 @@ export const withTest = <T extends Editor>(editor: T): T & TestEditor => {
     TestEditor.captureYjsUpdate(e, updateMessage, origin);
   });
   syncDoc.observeDeep((events) => {
-    TestEditor.applyYjsEventsToSlate(e, events);
+    YjsEditor.applyEvents(e, events);
   });
 
   e.doc = doc;
