@@ -10,6 +10,7 @@ import { createNode } from './utils';
 // 'split_node' sections currently cause tests to fail and need further
 // investigation.
 const transforms = [
+  // Insert text into an existing paragraph.
   [
     'insert_text',
     [createNode('paragraph', '')],
@@ -38,6 +39,7 @@ const transforms = [
     ],
     [createNode('paragraph', 'Hello collaborator!')],
   ],
+  // Remove text from an existing paragraph.
   [
     'remove_text',
     [createNode('paragraph', 'Hello collaborator!')],
@@ -57,6 +59,7 @@ const transforms = [
     ],
     [createNode('paragraph', 'Hello!')],
   ],
+  // Insert new nodes.
   [
     'insert_node',
     [createNode()],
