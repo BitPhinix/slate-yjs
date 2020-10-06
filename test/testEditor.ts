@@ -1,4 +1,4 @@
-import { Editor, Operation } from 'slate';
+import { Editor, Node, Operation } from 'slate';
 import { YjsEditor } from '../src/plugin/yjsEditor';
 import * as Y from 'yjs';
 import { applySlateOps as applySlateOperations } from '../src/apply';
@@ -43,15 +43,21 @@ export const TestEditor = {
   applyYjsUpdateToYjs: (
     e: TestEditor,
     update: Uint8Array
-  ): Promise<void> => {
-    return new Promise((resolve) => {
+  ): Promise<unknown> => {
+    return new Promise((resolve, reject) => {
       e.shouldCaptureYjsUpdates = false;
       e.onChangeComplete = () => {
         e.onChangeComplete = () => void {};
         resolve();
       };
-      Y.applyUpdate(e.doc, update);
+      try {
+        Y.applyUpdate(e.doc, update);
+      } catch (err) {
+        reject(err);
+      }
       e.shouldCaptureYjsUpdates = true;
+    }).catch((err) => {
+      fail(err);
     });
   },
 
@@ -69,13 +75,19 @@ export const TestEditor = {
   /**
    * Apply one slate operation to slate.
    */
-  applySlateOpToSlate: (e: TestEditor, op: Operation): Promise<void> => {
-    return new Promise((resolve) => {
+  applySlateOpToSlate: (e: TestEditor, op: Operation): Promise<unknown> => {
+    return new Promise((resolve, reject) => {
       e.onChangeComplete = () => {
         e.onChangeComplete = () => void {};
         resolve();
       };
-      e.apply(op);
+      try {
+        e.apply(op);
+      } catch (err) {
+        reject(err);
+      }
+    }).catch((err) => {
+      fail(err);
     });
   },
 
@@ -86,6 +98,22 @@ export const TestEditor = {
     await Promise.all(
       operations.map((op) => {
         TestEditor.applySlateOpToSlate(e, op);
+      })
+    );
+  },
+
+  /**
+   * Insert the given set of slate nodes at the given path.
+   */
+  insertSlateNodes: async (e: TestEditor, nodes: Node[], path: number[]) => {
+    await TestEditor.applySlateOpsToSlate(
+      e,
+      nodes.reverse().map((node) => {
+        return {
+          type: 'insert_node',
+          path: path,
+          node: node,
+        };
       })
     );
   },
