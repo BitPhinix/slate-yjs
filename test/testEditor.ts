@@ -1,4 +1,4 @@
-import { Editor, Node, Operation } from 'slate';
+import { Editor, Location, Node, Operation, Path, Transforms } from 'slate';
 import { YjsEditor } from '../src/plugin/yjsEditor';
 import * as Y from 'yjs';
 import { applySlateOps as applySlateOperations } from '../src/apply';
@@ -9,6 +9,8 @@ export interface TestEditor extends YjsEditor {
   capturedYjsUpdates: Uint8Array[];
   onChangeComplete: () => void;
 }
+
+export type TransformFunc = ((e: Editor) => void);
 
 export const TestEditor = {
   /**
@@ -65,24 +67,22 @@ export const TestEditor = {
    * Apply multiple Yjs updates to Yjs.
    */
   applyYjsUpdatesToYjs: async (e: TestEditor, updates: Uint8Array[]) => {
-    await Promise.all(
-      updates.map((update) => {
-        TestEditor.applyYjsUpdateToYjs(e, update);
-      })
-    );
+    updates.map(async (update) => {
+      await TestEditor.applyYjsUpdateToYjs(e, update);
+    });
   },
 
-  /**
-   * Apply one slate operation to slate.
+  /** 
+   * Apply one TransformFunc to slate.
    */
-  applySlateOpToSlate: (e: TestEditor, op: Operation): Promise<unknown> => {
+  applyTransform: async (e: TestEditor, transform: TransformFunc): Promise<unknown> => {
     return new Promise((resolve, reject) => {
       e.onChangeComplete = () => {
         e.onChangeComplete = () => void {};
         resolve();
       };
       try {
-        e.apply(op);
+        transform(e);
       } catch (err) {
         reject(err);
       }
@@ -91,31 +91,61 @@ export const TestEditor = {
     });
   },
 
-  /**
-   * Apply multiple slate operations to slate.
+  /** 
+   * Apply multiple TransformFuncs to slate.
    */
-  applySlateOpsToSlate: async (e: TestEditor, operations: Operation[]) => {
-    await Promise.all(
-      operations.map((op) => {
-        TestEditor.applySlateOpToSlate(e, op);
-      })
-    );
+  applyTransforms: async (e: TestEditor, transforms: TransformFunc[]) => {
+    transforms.map(async (transform) => {
+      await TestEditor.applyTransform(e, transform);
+    });
   },
 
-  /**
-   * Insert the given set of slate nodes at the given path.
-   */
-  insertSlateNodes: async (e: TestEditor, nodes: Node[], path: number[]) => {
-    await TestEditor.applySlateOpsToSlate(
-      e,
-      nodes.reverse().map((node) => {
-        return {
-          type: 'insert_node',
-          path: path,
-          node: node,
-        };
-      })
-    );
+  makeInsertText: (text: string, at: Location): TransformFunc => {
+    return (e: Editor) => {
+      Transforms.insertText(e, text, { at });
+    };
+  },
+
+  makeRemoveCharacters: (count: number, at: Location): TransformFunc => {
+    return (e: Editor) => {
+      Transforms.delete(e, { distance: count, at });
+    };
+  },
+
+  makeInsertNodes: (nodes: Node | Node[], at: Location): TransformFunc => {
+    return (e: Editor) => {
+      Transforms.insertNodes(e, nodes, { at });
+    };
+  },
+
+  makeMergeNodes: (at: Path): TransformFunc => {
+    return (e: Editor) => {
+      Transforms.mergeNodes(e, { at });
+    };
+  },
+
+  makeMoveNodes: (from: Path, to: Path): TransformFunc => {
+    return (e: Editor) => {
+      Transforms.moveNodes(e, { at: from, to: to });
+    };
+  },
+
+  makeRemoveNodes: (at: Path): TransformFunc => {
+    return (e: Editor) => {
+      Transforms.removeNodes(e, { at });
+    };
+  },
+
+  makeSetNodes: (at: Location, props: Partial<Node>): TransformFunc => {
+    return (e: Editor) => {
+      Transforms.setNodes(e, props, { at });
+    };
+  },
+
+  makeSplitNodes: (at: Location): TransformFunc => {
+    return (e: Editor) => {
+      Transforms.splitNodes(e, { at });
+    };
   },
 };
 
