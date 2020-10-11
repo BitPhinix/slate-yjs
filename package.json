@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@types/jest": "26.0.14",
-    "@types/lodash": "4.14.161",
+    "@types/lodash": "4.14.162",
     "@types/node": "10.17.37",
     "@types/shelljs": "0.8.8",
     "@typescript-eslint/eslint-plugin": "4.4.0",
