@@ -33,6 +33,50 @@ const tests = [
     [createNode(), createNode('paragraph', 'Hello collaborator!')],
   ],
   [
+    'Insert new nodes (two paragraphs)',
+    [
+      createNode('paragraph', 'alfa'),
+      createNode('paragraph', 'bravo'),
+      createNode('paragraph', 'charlie'),
+      createNode('paragraph', 'delta'),
+    ],
+    [
+      TestEditor.makeInsertNodes(createNode('paragraph', 'echo'), [1]),
+      TestEditor.makeInsertNodes(createNode('paragraph', 'foxtrot'), [4]),
+    ],
+    [
+      createNode('paragraph', 'alfa'),
+      createNode('paragraph', 'echo'),
+      createNode('paragraph', 'bravo'),
+      createNode('paragraph', 'charlie'),
+      createNode('paragraph', 'foxtrot'),
+      createNode('paragraph', 'delta'),
+    ],
+  ],
+  [
+    'Insert new nodes (three paragraphs)',
+    [
+      createNode('paragraph', 'one'),
+      createNode('paragraph', 'two'),
+      createNode('paragraph', 'three'),
+      createNode('paragraph', 'four'),
+    ],
+    [
+      TestEditor.makeInsertNodes(createNode('paragraph', 'five'), [1]),
+      TestEditor.makeInsertNodes(createNode('paragraph', 'six'), [3]),
+      TestEditor.makeInsertNodes(createNode('paragraph', 'seven'), [5]),
+    ],
+    [
+      createNode('paragraph', 'one'),
+      createNode('paragraph', 'five'),
+      createNode('paragraph', 'two'),
+      createNode('paragraph', 'six'),
+      createNode('paragraph', 'three'),
+      createNode('paragraph', 'seven'),
+      createNode('paragraph', 'four'),
+    ],
+  ],
+  [
     'Merge two paragraph nodes',
     [
       createNode('paragraph', 'Hello '),
@@ -78,6 +122,34 @@ const tests = [
     ],
     [TestEditor.makeRemoveNodes([0])],
     [createNode('paragraph', 'second'), createNode('paragraph', 'third')],
+  ],
+  [
+    'Remove two non-consecutive paragraph nodes',
+    [
+      createNode('paragraph', 'first'),
+      createNode('paragraph', 'second'),
+      createNode('paragraph', 'third'),
+      createNode('paragraph', 'fourth'),
+    ],
+    [
+      TestEditor.makeRemoveNodes([0]),
+      TestEditor.makeRemoveNodes([1])
+    ],
+    [createNode('paragraph', 'second'), createNode('paragraph', 'fourth')],
+  ],
+  [
+    'Remove two consecutive paragraph nodes',
+    [
+      createNode('paragraph', 'first'),
+      createNode('paragraph', 'second'),
+      createNode('paragraph', 'third'),
+      createNode('paragraph', 'fourth'),
+    ],
+    [
+      TestEditor.makeRemoveNodes([1]),
+      TestEditor.makeRemoveNodes([1])
+    ],
+    [createNode('paragraph', 'first'), createNode('paragraph', 'fourth')],
   ],
   [
     'Remove a text node',

@@ -28,21 +28,26 @@ export const arrayEvent = (
   const sortFunc = (a: NodeOperation, b: NodeOperation) =>
     a.path[a.path.length - 1] > b.path[b.path.length - 1] ? 1 : 0;
 
-  let retain = 0;
+  let removeIndex = 0;
+  let addIndex = 0;
   let removeOps: NodeOperation[] = [];
   let addOps: NodeOperation[] = [];
   for (const delta of event.changes.delta) {
     const d = delta as any;
     if (d.retain !== undefined) {
-      retain += d.retain;
+      removeIndex += d.retain;
+      addIndex += d.retain;
     } else if (d.delete !== undefined) {
-      removeOps.push(createRemoveNode(retain));
+      for (let i = 0; i < d.delete; i += 1) {
+        removeOps.push(createRemoveNode(removeIndex));
+      }
     } else if (d.insert !== undefined) {
       addOps = addOps.concat(
         d.insert.map((e: SyncElement, i: number) =>
-          createInsertNode(retain + i, e)
+          createInsertNode(addIndex + i, e)
         )
       );
+      addIndex += d.insert.length;
     }
   }
 
