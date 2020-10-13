@@ -22,13 +22,17 @@ yarn add slate-yjs
 
 # Why use Slate Yjs instead of slate-collaborative?
 
-Performance. slate-collaboritve works well for small documents but causes 20 seconds plus load times on larger documents which slate-yjs can load in a fraction of a second.
+Performance. slate-collaborative works well for small documents but causes 20 seconds plus load times on larger documents which slate-yjs can load in a fraction of a second.
 
 For a more in-depth comparison take a look at this [benchmark](https://github.com/dmonad/crdt-benchmarks).
 
+# Why CRDTs over OT?
+
+The article ["CRDTs are the future"](https://josephg.com/blog/crdts-are-the-future/) from the creator of [sharedb](https://github.com/share/sharedb) might be interesting for you.
+
 # API
 
-## YjsClient
+## YjsEditor
 
 Adding a 2-way binding from the editor to a yjs document is as easy as:
 
@@ -41,7 +45,7 @@ const yjsEditor = withYjs(editor);
 console.log(yjsEditor.syncDoc);
 ```
 
-## WebsocketClient
+## WebsocketEditor
 
 Slate Yjs comes with built in support for [y-websocket](https://github.com/yjs/y-websocket):
 
