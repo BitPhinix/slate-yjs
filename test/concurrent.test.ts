@@ -144,6 +144,22 @@ const tests: Test[] = [
     name: 'Split 4rd paragraph',
     transform: TestEditor.makeSplitNodes({ path: [3, 0], offset: 7}),
   },
+  {
+    name: 'Move 1st paragraph',
+    transform: TestEditor.makeMoveNodes([0], [3]),
+  },
+  {
+    name: 'Move 2nd paragraph',
+    transform: TestEditor.makeMoveNodes([3], [2]),
+  },
+  {
+    name: 'Move 3rd paragraph',
+    transform: TestEditor.makeMoveNodes([2], [1]),
+  },
+  {
+    name: 'Move 4th paragraph',
+    transform: TestEditor.makeMoveNodes([1], [0]),
+  },
 ];
 
 const runOneTest = async (ti: Test, tj: Test) => {
