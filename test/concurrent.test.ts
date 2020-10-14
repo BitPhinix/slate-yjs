@@ -93,7 +93,7 @@ const tests: Test[] = [
     transform: TestEditor.makeMergeNodes([2]),
   },
   {
-    name: 'Merge 3nd and 4rd paragraphs',
+    name: 'Merge 3nd and 4th paragraphs',
     transform: TestEditor.makeMergeNodes([3]),
   },
   {
@@ -141,7 +141,7 @@ const tests: Test[] = [
     transform: TestEditor.makeSplitNodes({ path: [2, 0], offset: 6}),
   },
   {
-    name: 'Split 4rd paragraph',
+    name: 'Split 4th paragraph',
     transform: TestEditor.makeSplitNodes({ path: [3, 0], offset: 7}),
   },
   {
