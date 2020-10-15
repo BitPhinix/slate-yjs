@@ -86,7 +86,7 @@ const tests = [
     [createNode('paragraph', 'Hello collaborator!')],
   ],
   [
-    'Move a paragraph node',
+    'Move a paragraph node to an existing position',
     [
       createNode('paragraph', 'first'),
       createNode('paragraph', 'second'),
@@ -97,6 +97,34 @@ const tests = [
       createNode('paragraph', 'second'),
       createNode('paragraph', 'first'),
       createNode('paragraph', 'third'),
+    ],
+  ],
+  [
+    'Move a paragraph node to the end',
+    [
+      createNode('paragraph', 'first'),
+      createNode('paragraph', 'second'),
+      createNode('paragraph', 'third'),
+    ],
+    [TestEditor.makeMoveNodes([0], [3])],
+    [
+      createNode('paragraph', 'second'),
+      createNode('paragraph', 'third'),
+      createNode('paragraph', 'first'),
+    ],
+  ],
+  [
+    'Move a paragraph node far past the end',
+    [
+      createNode('paragraph', 'first'),
+      createNode('paragraph', 'second'),
+      createNode('paragraph', 'third'),
+    ],
+    [TestEditor.makeMoveNodes([0], [1000])],
+    [
+      createNode('paragraph', 'second'),
+      createNode('paragraph', 'third'),
+      createNode('paragraph', 'first'),
     ],
   ],
   [

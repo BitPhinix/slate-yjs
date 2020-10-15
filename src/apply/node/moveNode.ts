@@ -27,7 +27,7 @@ const moveNode: ApplyFunc<MoveNodeOperation> = (doc, op) => {
   const toInsert = cloneSyncElement(toMove);
 
   fromChildren!.delete(fromIndex);
-  toChildren!.insert(toIndex, [toInsert]);
+  toChildren!.insert(Math.min(toIndex, toChildren!.length), [toInsert]);
 
   return doc;
 };
