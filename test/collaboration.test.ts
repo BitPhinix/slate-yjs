@@ -234,6 +234,40 @@ const tests = [
       createNode('paragraph', 'collaborator!'),
     ],
   ],
+  [
+    'Insert and remove text in the same paragraph', 
+    [
+      createNode('paragraph', 'abc def'),
+    ],
+    [
+      TestEditor.makeInsertText('ghi ', { path: [0, 0], offset:  4}),
+      TestEditor.makeRemoveCharacters(2, { path: [0, 0], offset:  1}),
+      TestEditor.makeInsertText('jkl ', { path: [0, 0], offset:  6}),
+      TestEditor.makeRemoveCharacters(1, { path: [0, 0], offset:  11}),
+      TestEditor.makeInsertText(' mno', { path: [0, 0], offset:  12}),
+    ],
+    [
+      createNode('paragraph', 'a ghi jkl df mno'),
+    ],
+  ],
+];
+
+// @ts-ignore
+const failingTests = [
+  [
+    'Remove first paragraph, insert text into second paragraph', 
+    [
+      createNode('paragraph', 'abcd'),
+      createNode('paragraph', 'efgh'),
+    ],
+    [
+      TestEditor.makeRemoveNodes([0]),
+      TestEditor.makeInsertText(' ijkl ', { path: [0, 0], offset: 2 }),
+    ],
+    [
+      createNode('paragraph', 'ef ijkl gh'),
+    ],
+  ],
 ];
 
 describe('slate operations propagate between editors', () => {
