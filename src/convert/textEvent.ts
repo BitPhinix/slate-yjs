@@ -2,15 +2,6 @@ import { TextOperation } from 'slate';
 import * as Y from 'yjs';
 import { toSlatePath } from '../utils/convert';
 
-// Calculates the offset of a text item
-const getOffset = (item: Y.Item): number => {
-  if (!item.left) {
-    return 0;
-  }
-
-  return (item.left.deleted ? 0 : item.left.length) + getOffset(item.left);
-};
-
 /**
  * Converts a Yjs Text event into Slate operations.
  *
@@ -19,33 +10,41 @@ const getOffset = (item: Y.Item): number => {
 export const textEvent = (event: Y.YTextEvent): TextOperation[] => {
   const eventTargetPath = toSlatePath(event.path);
 
-  const createOpMapper = (type: 'insert_text' | 'remove_text') => (
-    item: Y.Item
-  ): TextOperation => {
-    const { content } = item;
-    if (!(content instanceof Y.ContentString)) {
-      throw new TypeError(`Unsupported content type ${item.content}`);
-    }
-
+  const createTextOp = (
+      type: 'insert_text' | 'remove_text',
+      offset: number,
+      text: string
+    ): TextOperation => {
     return {
       type: type,
-      offset: getOffset(item),
-      text: content.str,
+      offset: offset,
+      text: text,
       path: eventTargetPath,
     };
   };
 
-  const sortFunc = (a: TextOperation, b: TextOperation) =>
-    a.path[a.path.length - 1] > b.path[b.path.length - 1] ? 1 : 0;
-
-  const removeOps = Array.from(
-    event.changes.deleted.values(),
-    createOpMapper('remove_text')
-  ).sort(sortFunc);
-  const addOps = Array.from(
-    event.changes.added.values(),
-    createOpMapper('insert_text')
-  ).sort(sortFunc);
+  let removedValues = event.changes.deleted.values();
+  let removeOffset = 0;
+  let addOffset = 0;
+  let removeOps: TextOperation[] = [];
+  let addOps: TextOperation[] = [];
+  for (const delta of event.changes.delta) {
+    const d = delta as any;
+    if (d.retain !== undefined) {
+      removeOffset += d.retain;
+      addOffset += d.retain;
+    } else if (d.delete !== undefined) {
+      const item = removedValues.next().value;
+      const { content } = item;
+      if (!(content instanceof Y.ContentString)) {
+        throw new TypeError(`Unsupported content type ${item.content}`);
+      }
+      removeOps.push(createTextOp('remove_text', removeOffset, content.str));
+    } else if (d.insert !== undefined) {
+      addOps.push(createTextOp('insert_text', addOffset, d.insert.join("")));
+      addOffset += d.insert.length;
+    }
+  }
 
   return [...removeOps, ...addOps];
 };
