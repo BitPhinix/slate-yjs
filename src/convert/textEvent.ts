@@ -11,23 +11,23 @@ export const textEvent = (event: Y.YTextEvent): TextOperation[] => {
   const eventTargetPath = toSlatePath(event.path);
 
   const createTextOp = (
-      type: 'insert_text' | 'remove_text',
-      offset: number,
-      text: string
-    ): TextOperation => {
+    type: 'insert_text' | 'remove_text',
+    offset: number,
+    text: string
+  ): TextOperation => {
     return {
-      type: type,
-      offset: offset,
-      text: text,
+      type,
+      offset,
+      text,
       path: eventTargetPath,
     };
   };
 
-  let removedValues = event.changes.deleted.values();
+  const removedValues = event.changes.deleted.values();
   let removeOffset = 0;
   let addOffset = 0;
-  let removeOps: TextOperation[] = [];
-  let addOps: TextOperation[] = [];
+  const removeOps: TextOperation[] = [];
+  const addOps: TextOperation[] = [];
   for (const delta of event.changes.delta) {
     const d = delta as any;
     if (d.retain !== undefined) {
@@ -41,7 +41,7 @@ export const textEvent = (event: Y.YTextEvent): TextOperation[] => {
       }
       removeOps.push(createTextOp('remove_text', removeOffset, content.str));
     } else if (d.insert !== undefined) {
-      addOps.push(createTextOp('insert_text', addOffset, d.insert.join("")));
+      addOps.push(createTextOp('insert_text', addOffset, d.insert.join('')));
       addOffset += d.insert.length;
     }
   }
