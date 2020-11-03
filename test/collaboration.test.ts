@@ -1,7 +1,7 @@
 import { Node, createEditor } from 'slate';
 import { TestEditor, TransformFunc, withTest } from './testEditor';
 import { toSlateDoc } from '../src';
-import { createNode } from './utils';
+import { createNode, createValue } from './utils';
 
 const tests = [
   [
@@ -250,10 +250,6 @@ const tests = [
       createNode('paragraph', 'a ghi jkl df mno'),
     ],
   ],
-];
-
-// @ts-ignore
-const failingTests = [
   [
     'Remove first paragraph, insert text into second paragraph', 
     [
@@ -266,6 +262,74 @@ const failingTests = [
     ],
     [
       createNode('paragraph', 'ef ijkl gh'),
+    ],
+  ],
+  [
+    'More complex case: insert text, both insert and remove nodes',
+    [
+      createNode('paragraph', 'abcd'),
+      createNode('paragraph', 'efgh'),
+      createNode('paragraph', 'ijkl'),
+    ],
+    [
+      TestEditor.makeInsertText(' mnop ', { path: [0, 0], offset: 2 }),
+      TestEditor.makeRemoveNodes([1]),
+      TestEditor.makeInsertText(' qrst ', { path: [1, 0], offset: 2 }),
+      TestEditor.makeInsertNodes(createNode('paragraph', 'uvxw'), [1]),
+    ],
+    [
+      createNode('paragraph', 'ab mnop cd'),
+      createNode('paragraph', 'uvxw'),
+      createNode('paragraph', 'ij qrst kl'),
+    ],
+  ],
+  [
+    'Insert text, then insert node that affects the path to the affected text',
+    [
+      createNode('paragraph', 'abcd'),
+    ],
+    [
+      TestEditor.makeInsertText(' efgh ', { path: [0, 0], offset: 2 }),
+      TestEditor.makeInsertNodes(createNode('paragraph', 'ijkl'), [0]),
+    ],
+    [
+      createNode('paragraph', 'ijkl'),
+      createNode('paragraph', 'ab efgh cd'),
+    ],
+  ],
+  [
+    'Set properties, then insert node that affects path to the affected node', 
+    [
+      createNode('paragraph', 'abcd'),
+    ],
+    [
+      TestEditor.makeSetNodes([0], { test: '1234' }),
+      TestEditor.makeInsertNodes(createNode('paragraph', 'ijkl'), [0]),
+    ],
+    [
+      createNode('paragraph', 'ijkl'),
+      createNode('paragraph', 'abcd', { test: '1234' }),
+    ],
+  ],
+  [
+    'Insert node, then insert second node that affects path to the first node',
+    [
+      createValue([
+        createNode('paragraph', 'abc'),
+        createNode('paragraph', 'def'),
+      ]),
+    ],
+    [
+      TestEditor.makeInsertNodes(createNode('paragraph', 'jkl'), [0, 1]),
+      TestEditor.makeInsertNodes(createNode('paragraph', 'ghi'), [0]),
+    ],
+    [
+      createNode('paragraph', 'ghi'),
+      createValue([
+        createNode('paragraph', 'abc'),
+        createNode('paragraph', 'jkl'),
+        createNode('paragraph', 'def'),
+      ]),
     ],
   ],
 ];
