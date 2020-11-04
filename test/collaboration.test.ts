@@ -332,10 +332,52 @@ const tests = [
       ]),
     ],
   ],
+  [
+    'remove_text op spans location of previous remove_text op',
+    [
+      createNode('paragraph', 'abc defg ijklm'),
+    ],
+    [
+      TestEditor.makeRemoveCharacters(5, { path: [0, 0], offset: 4 }),
+    ],
+    [
+      createNode('paragraph', 'abc ijklm'),
+    ],
+    [
+      TestEditor.makeRemoveCharacters(6, { path: [0, 0], offset: 1 }),
+    ],
+    [
+      createNode('paragraph', 'alm'),
+    ],
+  ],
+  [
+    'remove_text op spans locations of two previous remove_text ops',
+    [
+      createNode('paragraph', 'abcdefghijklmnopqrst'),
+    ],
+    [
+      TestEditor.makeRemoveCharacters(3, { path: [0, 0], offset: 2 }),
+    ],
+    [
+      createNode('paragraph', 'abfghijklmnopqrst'),
+    ],
+    [
+      TestEditor.makeRemoveCharacters(8, { path: [0, 0], offset: 5 }),
+    ],
+    [
+      createNode('paragraph', 'abfghqrst'),
+    ],
+    [
+      TestEditor.makeRemoveCharacters(7, { path: [0, 0], offset: 1 }),
+    ],
+    [
+      createNode('paragraph', 'at'),
+    ],
+  ],
 ];
 
 describe('slate operations propagate between editors', () => {
-  tests.forEach(([testName, input, transforms, output]) => {
+  tests.forEach(([testName, input, ...rest]) => {
     it(`${testName}`, async () => {
       // Create two editors.
       const src = withTest(createEditor());
@@ -355,138 +397,22 @@ describe('slate operations propagate between editors', () => {
       expect(toSlateDoc(dst.syncDoc)).toEqual(input);
       expect(dst.children).toEqual(input);
 
-      // Apply transforms to src editor, propagate changes to dst editor.
-      await TestEditor.applyTransforms(src, transforms as TransformFunc[]);
-      updates = TestEditor.getCapturedYjsUpdates(src);
-      await TestEditor.applyYjsUpdatesToYjs(dst, updates);
+      // Allow for multiple rounds of applying transforms and verifying state.
+      while (rest.length > 0) {
+        let transforms, output;
+        [transforms, output, ...rest] = rest;
 
-      // Verify final states.
-      expect(src.children).toEqual(output);
-      expect(toSlateDoc(src.syncDoc)).toEqual(output);
-      expect(toSlateDoc(dst.syncDoc)).toEqual(output);
-      expect(dst.children).toEqual(output);
+        // Apply transforms to src editor, propagate changes to dst editor.
+        await TestEditor.applyTransforms(src, transforms as TransformFunc[]);
+        updates = TestEditor.getCapturedYjsUpdates(src);
+        await TestEditor.applyYjsUpdatesToYjs(dst, updates);
+
+        // Verify final states.
+        expect(src.children).toEqual(output);
+        expect(toSlateDoc(src.syncDoc)).toEqual(output);
+        expect(toSlateDoc(dst.syncDoc)).toEqual(output);
+        expect(dst.children).toEqual(output);
+      }
     });
-  });
-
-  it('remove_text op spans location of previous remove_text op', async () => {
-    const input = [ createNode('paragraph', 'abc defg ijklm') ];
-
-    // Create two editors.
-    const src = withTest(createEditor());
-    const dst = withTest(createEditor());
-
-    // Set initial state for src editor, propagate changes to dst editor.
-    await TestEditor.applyTransform(
-      src,
-      TestEditor.makeInsertNodes(input as Node[], [0])
-    );
-    const updates0 = TestEditor.getCapturedYjsUpdates(src);
-    await TestEditor.applyYjsUpdatesToYjs(dst, updates0);
-
-    // Verify initial states.
-    expect(src.children).toEqual(input);
-    expect(toSlateDoc(src.syncDoc)).toEqual(input);
-    expect(toSlateDoc(dst.syncDoc)).toEqual(input);
-    expect(dst.children).toEqual(input);
-
-    // First remove_text in src editor, propagate changes to dst editor.
-    await TestEditor.applyTransform(
-      src,
-      TestEditor.makeRemoveCharacters(5, { path: [0, 0], offset: 4 })
-    );
-    const updates1 = TestEditor.getCapturedYjsUpdates(src);
-    await TestEditor.applyYjsUpdatesToYjs(dst, updates1);
-
-    // Verify expected states.
-    const expected1 = [ createNode('paragraph', 'abc ijklm') ];
-    expect(src.children).toEqual(expected1);
-    expect(toSlateDoc(src.syncDoc)).toEqual(expected1);
-    expect(toSlateDoc(dst.syncDoc)).toEqual(expected1);
-    expect(dst.children).toEqual(expected1);
-
-    // Second remove_text in src editor (overlaps location of first
-    // remove_text), propagate changes to dst editor.
-    await TestEditor.applyTransform(
-      src,
-      TestEditor.makeRemoveCharacters(6, { path: [0, 0], offset: 1 })
-    );
-    const updates2 = TestEditor.getCapturedYjsUpdates(src);
-    await TestEditor.applyYjsUpdatesToYjs(dst, updates2);
-
-    // Verify expected states.
-    const expected2 = [ createNode('paragraph', 'alm') ];
-    expect(src.children).toEqual(expected2);
-    expect(toSlateDoc(src.syncDoc)).toEqual(expected2);
-    expect(toSlateDoc(dst.syncDoc)).toEqual(expected2);
-    expect(dst.children).toEqual(expected2);
-  });
-
-  it('remove_text op spans locations of two previous remove_text ops', async () => {
-    const input = [ createNode('paragraph', 'abcdefghijklmnopqrst') ];
-
-    // Create two editors.
-    const src = withTest(createEditor());
-    const dst = withTest(createEditor());
-
-    // Set initial state for src editor, propagate changes to dst editor.
-    await TestEditor.applyTransform(
-      src,
-      TestEditor.makeInsertNodes(input as Node[], [0])
-    );
-    const updates0 = TestEditor.getCapturedYjsUpdates(src);
-    await TestEditor.applyYjsUpdatesToYjs(dst, updates0);
-
-    // Verify initial states.
-    expect(src.children).toEqual(input);
-    expect(toSlateDoc(src.syncDoc)).toEqual(input);
-    expect(toSlateDoc(dst.syncDoc)).toEqual(input);
-    expect(dst.children).toEqual(input);
-
-    // First remove_text in src editor, propagate changes to dst editor.
-    await TestEditor.applyTransform(
-      src,
-      TestEditor.makeRemoveCharacters(3, { path: [0, 0], offset: 2 })
-    );
-    const updates1 = TestEditor.getCapturedYjsUpdates(src);
-    await TestEditor.applyYjsUpdatesToYjs(dst, updates1);
-
-    // Verify expected states.
-    const expected1 = [ createNode('paragraph', 'abfghijklmnopqrst') ];
-    expect(src.children).toEqual(expected1);
-    expect(toSlateDoc(src.syncDoc)).toEqual(expected1);
-    expect(toSlateDoc(dst.syncDoc)).toEqual(expected1);
-    expect(dst.children).toEqual(expected1);
-
-    // Second remove_text in src editor (does not overlap location of first
-    // remove_text), propagate changes to dst editor.
-    await TestEditor.applyTransform(
-      src,
-      TestEditor.makeRemoveCharacters(8, { path: [0, 0], offset: 5 })
-    );
-    const updates2 = TestEditor.getCapturedYjsUpdates(src);
-    await TestEditor.applyYjsUpdatesToYjs(dst, updates2);
-
-    // Verify expected states.
-    const expected2 = [ createNode('paragraph', 'abfghqrst') ];
-    expect(src.children).toEqual(expected2);
-    expect(toSlateDoc(src.syncDoc)).toEqual(expected2);
-    expect(toSlateDoc(dst.syncDoc)).toEqual(expected2);
-    expect(dst.children).toEqual(expected2);
-
-    // Third remove_text in src editor (overlaps location of first and second
-    // remove_text), propagate changes to dst editor.
-    await TestEditor.applyTransform(
-      src,
-      TestEditor.makeRemoveCharacters(7, { path: [0, 0], offset: 1 })
-    );
-    const updates3 = TestEditor.getCapturedYjsUpdates(src);
-    await TestEditor.applyYjsUpdatesToYjs(dst, updates3);
-
-    // Verify expected states.
-    const expected3 = [ createNode('paragraph', 'at') ];
-    expect(src.children).toEqual(expected3);
-    expect(toSlateDoc(src.syncDoc)).toEqual(expected3);
-    expect(toSlateDoc(dst.syncDoc)).toEqual(expected3);
-    expect(dst.children).toEqual(expected3);
   });
 });
