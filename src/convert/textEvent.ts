@@ -34,7 +34,7 @@ export const textEvent = (event: Y.YTextEvent): TextOperation[] => {
       removeOffset += d.retain;
       addOffset += d.retain;
     } else if (d.delete !== undefined) {
-      let text = ''; 
+      let text = '';
       while (text.length < d.delete) {
         const item = removedValues.next().value;
         const { content } = item;
@@ -45,7 +45,8 @@ export const textEvent = (event: Y.YTextEvent): TextOperation[] => {
       }
       if (text.length !== d.delete) {
         throw new Error(
-          `Unexpected length: expected ${d.delete}, got ${text.length}`);
+          `Unexpected length: expected ${d.delete}, got ${text.length}`
+        );
       }
       removeOps.push(createTextOp('remove_text', removeOffset, text));
     } else if (d.insert !== undefined) {
