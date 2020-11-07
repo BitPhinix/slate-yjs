@@ -1,6 +1,6 @@
 name: 🧪 test
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   release:
@@ -18,3 +18,5 @@ jobs:
         run: npm i
       - name: 🧪 test
         run: npm run test
+      - name: ☂️ codecov
+        uses: codecov/codecov-action@v1
