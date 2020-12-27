@@ -2,7 +2,7 @@
 
 (Experimental) Yjs bindings for Slate.
 
-Heavily inspired by [slate-collaboritve](https://github.com/cudr/slate-collaborative)
+Heavily inspired by [slate-collaborative](https://github.com/cudr/slate-collaborative)
 
 ![](https://media.giphy.com/media/J4IaAYZvJ1MNXz2p4j/giphy.gif)
 
