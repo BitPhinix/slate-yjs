@@ -20,11 +20,11 @@ jobs:
           node-version: 12
           registry-url: https://registry.npmjs.org/
       - name: Install Dependencies
-        run: yarn
+        run: npm install
       - name: Build
-        run: yarn run build
+        run: npm run build
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: yarn run semantic-release
+        run: npx semantic-release
