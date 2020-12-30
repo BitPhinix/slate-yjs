@@ -1,16 +1,13 @@
-name: test
+name: release
 
 on:
   push:
     branches:
       - master
-  pull_request:
-    branches:
-      - master
 
 jobs:
   release:
-    name: Test
+    name: Release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -24,7 +21,10 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - name: Install Dependencies
         run: yarn
-      - name: Test
-        run: npm run test
-      - name: Codecov
-        uses: codecov/codecov-action@v1
+      - name: Build
+        run: yarn run build
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: yarn run semantic-release

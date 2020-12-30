@@ -1,4 +1,4 @@
-name: 🔍 lint
+name: lint
 
 on:
   push:
@@ -9,20 +9,23 @@ on:
       - master
 
 jobs:
-  release:
-    name: 🔍 lint
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
     steps:
-      - name: 📜 checkout
+      - name: Checkout
         uses: actions/checkout@v2
-      - name: 🟢 node
+        with:
+          fetch-depth: 0
+      - name: Setup Node
         uses: actions/setup-node@v2
         with:
           node-version: 12
           registry-url: https://registry.npmjs.org/
-      - name: 📥 install
-        run: npm i
-      - name: 🔍 lint
+      - name: Install Dependencies
+        run: yarn
+      - name: Lint
         uses: reviewdog/action-eslint@v1
         with:
           reporter: github-pr-review
+          fail_on_error: true
