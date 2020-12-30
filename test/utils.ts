@@ -1,33 +1,43 @@
-import { Node } from 'slate';
+import { Node, Text } from 'slate';
 import * as Y from 'yjs';
 import { SyncDoc, toSlateDoc, toSyncDoc } from '../src';
 
-export const createText = (text = '') => ({
-  text
-});
+export function createText(text = ''): Text {
+  return {
+    text,
+  };
+}
 
-export const createNode = (
+export function createNode(
   type = 'paragraph',
   text = '',
-  data?: { [key: string]: any }
-) => ({
-  type,
-  children: [createText(text)],
-  ...data
-});
+  data?: Partial<Node>
+): Node {
+  return {
+    type,
+    children: [createText(text)],
+    ...data,
+  };
+}
 
-export const createValue = (children?: any): { children: Node[] } => ({
-  children: children || [createNode()]
-});
+export function createValue(children?: Node[]): { children: Node[] } {
+  return {
+    children: children || [createNode()],
+  };
+}
 
-export const createDoc = (children?: any): Y.Doc => {
+export function createDoc(children?: Node[]): Y.Doc {
   const doc = new Y.Doc();
   toSyncDoc(doc.getArray('content'), createValue(children).children);
   return doc;
-};
+}
 
-export const cloneDoc = (doc: SyncDoc): Y.Doc => {
+export function cloneDoc(doc: SyncDoc): Y.Doc {
   const clone = new Y.Doc();
   toSyncDoc(clone.getArray('content'), toSlateDoc(doc));
   return clone;
-};
+}
+
+export function wait(ms = 0): Promise<void> {
+  return new Promise<void>((resolve) => setTimeout(resolve, ms));
+}

@@ -27,7 +27,7 @@
     "listFiles": false /* Print names of files part of the compilation. */,
     "pretty": true /* Stylize errors and messages using color and context. */,
 
-    "lib": ["ES2017", "DOM"]
+    "lib": ["ES2020", "DOM"]
   },
   "include": ["src"]
 }

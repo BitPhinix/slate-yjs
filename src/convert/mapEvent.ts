@@ -14,7 +14,7 @@ type SetNodeOperationProperties = Pick<
  *
  * @param event
  */
-export const mapEvent = (event: Y.YMapEvent<any>): SetNodeOperation[] => {
+export default function mapEvent(event: Y.YMapEvent<any>): SetNodeOperation[] {
   const convertMapOp = (
     actionEntry: [string, MapAction]
   ): SetNodeOperationProperties => {
@@ -51,6 +51,4 @@ export const mapEvent = (event: Y.YMapEvent<any>): SetNodeOperation[] => {
 
   // Combine changes into a single set node operation
   return [changes.reduce<SetNodeOperation>(combineMapOp, baseOp)];
-};
-
-export default mapEvent;
+}

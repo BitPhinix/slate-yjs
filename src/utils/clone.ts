@@ -1,7 +1,7 @@
 import * as Y from 'yjs';
 import { SyncElement } from '../model';
 
-export const cloneSyncElement = (element: SyncElement): SyncElement => {
+export default function cloneSyncElement(element: SyncElement): SyncElement {
   const text = SyncElement.getText(element);
   const children = SyncElement.getChildren(element);
 
@@ -19,11 +19,11 @@ export const cloneSyncElement = (element: SyncElement): SyncElement => {
     clone.set('children', childContainer);
   }
 
-  for (const [key, value] of element.entries()) {
+  Array.from(element.entries()).forEach(([key, value]) => {
     if (key !== 'children' && key !== 'text') {
       clone.set(key, value);
     }
-  }
+  });
 
   return clone;
-};
+}

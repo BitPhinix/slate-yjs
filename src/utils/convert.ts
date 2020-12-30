@@ -7,7 +7,7 @@ import { SyncDoc, SyncElement } from '../model';
  *
  * @param element
  */
-export const toSlateNode = (element: SyncElement): Node => {
+export function toSlateNode(element: SyncElement): Node {
   const text = SyncElement.getText(element);
   const children = SyncElement.getChildren(element);
 
@@ -19,40 +19,29 @@ export const toSlateNode = (element: SyncElement): Node => {
     node.children = children.map(toSlateNode);
   }
 
-  for (const [key, value] of element.entries()) {
+  Array.from(element.entries()).forEach(([key, value]) => {
     if (key !== 'children' && key !== 'text') {
       node[key] = value;
     }
-  }
+  });
 
   return node as Node;
-};
+}
 
 /**
  * Converts a SyncDoc to a Slate doc
  * @param doc
  */
-export const toSlateDoc = (doc: SyncDoc): Node[] => {
+export function toSlateDoc(doc: SyncDoc): Node[] {
   return doc.map(toSlateNode);
-};
-
-/**
- * Converts all elements int a Slate doc to SyncElements and adds them
- * to the SyncDoc
- *
- * @param syncDoc
- * @param doc
- */
-export const toSyncDoc = (syncDoc: SyncDoc, doc: Node[]): void => {
-  syncDoc.insert(0, doc.map(toSyncElement));
-};
+}
 
 /**
  * Converts a slate node to a sync element
  *
  * @param node
  */
-export const toSyncElement = (node: Node): SyncElement => {
+export function toSyncElement(node: Node): SyncElement {
   const element: SyncElement = new Y.Map();
 
   if (Element.isElement(node)) {
@@ -67,20 +56,31 @@ export const toSyncElement = (node: Node): SyncElement => {
     element.set('text', textElement);
   }
 
-  for (const [key, value] of Object.entries(node)) {
+  Object.entries(node).forEach(([key, value]) => {
     if (key !== 'children' && key !== 'text') {
       element.set(key, value);
     }
-  }
+  });
 
   return element;
-};
+}
+
+/**
+ * Converts all elements int a Slate doc to SyncElements and adds them
+ * to the SyncDoc
+ *
+ * @param syncDoc
+ * @param doc
+ */
+export function toSyncDoc(syncDoc: SyncDoc, doc: Node[]): void {
+  syncDoc.insert(0, doc.map(toSyncElement));
+}
 
 /**
  * Converts a SyncDoc path the a slate path
  *
  * @param path
  */
-export const toSlatePath = (path: (string | number)[]): Path => {
+export function toSlatePath(path: (string | number)[]): Path {
   return path.filter((node) => typeof node === 'number') as Path;
-};
+}

@@ -1,8 +1,7 @@
 import { SplitNodeOperation } from 'slate';
-import { SyncNode } from '../../model';
+import { SyncDoc, SyncNode } from '../../model';
 import { getParent } from '../../path';
-import { cloneSyncElement } from '../../utils/clone';
-import { ApplyFunc } from '../types';
+import cloneSyncElement from '../../utils/clone';
 
 /**
  * Applies a split node operation to a SyncDoc
@@ -10,7 +9,10 @@ import { ApplyFunc } from '../types';
  * @param doc
  * @param op
  */
-const splitNode: ApplyFunc<SplitNodeOperation> = (doc, op) => {
+export default function splitNode(
+  doc: SyncDoc,
+  op: SplitNodeOperation
+): SyncDoc {
   const [parent, index]: [SyncNode, number] = getParent(doc, op.path);
 
   const target = SyncNode.getChildren(parent)!.get(index);
@@ -40,6 +42,4 @@ const splitNode: ApplyFunc<SplitNodeOperation> = (doc, op) => {
   }
 
   return doc;
-};
-
-export default splitNode;
+}

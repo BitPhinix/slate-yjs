@@ -1,8 +1,7 @@
 import { InsertNodeOperation } from 'slate';
-import { SyncNode } from '../../model';
+import { SyncDoc, SyncNode } from '../../model';
 import { getParent } from '../../path';
 import { toSyncElement } from '../../utils/convert';
-import { ApplyFunc } from '../types';
 
 /**
  * Applies an insert node operation to a SyncDoc.
@@ -10,7 +9,10 @@ import { ApplyFunc } from '../types';
  * @param doc
  * @param op
  */
-const insertNode: ApplyFunc<InsertNodeOperation> = (doc, op) => {
+export default function insertNode(
+  doc: SyncDoc,
+  op: InsertNodeOperation
+): SyncDoc {
   const [parent, index] = getParent(doc, op.path);
 
   const children = SyncNode.getChildren(parent);
@@ -20,6 +22,4 @@ const insertNode: ApplyFunc<InsertNodeOperation> = (doc, op) => {
 
   SyncNode.getChildren(parent)!.insert(index, [toSyncElement(op.node)]);
   return doc;
-};
-
-export default insertNode;
+}

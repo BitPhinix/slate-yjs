@@ -1,7 +1,6 @@
 import { RemoveNodeOperation } from 'slate';
-import { SyncNode } from '../../model';
+import { SyncDoc, SyncNode } from '../../model';
 import { getParent } from '../../path';
-import { ApplyFunc } from '../types';
 
 /**
  * Applies a remove node operation to a SyncDoc.
@@ -9,7 +8,10 @@ import { ApplyFunc } from '../types';
  * @param doc
  * @param op
  */
-export const removeNode: ApplyFunc<RemoveNodeOperation> = (doc, op) => {
+export default function removeNode(
+  doc: SyncDoc,
+  op: RemoveNodeOperation
+): SyncDoc {
   const [parent, index] = getParent(doc, op.path);
 
   if (SyncNode.getText(parent) !== undefined) {
@@ -18,6 +20,4 @@ export const removeNode: ApplyFunc<RemoveNodeOperation> = (doc, op) => {
 
   SyncNode.getChildren(parent)!.delete(index);
   return doc;
-};
-
-export default removeNode;
+}

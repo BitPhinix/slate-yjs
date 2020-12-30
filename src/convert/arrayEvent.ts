@@ -1,4 +1,4 @@
-import { NodeOperation } from 'slate';
+import { InsertNodeOperation, NodeOperation, RemoveNodeOperation } from 'slate';
 import * as Y from 'yjs';
 import { SyncElement } from '../model';
 import { toSlateNode, toSlatePath } from '../utils/convert';
@@ -8,22 +8,25 @@ import { toSlateNode, toSlatePath } from '../utils/convert';
  *
  * @param event
  */
-export const arrayEvent = (
+export default function arrayEvent(
   event: Y.YArrayEvent<SyncElement>
-): NodeOperation[] => {
+): NodeOperation[] {
   const eventTargetPath = toSlatePath(event.path);
 
-  const createRemoveNode = (index: number): NodeOperation => {
+  function createRemoveNode(index: number): RemoveNodeOperation {
     const path = [...eventTargetPath, index];
     const node = { type: 'paragraph', children: [{ text: '' }] };
     return { type: 'remove_node', path, node };
-  };
+  }
 
-  const createInsertNode = (index: number, element: SyncElement) => {
+  function createInsertNode(
+    index: number,
+    element: SyncElement
+  ): InsertNodeOperation {
     const path = [...eventTargetPath, index];
     const node = toSlateNode(element as SyncElement);
     return { type: 'insert_node', path, node };
-  };
+  }
 
   const sortFunc = (a: NodeOperation, b: NodeOperation) =>
     a.path[a.path.length - 1] > b.path[b.path.length - 1] ? 1 : 0;
@@ -32,29 +35,36 @@ export const arrayEvent = (
   let addIndex = 0;
   let removeOps: NodeOperation[] = [];
   let addOps: NodeOperation[] = [];
-  for (const delta of event.changes.delta) {
-    const d = delta as any;
-    if (d.retain !== undefined) {
-      removeIndex += d.retain;
-      addIndex += d.retain;
-    } else if (d.delete !== undefined) {
-      for (let i = 0; i < d.delete; i += 1) {
+
+  event.changes.delta.forEach((delta) => {
+    if ('retain' in delta) {
+      removeIndex += delta.retain;
+      addIndex += delta.retain;
+      return;
+    }
+
+    if ('delete' in delta) {
+      for (let i = 0; i < delta.delete; i += 1) {
         removeOps.push(createRemoveNode(removeIndex));
       }
-    } else if (d.insert !== undefined) {
-      addOps = addOps.concat(
-        d.insert.map((e: SyncElement, i: number) =>
+
+      return;
+    }
+
+    if ('insert' in delta) {
+      addOps.push(
+        // eslint-disable-next-line no-loop-func
+        ...delta.insert.map((e: SyncElement, i: number) =>
           createInsertNode(addIndex + i, e)
         )
       );
-      addIndex += d.insert.length;
+
+      addIndex += delta.insert.length;
     }
-  }
+  });
 
   removeOps = removeOps.sort(sortFunc);
   addOps = addOps.sort(sortFunc);
 
   return [...removeOps, ...addOps];
-};
-
-export default arrayEvent;
+}
