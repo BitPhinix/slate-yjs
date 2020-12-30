@@ -1,8 +1,7 @@
 import { MoveNodeOperation } from 'slate';
-import { SyncNode } from '../../model';
+import { SyncDoc, SyncNode } from '../../model';
 import { getParent } from '../../path';
-import { cloneSyncElement } from '../../utils/clone';
-import { ApplyFunc } from '../types';
+import { cloneSyncElement } from '../../utils';
 
 /**
  * Applies a move node operation to a SyncDoc.
@@ -10,7 +9,7 @@ import { ApplyFunc } from '../types';
  * @param doc
  * @param op
  */
-const moveNode: ApplyFunc<MoveNodeOperation> = (doc, op) => {
+export default function moveNode(doc: SyncDoc, op: MoveNodeOperation): SyncDoc {
   const [from, fromIndex] = getParent(doc, op.path);
   const [to, toIndex] = getParent(doc, op.newPath);
 
@@ -30,6 +29,4 @@ const moveNode: ApplyFunc<MoveNodeOperation> = (doc, op) => {
   toChildren!.insert(Math.min(toIndex, toChildren!.length), [toInsert]);
 
   return doc;
-};
-
-export default moveNode;
+}

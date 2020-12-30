@@ -1,8 +1,7 @@
 import { MergeNodeOperation } from 'slate';
-import { SyncNode } from '../../model';
+import { SyncDoc, SyncNode } from '../../model';
 import { getParent } from '../../path';
-import { cloneSyncElement } from '../../utils/clone';
-import { ApplyFunc } from '../types';
+import { cloneSyncElement } from '../../utils';
 
 /**
  * Applies a merge node operation to a SyncDoc.
@@ -10,7 +9,10 @@ import { ApplyFunc } from '../types';
  * @param doc
  * @param op
  */
-const mergeNode: ApplyFunc<MergeNodeOperation> = (doc, op) => {
+export default function mergeNode(
+  doc: SyncDoc,
+  op: MergeNodeOperation
+): SyncDoc {
   const [parent, index] = getParent(doc, op.path);
 
   const children = SyncNode.getChildren(parent);
@@ -30,6 +32,4 @@ const mergeNode: ApplyFunc<MergeNodeOperation> = (doc, op) => {
   SyncNode.getChildren(parent)!.delete(index, 1);
 
   return doc;
-};
-
-export default mergeNode;
+}

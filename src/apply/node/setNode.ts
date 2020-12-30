@@ -1,7 +1,6 @@
 import { SetNodeOperation } from 'slate';
-import { SyncElement } from '../../model';
+import { SyncDoc, SyncElement } from '../../model';
 import { getTarget } from '../../path';
-import { ApplyFunc } from '../types';
 
 /**
  * Applies a setNode operation to a SyncDoc
@@ -9,18 +8,16 @@ import { ApplyFunc } from '../types';
  * @param doc
  * @param op
  */
-const setNode: ApplyFunc<SetNodeOperation> = (doc, op) => {
+export default function setNode(doc: SyncDoc, op: SetNodeOperation): SyncDoc {
   const node = getTarget(doc, op.path) as SyncElement;
 
-  for (const [key, value] of Object.entries(op.newProperties)) {
+  Object.entries(op.newProperties).forEach(([key, value]) => {
     if (key === 'children' || key === 'text') {
       throw new Error(`Cannot set the "${key}" property of nodes!`);
     }
 
     node.set(key, value);
-  }
+  });
 
   return doc;
-};
-
-export default setNode;
+}

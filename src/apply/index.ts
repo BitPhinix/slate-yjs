@@ -20,19 +20,14 @@ const opMappers: OpMapper = {
  * @param doc
  * @param op
  */
-const applySlateOp = (doc: SyncDoc, op: Operation): SyncDoc => {
-  try {
-    const apply = opMappers[op.type] as ApplyFunc<typeof op>;
-    if (!apply) {
-      throw new Error(`Unknown operation: ${op.type}`);
-    }
-
-    return apply(doc, op);
-  } catch (e) {
-    console.error(e, op, doc.toJSON());
-    return doc;
+export function applySlateOp(doc: SyncDoc, op: Operation): SyncDoc {
+  const apply = opMappers[op.type] as ApplyFunc<typeof op>;
+  if (!apply) {
+    throw new Error(`Unknown operation: ${op.type}`);
   }
-};
+
+  return apply(doc, op);
+}
 
 /**
  * Applies a slate operations to a SyncDoc
@@ -40,8 +35,6 @@ const applySlateOp = (doc: SyncDoc, op: Operation): SyncDoc => {
  * @param doc
  * @param op
  */
-const applySlateOps = (doc: SyncDoc, operations: Operation[]): SyncDoc => {
+export function applySlateOps(doc: SyncDoc, operations: Operation[]): SyncDoc {
   return operations.reduce(applySlateOp, doc);
-};
-
-export { applySlateOp, applySlateOps };
+}

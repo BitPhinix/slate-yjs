@@ -3,7 +3,7 @@ import * as Y from 'yjs';
 import { SyncElement } from '../model';
 import { toSlatePath } from '../utils/convert';
 
-type MapAction = { action: 'add' | 'update' | 'delete'; oldValue: any };
+type MapAction = { action: 'add' | 'update' | 'delete'; oldValue: unknown };
 type SetNodeOperationProperties = Pick<
   SetNodeOperation,
   'newProperties' | 'properties'
@@ -14,7 +14,9 @@ type SetNodeOperationProperties = Pick<
  *
  * @param event
  */
-export const mapEvent = (event: Y.YMapEvent<any>): SetNodeOperation[] => {
+export default function mapEvent(
+  event: Y.YMapEvent<unknown>
+): SetNodeOperation[] {
   const convertMapOp = (
     actionEntry: [string, MapAction]
   ): SetNodeOperationProperties => {
@@ -38,8 +40,7 @@ export const mapEvent = (event: Y.YMapEvent<any>): SetNodeOperation[] => {
     };
   };
 
-  // Yjs typings are incomplete so we need to use this hacky workaround.
-  const keys = (event.changes as any).keys as Map<string, MapAction>;
+  const { keys } = event.changes;
   const changes = Array.from(keys.entries(), convertMapOp);
 
   const baseOp: SetNodeOperation = {
@@ -51,6 +52,4 @@ export const mapEvent = (event: Y.YMapEvent<any>): SetNodeOperation[] => {
 
   // Combine changes into a single set node operation
   return [changes.reduce<SetNodeOperation>(combineMapOp, baseOp)];
-};
-
-export default mapEvent;
+}

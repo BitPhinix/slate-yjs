@@ -7,7 +7,7 @@ import { toSlatePath } from '../utils/convert';
  *
  * @param event
  */
-export const textEvent = (event: Y.YTextEvent): TextOperation[] => {
+export default function textEvent(event: Y.YTextEvent): TextOperation[] {
   const eventTargetPath = toSlatePath(event.path);
 
   const createTextOp = (
@@ -28,14 +28,18 @@ export const textEvent = (event: Y.YTextEvent): TextOperation[] => {
   let addOffset = 0;
   const removeOps: TextOperation[] = [];
   const addOps: TextOperation[] = [];
-  for (const delta of event.changes.delta) {
-    const d = delta as any;
-    if (d.retain !== undefined) {
-      removeOffset += d.retain;
-      addOffset += d.retain;
-    } else if (d.delete !== undefined) {
+
+  event.changes.delta.forEach((delta) => {
+    if ('retain' in delta && delta.retain !== undefined) {
+      removeOffset += delta.retain;
+      addOffset += delta.retain;
+      return;
+    }
+
+    if ('delete' in delta && delta.delete !== undefined) {
       let text = '';
-      while (text.length < d.delete) {
+
+      while (text.length < delta.delete) {
         const item = removedValues.next().value;
         const { content } = item;
         if (!(content instanceof Y.ContentString)) {
@@ -43,19 +47,24 @@ export const textEvent = (event: Y.YTextEvent): TextOperation[] => {
         }
         text = text.concat(content.str);
       }
-      if (text.length !== d.delete) {
+
+      if (text.length !== delta.delete) {
         throw new Error(
-          `Unexpected length: expected ${d.delete}, got ${text.length}`
+          `Unexpected length: expected ${delta.delete}, got ${text.length}`
         );
       }
+
       removeOps.push(createTextOp('remove_text', removeOffset, text));
-    } else if (d.insert !== undefined) {
-      addOps.push(createTextOp('insert_text', addOffset, d.insert.join('')));
-      addOffset += d.insert.length;
+      return;
     }
-  }
+
+    if ('insert' in delta && delta.insert !== undefined) {
+      addOps.push(
+        createTextOp('insert_text', addOffset, delta.insert.join(''))
+      );
+      addOffset += delta.insert.length;
+    }
+  });
 
   return [...removeOps, ...addOps];
-};
-
-export default textEvent;
+}

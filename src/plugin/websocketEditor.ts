@@ -16,7 +16,7 @@ export type WebsocketEditorOptions = {
   onDisconnect?: () => void;
 } & NonNullable<ConstructorParameters<typeof WebsocketProvider>[3]>;
 
-export const withWebsocket = <T extends YjsEditor>(
+export function withWebsocket<T extends YjsEditor>(
   editor: T,
   {
     endpoint,
@@ -25,7 +25,7 @@ export const withWebsocket = <T extends YjsEditor>(
     onDisconnect,
     ...options
   }: WebsocketEditorOptions
-): T & WebsocketEditor => {
+): T & WebsocketEditor {
   const e = editor as T & WebsocketEditor;
 
   e.websocketProvider = new WebsocketProvider(endpoint, roomName, e.doc, {
@@ -56,4 +56,4 @@ export const withWebsocket = <T extends YjsEditor>(
   };
 
   return e;
-};
+}

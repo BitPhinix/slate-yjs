@@ -1,6 +1,6 @@
 {
   "name": "slate-yjs",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Yjs bindings for Slate.",
   "keywords": [
     "slate",
@@ -24,35 +24,35 @@
     "node": ">=6.0.0"
   },
   "scripts": {
-    "lint": "eslint 'src/**/*.{js,ts,tsx}' --quiet",
-    "fix": "eslint 'src/**/*.{js,ts,tsx}' --quiet --fix",
+    "lint": "eslint ./test/**/*.ts ./src/**/*.ts --quiet",
+    "fix": "eslint ./test/**/*.ts ./src/**/*.ts --quiet --fix",
     "build": "rimraf dist && npm run build:main & npm run build:module",
     "build:main": "tsc -p tsconfig.json",
     "build:module": "tsc -p tsconfig.module.json",
-    "test": "jest --coverage",
-    "test:watch": "jest --coverage --watch"
+    "test": "jest --forceExit --coverage",
+    "test:watch": "jest --forceExit --coverage --watch"
   },
   "devDependencies": {
     "@types/jest": "26.0.19",
     "@types/lodash": "4.14.166",
     "@types/node": "10.17.50",
     "@types/shelljs": "0.8.8",
-    "@typescript-eslint/eslint-plugin": "4.11.1",
-    "@typescript-eslint/parser": "4.11.1",
-    "eslint": "7.16.0",
-    "eslint-config-prettier": "7.1.0",
-    "eslint-plugin-prettier": "3.3.0",
+    "@typescript-eslint/eslint-plugin": "4.9.0",
+    "@typescript-eslint/parser": "4.9.0",
+    "eslint": "7.15.0",
+    "eslint-config-airbnb-typescript-prettier": "^4.1.0",
+    "eslint-config-prettier": "6.15.0",
+    "eslint-plugin-prettier": "3.2.0",
     "esrever": "0.2.0",
     "jest": "26.6.3",
     "jest-config": "26.6.3",
     "prettier": "2.2.1",
     "rimraf": "3.0.2",
     "ts-jest": "26.4.4",
-    "ts-node": "9.1.1",
-    "typescript": "4.0.5"
+    "ts-node": "9.1.0",
+    "typescript": "^4.1.3"
   },
   "dependencies": {
-    "lodash": "^4.17.19",
     "slate": "^0.59.0",
     "y-protocols": "^1.0.1",
     "y-websocket": "^1.3.2",

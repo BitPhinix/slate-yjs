@@ -1,6 +1,6 @@
 import { Editor, Operation } from 'slate';
 import * as Y from 'yjs';
-import { applySlateOps as applySlateOperations } from '../apply';
+import { applySlateOps } from '../apply';
 import { toSlateOps } from '../convert';
 import { SyncDoc, SyncElement } from '../model';
 
@@ -14,22 +14,18 @@ export const YjsEditor = {
   /**
    * Apply slate ops to Yjs
    */
-  applySlateOps: (e: YjsEditor, operations: Operation[]) => {
-    try {
-      e.doc.transact(() => {
-        applySlateOperations(e.syncDoc, operations);
-      });
-    } catch (e) {
-      console.error(e);
-    }
+  applySlateOps: (e: YjsEditor, operations: Operation[]): void => {
+    e.doc.transact(() => {
+      applySlateOps(e.syncDoc, operations);
+    });
   },
 
   /**
    * Apply Yjs events to slate
    */
-  applyEvents: (e: YjsEditor, events: Y.YEvent[]) => {
+  applyEvents: (e: YjsEditor, events: Y.YEvent[]): void => {
     const remoteEvents = events.filter((event) => !event.transaction.local);
-    if (remoteEvents.length == 0) {
+    if (remoteEvents.length === 0) {
       return;
     }
 
@@ -41,11 +37,12 @@ export const YjsEditor = {
       });
     });
 
+    // eslint-disable-next-line no-return-assign
     Promise.resolve().then(() => (e.isRemote = false));
   },
 };
 
-export const withYjs = <T extends Editor>(editor: T): T & YjsEditor => {
+export function withYjs<T extends Editor>(editor: T): T & YjsEditor {
   const e = editor as T & YjsEditor;
 
   const doc = new Y.Doc();
@@ -71,4 +68,4 @@ export const withYjs = <T extends Editor>(editor: T): T & YjsEditor => {
   };
 
   return e;
-};
+}

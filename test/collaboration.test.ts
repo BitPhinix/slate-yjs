@@ -1,7 +1,7 @@
-import { Node, createEditor } from 'slate';
+import { createEditor, Node } from 'slate';
+import { toSlateDoc, withYjs } from '../src';
 import { TestEditor, TransformFunc, withTest } from './testEditor';
-import { toSlateDoc } from '../src';
-import { createNode, createValue } from './utils';
+import { createNode, createValue, wait } from './utils';
 
 const tests = [
   [
@@ -159,10 +159,7 @@ const tests = [
       createNode('paragraph', 'third'),
       createNode('paragraph', 'fourth'),
     ],
-    [
-      TestEditor.makeRemoveNodes([0]),
-      TestEditor.makeRemoveNodes([1])
-    ],
+    [TestEditor.makeRemoveNodes([0]), TestEditor.makeRemoveNodes([1])],
     [createNode('paragraph', 'second'), createNode('paragraph', 'fourth')],
   ],
   [
@@ -173,10 +170,7 @@ const tests = [
       createNode('paragraph', 'third'),
       createNode('paragraph', 'fourth'),
     ],
-    [
-      TestEditor.makeRemoveNodes([1]),
-      TestEditor.makeRemoveNodes([1])
-    ],
+    [TestEditor.makeRemoveNodes([1]), TestEditor.makeRemoveNodes([1])],
     [createNode('paragraph', 'first'), createNode('paragraph', 'fourth')],
   ],
   [
@@ -235,34 +229,25 @@ const tests = [
     ],
   ],
   [
-    'Insert and remove text in the same paragraph', 
+    'Insert and remove text in the same paragraph',
+    [createNode('paragraph', 'abc def')],
     [
-      createNode('paragraph', 'abc def'),
+      TestEditor.makeInsertText('ghi ', { path: [0, 0], offset: 4 }),
+      TestEditor.makeRemoveCharacters(2, { path: [0, 0], offset: 1 }),
+      TestEditor.makeInsertText('jkl ', { path: [0, 0], offset: 6 }),
+      TestEditor.makeRemoveCharacters(1, { path: [0, 0], offset: 11 }),
+      TestEditor.makeInsertText(' mno', { path: [0, 0], offset: 12 }),
     ],
-    [
-      TestEditor.makeInsertText('ghi ', { path: [0, 0], offset:  4}),
-      TestEditor.makeRemoveCharacters(2, { path: [0, 0], offset:  1}),
-      TestEditor.makeInsertText('jkl ', { path: [0, 0], offset:  6}),
-      TestEditor.makeRemoveCharacters(1, { path: [0, 0], offset:  11}),
-      TestEditor.makeInsertText(' mno', { path: [0, 0], offset:  12}),
-    ],
-    [
-      createNode('paragraph', 'a ghi jkl df mno'),
-    ],
+    [createNode('paragraph', 'a ghi jkl df mno')],
   ],
   [
-    'Remove first paragraph, insert text into second paragraph', 
-    [
-      createNode('paragraph', 'abcd'),
-      createNode('paragraph', 'efgh'),
-    ],
+    'Remove first paragraph, insert text into second paragraph',
+    [createNode('paragraph', 'abcd'), createNode('paragraph', 'efgh')],
     [
       TestEditor.makeRemoveNodes([0]),
       TestEditor.makeInsertText(' ijkl ', { path: [0, 0], offset: 2 }),
     ],
-    [
-      createNode('paragraph', 'ef ijkl gh'),
-    ],
+    [createNode('paragraph', 'ef ijkl gh')],
   ],
   [
     'More complex case: insert text, both insert and remove nodes',
@@ -285,23 +270,16 @@ const tests = [
   ],
   [
     'Insert text, then insert node that affects the path to the affected text',
-    [
-      createNode('paragraph', 'abcd'),
-    ],
+    [createNode('paragraph', 'abcd')],
     [
       TestEditor.makeInsertText(' efgh ', { path: [0, 0], offset: 2 }),
       TestEditor.makeInsertNodes(createNode('paragraph', 'ijkl'), [0]),
     ],
-    [
-      createNode('paragraph', 'ijkl'),
-      createNode('paragraph', 'ab efgh cd'),
-    ],
+    [createNode('paragraph', 'ijkl'), createNode('paragraph', 'ab efgh cd')],
   ],
   [
-    'Set properties, then insert node that affects path to the affected node', 
-    [
-      createNode('paragraph', 'abcd'),
-    ],
+    'Set properties, then insert node that affects path to the affected node',
+    [createNode('paragraph', 'abcd')],
     [
       TestEditor.makeSetNodes([0], { test: '1234' }),
       TestEditor.makeInsertNodes(createNode('paragraph', 'ijkl'), [0]),
@@ -334,62 +312,52 @@ const tests = [
   ],
   [
     'remove_text op spans location of previous remove_text op',
-    [
-      createNode('paragraph', 'abc defg ijklm'),
-    ],
-    [
-      TestEditor.makeRemoveCharacters(5, { path: [0, 0], offset: 4 }),
-    ],
-    [
-      createNode('paragraph', 'abc ijklm'),
-    ],
-    [
-      TestEditor.makeRemoveCharacters(6, { path: [0, 0], offset: 1 }),
-    ],
-    [
-      createNode('paragraph', 'alm'),
-    ],
+    [createNode('paragraph', 'abc defg ijklm')],
+    [TestEditor.makeRemoveCharacters(5, { path: [0, 0], offset: 4 })],
+    [createNode('paragraph', 'abc ijklm')],
+    [TestEditor.makeRemoveCharacters(6, { path: [0, 0], offset: 1 })],
+    [createNode('paragraph', 'alm')],
   ],
   [
     'remove_text op spans locations of two previous remove_text ops',
+    [createNode('paragraph', 'abcdefghijklmnopqrst')],
+    [TestEditor.makeRemoveCharacters(3, { path: [0, 0], offset: 2 })],
+    [createNode('paragraph', 'abfghijklmnopqrst')],
+    [TestEditor.makeRemoveCharacters(8, { path: [0, 0], offset: 5 })],
+    [createNode('paragraph', 'abfghqrst')],
+    [TestEditor.makeRemoveCharacters(7, { path: [0, 0], offset: 1 })],
+    [createNode('paragraph', 'at')],
+  ],
+  [
+    'set_selection op is a null op',
+    [createNode('paragraph', 'abcdefghijklmnopqrst')],
     [
-      createNode('paragraph', 'abcdefghijklmnopqrst'),
+      TestEditor.makeSetSelection(
+        { path: [0, 0], offset: 2 },
+        { path: [0, 0], offset: 4 }
+      ),
     ],
-    [
-      TestEditor.makeRemoveCharacters(3, { path: [0, 0], offset: 2 }),
-    ],
-    [
-      createNode('paragraph', 'abfghijklmnopqrst'),
-    ],
-    [
-      TestEditor.makeRemoveCharacters(8, { path: [0, 0], offset: 5 }),
-    ],
-    [
-      createNode('paragraph', 'abfghqrst'),
-    ],
-    [
-      TestEditor.makeRemoveCharacters(7, { path: [0, 0], offset: 1 }),
-    ],
-    [
-      createNode('paragraph', 'at'),
-    ],
+    [createNode('paragraph', 'abcdefghijklmnopqrst')],
   ],
 ];
 
 describe('slate operations propagate between editors', () => {
-  tests.forEach(([testName, input, ...rest]) => {
+  tests.forEach(([testName, input, ...cases]) => {
     it(`${testName}`, async () => {
       // Create two editors.
-      const src = withTest(createEditor());
-      const dst = withTest(createEditor());
+      const src = withTest(withYjs(createEditor()));
+      const dst = withTest(withYjs(createEditor()));
 
       // Set initial state for src editor, propagate changes to dst editor.
-      await TestEditor.applyTransform(
+      TestEditor.applyTransform(
         src,
         TestEditor.makeInsertNodes(input as Node[], [0])
       );
+      await wait();
+
       let updates = TestEditor.getCapturedYjsUpdates(src);
-      await TestEditor.applyYjsUpdatesToYjs(dst, updates);
+      TestEditor.applyYjsUpdatesToYjs(dst, updates);
+      await wait();
 
       // Verify initial states.
       expect(src.children).toEqual(input);
@@ -398,14 +366,19 @@ describe('slate operations propagate between editors', () => {
       expect(dst.children).toEqual(input);
 
       // Allow for multiple rounds of applying transforms and verifying state.
-      while (rest.length > 0) {
-        let transforms, output;
-        [transforms, output, ...rest] = rest;
+      const toTest = cases.slice();
+      while (toTest.length > 0) {
+        const [transforms, output] = toTest.splice(0, 2);
 
         // Apply transforms to src editor, propagate changes to dst editor.
-        await TestEditor.applyTransforms(src, transforms as TransformFunc[]);
+        TestEditor.applyTransforms(src, transforms as TransformFunc[]);
+        // eslint-disable-next-line no-await-in-loop
+        await wait();
+
         updates = TestEditor.getCapturedYjsUpdates(src);
-        await TestEditor.applyYjsUpdatesToYjs(dst, updates);
+        TestEditor.applyYjsUpdatesToYjs(dst, updates);
+        // eslint-disable-next-line no-await-in-loop
+        await wait();
 
         // Verify final states.
         expect(src.children).toEqual(output);

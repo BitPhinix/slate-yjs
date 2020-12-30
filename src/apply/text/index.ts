@@ -1,7 +1,7 @@
 import { TextOperation } from 'slate';
 import { OpMapper } from '../types';
-import { insertText } from './insertText';
-import { removeText } from './removeText';
+import insertText from './insertText';
+import removeText from './removeText';
 
 const mappers: OpMapper<TextOperation> = {
   insert_text: insertText,
