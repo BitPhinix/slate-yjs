@@ -23,7 +23,7 @@ jobs:
           node-version: 12
           registry-url: https://registry.npmjs.org/
       - name: Install Dependencies
-        run: yarn
+        run: npm install
       - name: Test
         run: npm run test
       - name: Codecov
