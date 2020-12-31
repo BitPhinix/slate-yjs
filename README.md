@@ -1,13 +1,12 @@
 # Slate Yjs
 
 [![codecov](https://codecov.io/gh/BitPhinix/slate-yjs/branch/master/graph/badge.svg?token=ZHUA26IWP0)](https://codecov.io/gh/BitPhinix/slate-yjs)
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/BitPhinix/slate-yjs/graphs/commit-activity)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 [![Downloads](https://img.shields.io/npm/dt/slate-yjs.svg)](https://www.npmjs.com/package/slate-yjs)
-![npm](https://img.shields.io/npm/v/slate-yjs)
-![lint](https://img.shields.io/github/workflow/status/bitphinix/slate-yjs/lint)
-![tests](https://img.shields.io/github/workflow/status/bitphinix/slate-yjs/test)
-[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+[![npm](https://img.shields.io/npm/v/slate-yjs)](https://www.npmjs.com/package/slate-yjs)
+[![tests](https://img.shields.io/github/workflow/status/bitphinix/slate-yjs/test)](https://github.com/BitPhinix/slate-yjs/actions)
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/BitPhinix/slate-yjs/actions?query=workflow%3Arelease)
 
 Yjs bindings for Slate.
 
