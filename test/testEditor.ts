@@ -1,4 +1,5 @@
 import { Editor, Location, Node, Path, Point, Transforms } from 'slate';
+import invariant from 'tiny-invariant';
 import * as Y from 'yjs';
 import { YjsEditor } from '../src/plugin/yjsEditor';
 
@@ -32,7 +33,8 @@ export const TestEditor = {
    */
   applyYjsUpdateToYjs: (e: TestEditor, update: Uint8Array): void => {
     e.shouldCaptureYjsUpdates = false;
-    Y.applyUpdate(e.doc, update);
+    invariant(e.sharedType.doc, 'Shared type should be bound to a document');
+    Y.applyUpdate(e.sharedType.doc, update);
     e.shouldCaptureYjsUpdates = true;
   },
 
@@ -119,7 +121,8 @@ export const TestEditor = {
 export function withTest<T extends YjsEditor>(editor: T): T & TestEditor {
   const e = editor as T & TestEditor;
 
-  e.doc.on('update', (updateMessage: Uint8Array) => {
+  invariant(e.sharedType.doc, 'Shared type should be bound to a document');
+  e.sharedType.doc.on('update', (updateMessage: Uint8Array) => {
     TestEditor.captureYjsUpdate(e, updateMessage);
   });
 

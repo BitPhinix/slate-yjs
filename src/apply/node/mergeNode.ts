@@ -1,23 +1,26 @@
 import { MergeNodeOperation } from 'slate';
-import { SyncDoc, SyncNode } from '../../model';
+import invariant from 'tiny-invariant';
+import { SharedType, SyncNode } from '../../model';
 import { getParent } from '../../path';
 import { cloneSyncElement } from '../../utils';
 
 /**
- * Applies a merge node operation to a SyncDoc.
+ * Applies a merge node operation to a SharedType.
  *
  * @param doc
  * @param op
  */
 export default function mergeNode(
-  doc: SyncDoc,
+  doc: SharedType,
   op: MergeNodeOperation
-): SyncDoc {
+): SharedType {
   const [parent, index] = getParent(doc, op.path);
 
   const children = SyncNode.getChildren(parent);
-  const prev = children!.get(index - 1);
-  const next = children!.get(index);
+  invariant(children, 'Parent of element should have children');
+
+  const prev = children.get(index - 1);
+  const next = children.get(index);
 
   const prevText = SyncNode.getText(prev);
   const nextText = SyncNode.getText(next);
@@ -25,11 +28,16 @@ export default function mergeNode(
   if (prevText && nextText) {
     prevText.insert(prevText.length, nextText.toString());
   } else {
-    const toPush = SyncNode.getChildren(next)!.map(cloneSyncElement);
-    SyncNode.getChildren(prev)!.push(toPush);
+    const nextChildren = SyncNode.getChildren(next);
+    const prevChildren = SyncNode.getChildren(prev);
+
+    invariant(nextChildren, 'Next element should have children');
+    invariant(prevChildren, 'Prev element should have children');
+
+    const toPush = nextChildren.map(cloneSyncElement);
+    prevChildren.push(toPush);
   }
 
-  SyncNode.getChildren(parent)!.delete(index, 1);
-
+  children.delete(index, 1);
   return doc;
 }

@@ -1,8 +1,8 @@
 import * as Y from 'yjs';
 
 export type SyncElement = Y.Map<any>;
-export type SyncDoc = Y.Array<SyncElement>;
-export type SyncNode = SyncDoc | SyncElement;
+export type SharedType = Y.Array<SyncElement>;
+export type SyncNode = SharedType | SyncElement;
 
 export const SyncElement = {
   getText(element: SyncElement): Y.Text | undefined {

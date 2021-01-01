@@ -1,7 +1,7 @@
-import { createEditor, Node } from 'slate';
-import { toSlateDoc, withYjs } from '../src';
-import { TestEditor, TransformFunc, withTest } from './testEditor';
-import { createNode, wait } from './utils';
+import { Node } from 'slate';
+import { toSlateDoc } from '../src';
+import { TestEditor, TransformFunc } from './testEditor';
+import { createNode, createTestEditor, wait } from './utils';
 
 const initialState: Node[] = [
   createNode('paragraph', 'alfa bravo'),
@@ -173,8 +173,8 @@ const tests: Test[] = [
 
 const runOneTest = async (ti: Test, tj: Test) => {
   // Create two editors.
-  const ei = withTest(withYjs(createEditor()));
-  const ej = withTest(withYjs(createEditor()));
+  const ei = createTestEditor();
+  const ej = createTestEditor();
 
   // Set initial state for 1st editor, propagate changes to 2nd.
   TestEditor.applyTransform(
@@ -189,7 +189,7 @@ const runOneTest = async (ti: Test, tj: Test) => {
 
   // Verify initial states match.
   expect(ei.children).toEqual(ej.children);
-  expect(toSlateDoc(ei.syncDoc)).toEqual(toSlateDoc(ej.syncDoc));
+  expect(toSlateDoc(ei.sharedType)).toEqual(toSlateDoc(ej.sharedType));
 
   // Apply 1st transform to 1st editor, capture updates.
   TestEditor.applyTransform(ei, ti.transform);
@@ -210,7 +210,7 @@ const runOneTest = async (ti: Test, tj: Test) => {
 
   // Verify final states match.
   expect(ei.children).toEqual(ej.children);
-  expect(toSlateDoc(ei.syncDoc)).toEqual(toSlateDoc(ej.syncDoc));
+  expect(toSlateDoc(ei.sharedType)).toEqual(toSlateDoc(ej.sharedType));
 };
 
 describe('model concurrent edits in separate editors', () => {

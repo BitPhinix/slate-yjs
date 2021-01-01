@@ -1,14 +1,17 @@
 import { SetNodeOperation } from 'slate';
-import { SyncDoc, SyncElement } from '../../model';
+import { SharedType, SyncElement } from '../../model';
 import { getTarget } from '../../path';
 
 /**
- * Applies a setNode operation to a SyncDoc
+ * Applies a setNode operation to a SharedType
  *
  * @param doc
  * @param op
  */
-export default function setNode(doc: SyncDoc, op: SetNodeOperation): SyncDoc {
+export default function setNode(
+  doc: SharedType,
+  op: SetNodeOperation
+): SharedType {
   const node = getTarget(doc, op.path) as SyncElement;
 
   Object.entries(op.newProperties).forEach(([key, value]) => {

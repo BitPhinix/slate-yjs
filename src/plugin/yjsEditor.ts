@@ -1,13 +1,13 @@
 import { Editor, Operation } from 'slate';
+import invariant from 'tiny-invariant';
 import * as Y from 'yjs';
 import { applySlateOps } from '../apply';
 import { toSlateOps } from '../convert';
-import { SyncDoc, SyncElement } from '../model';
+import { SharedType } from '../model';
 
 export interface YjsEditor extends Editor {
   isRemote: boolean;
-  doc: Y.Doc;
-  syncDoc: SyncDoc;
+  sharedType: SharedType;
 }
 
 export const YjsEditor = {
@@ -15,8 +15,10 @@ export const YjsEditor = {
    * Apply slate ops to Yjs
    */
   applySlateOps: (e: YjsEditor, operations: Operation[]): void => {
-    e.doc.transact(() => {
-      applySlateOps(e.syncDoc, operations);
+    invariant(e.sharedType.doc, 'shared type is not bound to a document');
+
+    e.sharedType.doc.transact(() => {
+      applySlateOps(e.sharedType, operations);
     });
   },
 
@@ -42,18 +44,17 @@ export const YjsEditor = {
   },
 };
 
-export function withYjs<T extends Editor>(editor: T): T & YjsEditor {
+export function withYjs<T extends Editor>(
+  editor: T,
+  sharedType: SharedType
+): T & YjsEditor {
   const e = editor as T & YjsEditor;
 
-  const doc = new Y.Doc();
-  const syncDoc = doc.getArray<SyncElement>('content');
-
-  syncDoc.observeDeep((events) => {
+  sharedType.observeDeep((events) => {
     YjsEditor.applyEvents(e, events);
   });
 
-  e.doc = doc;
-  e.syncDoc = syncDoc;
+  e.sharedType = sharedType;
   e.isRemote = false;
 
   const { onChange } = editor;
