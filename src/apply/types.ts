@@ -1,10 +1,10 @@
 import { Operation } from 'slate';
-import { SyncDoc } from '../model';
+import { SharedType } from '../model';
 
 export type ApplyFunc<O extends Operation = Operation> = (
-  syncDoc: SyncDoc,
+  sharedType: SharedType,
   op: O
-) => SyncDoc;
+) => SharedType;
 
 export type OpMapper<O extends Operation = Operation> = {
   [K in O['type']]: O extends { type: K } ? ApplyFunc<O> : never;

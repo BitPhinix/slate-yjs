@@ -4,7 +4,6 @@ module.exports = {
   ],
   rules: {
     'no-underscore-dangle': 'off',
-    '@typescript-eslint/no-non-null-assertion': 'off',
   },
   parserOptions: {
     project: './tsconfig.eslint.json',

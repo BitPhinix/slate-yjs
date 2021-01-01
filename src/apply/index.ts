@@ -1,10 +1,10 @@
 import { Operation } from 'slate';
-import { SyncDoc } from '../model';
+import { SharedType } from '../model';
 import node from './node';
 import text from './text';
 import { ApplyFunc, OpMapper } from './types';
 
-const nullOp: ApplyFunc = (doc: SyncDoc) => doc;
+const nullOp: ApplyFunc = (doc: SharedType) => doc;
 
 const opMappers: OpMapper = {
   ...text,
@@ -15,12 +15,12 @@ const opMappers: OpMapper = {
 };
 
 /**
- * Applies a slate operation to a SyncDoc
+ * Applies a slate operation to a SharedType
  *
  * @param doc
  * @param op
  */
-export function applySlateOp(doc: SyncDoc, op: Operation): SyncDoc {
+export function applySlateOp(doc: SharedType, op: Operation): SharedType {
   const apply = opMappers[op.type] as ApplyFunc<typeof op>;
   if (!apply) {
     throw new Error(`Unknown operation: ${op.type}`);
@@ -30,11 +30,14 @@ export function applySlateOp(doc: SyncDoc, op: Operation): SyncDoc {
 }
 
 /**
- * Applies a slate operations to a SyncDoc
+ * Applies a slate operations to a SharedType
  *
  * @param doc
  * @param op
  */
-export function applySlateOps(doc: SyncDoc, operations: Operation[]): SyncDoc {
+export function applySlateOps(
+  doc: SharedType,
+  operations: Operation[]
+): SharedType {
   return operations.reduce(applySlateOp, doc);
 }

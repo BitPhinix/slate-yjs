@@ -1,6 +1,7 @@
 import { Path } from 'slate';
+import invariant from 'tiny-invariant';
 import * as Y from 'yjs';
-import { SyncDoc, SyncElement, SyncNode } from '../model';
+import { SharedType, SyncElement, SyncNode } from '../model';
 import { toSlateDoc } from '../utils/convert';
 
 const isTree = (node: SyncNode): boolean => !!SyncNode.getChildren(node);
@@ -11,9 +12,11 @@ const isTree = (node: SyncNode): boolean => !!SyncNode.getChildren(node);
  * @param doc
  * @param path
  */
-export function getTarget(doc: SyncDoc, path: Path): SyncNode {
+export function getTarget(doc: SharedType, path: Path): SyncNode {
   function iterate(current: SyncNode, idx: number) {
-    if (!isTree(current) || !SyncNode.getChildren(current)?.get(idx)) {
+    const children = SyncNode.getChildren(current);
+
+    if (!isTree(current) || !children?.get(idx)) {
       throw new TypeError(
         `path ${path.toString()} does not match doc ${JSON.stringify(
           toSlateDoc(doc)
@@ -21,7 +24,7 @@ export function getTarget(doc: SyncDoc, path: Path): SyncNode {
       );
     }
 
-    return SyncNode.getChildren(current)!.get(idx);
+    return children.get(idx);
   }
 
   return path.reduce<SyncNode>(iterate, doc);
@@ -36,12 +39,14 @@ function getParentPath(path: Path, level = 1): [number, Path] {
 }
 
 export function getParent(
-  doc: SyncDoc,
+  doc: SharedType,
   path: Path,
   level = 1
 ): [SyncNode, number] {
   const [idx, parentPath] = getParentPath(path, level);
-  return [getTarget(doc, parentPath)!, idx];
+  const parent = getTarget(doc, parentPath);
+  invariant(parent, 'Parent node should exists');
+  return [parent, idx];
 }
 
 /**
@@ -75,11 +80,13 @@ export function getSyncItemPath(item: Y.Item): Path {
 
   const { parent } = item;
   if (parent instanceof Y.Array) {
-    return [...getSyncItemPath(parent._item!), getArrayPosition(item)];
+    invariant(parent._item, 'Parent should be associated with a item');
+    return [...getSyncItemPath(parent._item), getArrayPosition(item)];
   }
 
   if (parent instanceof Y.Map) {
-    return getSyncItemPath(parent._item!);
+    invariant(parent._item, 'Parent should be associated with a item');
+    return getSyncItemPath(parent._item);
   }
 
   throw new Error(`Unknown parent type ${parent}`);

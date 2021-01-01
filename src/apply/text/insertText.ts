@@ -1,17 +1,17 @@
 import { InsertTextOperation } from 'slate';
-import { SyncDoc, SyncElement } from '../../model';
+import { SharedType, SyncElement } from '../../model';
 import { getTarget } from '../../path';
 
 /**
- * Applies a insert text operation to a SyncDoc.
+ * Applies a insert text operation to a SharedType.
  *
  * @param doc
  * @param op
  */
 export default function insertText(
-  doc: SyncDoc,
+  doc: SharedType,
   op: InsertTextOperation
-): SyncDoc {
+): SharedType {
   const node = getTarget(doc, op.path) as SyncElement;
   const nodeText = SyncElement.getText(node)!;
   nodeText.insert(op.offset, op.text);

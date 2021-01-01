@@ -48,7 +48,7 @@ import { withYjs } from 'slate-yjs';
 const yjsEditor = withYjs(editor);
 
 // The 2-way bound sync doc
-console.log(yjsEditor.syncDoc);
+console.log(yjsEditor.sharedType);
 ```
 
 ## WebsocketEditor

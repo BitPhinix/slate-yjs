@@ -1,6 +1,6 @@
 import { Element, Node, Path, Text } from 'slate';
 import * as Y from 'yjs';
-import { SyncDoc, SyncElement } from '../model';
+import { SharedType, SyncElement } from '../model';
 
 /**
  * Converts a sync element to a slate node
@@ -29,10 +29,10 @@ export function toSlateNode(element: SyncElement): Node {
 }
 
 /**
- * Converts a SyncDoc to a Slate doc
+ * Converts a SharedType to a Slate doc
  * @param doc
  */
-export function toSlateDoc(doc: SyncDoc): Node[] {
+export function toSlateDoc(doc: SharedType): Node[] {
   return doc.map(toSlateNode);
 }
 
@@ -67,17 +67,17 @@ export function toSyncElement(node: Node): SyncElement {
 
 /**
  * Converts all elements int a Slate doc to SyncElements and adds them
- * to the SyncDoc
+ * to the SharedType
  *
- * @param syncDoc
+ * @param sharedType
  * @param doc
  */
-export function toSyncDoc(syncDoc: SyncDoc, doc: Node[]): void {
-  syncDoc.insert(0, doc.map(toSyncElement));
+export function toSharedType(sharedType: SharedType, doc: Node[]): void {
+  sharedType.insert(0, doc.map(toSyncElement));
 }
 
 /**
- * Converts a SyncDoc path the a slate path
+ * Converts a SharedType path the a slate path
  *
  * @param path
  */

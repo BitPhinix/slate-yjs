@@ -1,7 +1,7 @@
-import { createEditor, Node } from 'slate';
-import { toSlateDoc, withYjs } from '../src';
-import { TestEditor, TransformFunc, withTest } from './testEditor';
-import { createNode, createValue, wait } from './utils';
+import { Node } from 'slate';
+import { toSlateDoc } from '../src';
+import { TestEditor, TransformFunc } from './testEditor';
+import { createNode, createTestEditor, createValue, wait } from './utils';
 
 const tests = [
   [
@@ -345,8 +345,8 @@ describe('slate operations propagate between editors', () => {
   tests.forEach(([testName, input, ...cases]) => {
     it(`${testName}`, async () => {
       // Create two editors.
-      const src = withTest(withYjs(createEditor()));
-      const dst = withTest(withYjs(createEditor()));
+      const src = createTestEditor();
+      const dst = createTestEditor();
 
       // Set initial state for src editor, propagate changes to dst editor.
       TestEditor.applyTransform(
@@ -361,8 +361,8 @@ describe('slate operations propagate between editors', () => {
 
       // Verify initial states.
       expect(src.children).toEqual(input);
-      expect(toSlateDoc(src.syncDoc)).toEqual(input);
-      expect(toSlateDoc(dst.syncDoc)).toEqual(input);
+      expect(toSlateDoc(src.sharedType)).toEqual(input);
+      expect(toSlateDoc(dst.sharedType)).toEqual(input);
       expect(dst.children).toEqual(input);
 
       // Allow for multiple rounds of applying transforms and verifying state.
@@ -382,8 +382,8 @@ describe('slate operations propagate between editors', () => {
 
         // Verify final states.
         expect(src.children).toEqual(output);
-        expect(toSlateDoc(src.syncDoc)).toEqual(output);
-        expect(toSlateDoc(dst.syncDoc)).toEqual(output);
+        expect(toSlateDoc(src.sharedType)).toEqual(output);
+        expect(toSlateDoc(dst.sharedType)).toEqual(output);
         expect(dst.children).toEqual(output);
       }
     });
