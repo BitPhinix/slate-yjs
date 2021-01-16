@@ -1,4 +1,4 @@
-# Slate Yjs
+# Slate Yjs - [Live Demo](https://bitphinix.github.io/slate-yjs-example)
 
 [![codecov](https://codecov.io/gh/BitPhinix/slate-yjs/branch/master/graph/badge.svg?token=ZHUA26IWP0)](https://codecov.io/gh/BitPhinix/slate-yjs)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/BitPhinix/slate-yjs/graphs/commit-activity)
@@ -12,7 +12,7 @@ Yjs bindings for Slate.
 
 Heavily inspired by [slate-collaborative](https://github.com/cudr/slate-collaborative)
 
-![](https://media.giphy.com/media/J4IaAYZvJ1MNXz2p4j/giphy.gif)
+![](/preview.gif?raw=true)
 
 # Installation
 
