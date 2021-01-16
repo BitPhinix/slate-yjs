@@ -43,40 +43,12 @@ You might also want to take a look at ["CRDTs are the future"](https://josephg.c
 Adding a 2-way binding from the editor to a Yjs document is as easy as:
 
 ```ts
-import { withYjs } from 'slate-yjs';
+import { withYjs, SyncElement } from 'slate-yjs';
+import * as Y from 'yjs';
 
-const yjsEditor = withYjs(editor);
-
-// The 2-way bound sync doc
-console.log(yjsEditor.sharedType);
-```
-
-## WebsocketEditor
-
-Slate Yjs comes with built in support for [y-websocket](https://github.com/yjs/y-websocket):
-
-```js
-import { WebsocketEditorOptions, withWebsocket } from 'slate-yjs';
-
-const collabEditor = withWebsocket(yjsEditor, options);
-
-// Connect editor
-collabEditor.connect();
-```
-
-### Options
-
-```ts
-{
-  roomName: string // Room name
-  endpoint: string // Websocket endpoint
-  onConnect?: () => void // Connect callback
-  onDisconnect?: () => void // Disconnect callback
-  connect?: boolean // Whether to connect automatically (default false)
-  awareness?: awarenessProtocol.Awareness // Awareness protocol to use
-  WebSocketPolyfill?: typeof WebSocket // Websocket polyfill to use
-  resyncInterval?: number // Request server state every `resyncInterval` milliseconds
-}
+const doc = new Y.Doc();
+const sharedType = doc.getArray<SyncElement>('content');
+const yjsEditor = withYjs(editor, sharedType);
 ```
 
 ## Example project

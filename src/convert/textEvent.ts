@@ -30,13 +30,13 @@ export default function textEvent(event: Y.YTextEvent): TextOperation[] {
   const addOps: TextOperation[] = [];
 
   event.changes.delta.forEach((delta) => {
-    if ('retain' in delta && delta.retain !== undefined) {
+    if ('retain' in delta) {
       removeOffset += delta.retain;
       addOffset += delta.retain;
       return;
     }
 
-    if ('delete' in delta && delta.delete !== undefined) {
+    if ('delete' in delta) {
       let text = '';
 
       while (text.length < delta.delete) {
@@ -58,7 +58,7 @@ export default function textEvent(event: Y.YTextEvent): TextOperation[] {
       return;
     }
 
-    if ('insert' in delta && delta.insert !== undefined) {
+    if ('insert' in delta) {
       addOps.push(
         createTextOp('insert_text', addOffset, delta.insert.join(''))
       );
