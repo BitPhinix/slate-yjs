@@ -71,22 +71,25 @@ export function getArrayPosition(item: Y.Item): number {
 /**
  * Returns the document path of a sync item
  *
- * @param item
+ * @param node
  */
-export function getSyncItemPath(item: Y.Item): Path {
-  if (!item) {
+export function getSyncNodePath(node: SyncNode): Path {
+  if (!node) {
     return [];
   }
 
-  const { parent } = item;
+  const { parent } = node;
+  if (!parent) {
+    return [];
+  }
+
   if (parent instanceof Y.Array) {
-    invariant(parent._item, 'Parent should be associated with a item');
-    return [...getSyncItemPath(parent._item), getArrayPosition(item)];
+    invariant(node._item, 'Parent should be associated with a item');
+    return [...getSyncNodePath(parent), getArrayPosition(node._item)];
   }
 
   if (parent instanceof Y.Map) {
-    invariant(parent._item, 'Parent should be associated with a item');
-    return getSyncItemPath(parent._item);
+    return getSyncNodePath(parent);
   }
 
   throw new Error(`Unknown parent type ${parent}`);

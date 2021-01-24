@@ -1,8 +1,16 @@
+import { Range } from 'slate';
 import * as Y from 'yjs';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type SyncElement = Y.Map<any>;
 export type SharedType = Y.Array<SyncElement>;
 export type SyncNode = SharedType | SyncElement;
+
+export interface Cursor extends Range {
+  data: {
+    [key: string]: unknown;
+  };
+}
 
 export const SyncElement = {
   getText(element: SyncElement): Y.Text | undefined {
