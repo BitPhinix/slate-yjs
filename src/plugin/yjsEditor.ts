@@ -42,7 +42,7 @@ export const YjsEditor = {
   /**
    * Apply Yjs events to slate
    */
-  applyYJsEvents: (e: YjsEditor, events: Y.YEvent[]): void => {
+  applyYjsEvents: (e: YjsEditor, events: Y.YEvent[]): void => {
     e.isRemote = true;
 
     Editor.withoutNormalizing(e, () => {
@@ -72,7 +72,7 @@ export function withYjs<T extends Editor>(
 
   sharedType.observeDeep((events) => {
     if (!e.isLocal) {
-      YjsEditor.applyYJsEvents(e, events);
+      YjsEditor.applyYjsEvents(e, events);
     }
   });
 
