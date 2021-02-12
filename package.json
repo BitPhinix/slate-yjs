@@ -44,7 +44,7 @@
     "@typescript-eslint/eslint-plugin": "4.14.2",
     "@typescript-eslint/parser": "4.14.2",
     "cz-conventional-changelog": "3.3.0",
-    "eslint": "7.19.0",
+    "eslint": "7.20.0",
     "eslint-config-airbnb-typescript-prettier": "4.1.0",
     "eslint-config-prettier": "7.2.0",
     "eslint-plugin-prettier": "3.3.1",
