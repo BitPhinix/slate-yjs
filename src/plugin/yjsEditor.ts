@@ -1,4 +1,4 @@
-import { Editor, Operation } from 'slate';
+import { Editor, Operation, Transforms } from 'slate';
 import invariant from 'tiny-invariant';
 import * as Y from 'yjs';
 import { applySlateOps } from '../apply';
@@ -47,9 +47,11 @@ export const YjsEditor = {
 
     Editor.withoutNormalizing(e, () => {
       toSlateOps(events).forEach((op) => {
-        e.apply(op);
+        Transforms.transform(e, op);
       });
     });
+
+    e.onChange();
 
     // eslint-disable-next-line no-return-assign
     Promise.resolve().then(() => (e.isRemote = false));

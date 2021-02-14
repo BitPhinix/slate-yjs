@@ -23,6 +23,10 @@ export default function splitNode(
   const inject = cloneSyncElement(target);
   children.insert(index + 1, [inject]);
 
+  Object.entries(op.properties).forEach(([key, value]) =>
+    inject.set(key, value)
+  );
+
   if (SyncNode.getText(target) !== undefined) {
     const targetText = SyncNode.getText(target);
     const injectText = SyncNode.getText(inject);

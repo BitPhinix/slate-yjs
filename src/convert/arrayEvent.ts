@@ -28,13 +28,10 @@ export default function arrayEvent(
     return { type: 'insert_node', path, node };
   }
 
-  const sortFunc = (a: NodeOperation, b: NodeOperation) =>
-    a.path[a.path.length - 1] > b.path[b.path.length - 1] ? 1 : 0;
-
   let removeIndex = 0;
   let addIndex = 0;
-  let removeOps: NodeOperation[] = [];
-  let addOps: NodeOperation[] = [];
+  const removeOps: NodeOperation[] = [];
+  const addOps: NodeOperation[] = [];
 
   event.changes.delta.forEach((delta) => {
     if ('retain' in delta) {
@@ -62,9 +59,6 @@ export default function arrayEvent(
       addIndex += delta.insert.length;
     }
   });
-
-  removeOps = removeOps.sort(sortFunc);
-  addOps = addOps.sort(sortFunc);
 
   return [...removeOps, ...addOps];
 }

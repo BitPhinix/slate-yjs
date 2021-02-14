@@ -51,6 +51,21 @@ const sharedType = doc.getArray<SyncElement>('content');
 const yjsEditor = withYjs(editor, sharedType);
 ```
 
+## Cursors
+
+Slate-yjs support syncing collaborative cursors using awareness:
+
+```ts
+import { withCursor, useCursors } from 'slate-yjs';
+
+// Adds (and syncs) cursor information (anchor, focus) to the awareness local state.
+const cursorEditor = withCursor(yjsEditor, provider.awareness);
+
+// Returns a decorator that annotates text nodes with cursor information and
+// a array containing all cursor information.
+const { decorate, cursors } = useCursors(cursorEditor);
+```
+
 ## Example project
 
 Take a look at the example project [here](https://github.com/BitPhinix/slate-yjs-example)
