@@ -60,7 +60,7 @@
     "semantic-release": "17.4.0",
     "ts-jest": "26.5.2",
     "ts-node": "9.1.0",
-    "typescript": "4.1.5"
+    "typescript": "4.2.2"
   },
   "dependencies": {
     "tiny-invariant": "1.1.0",
