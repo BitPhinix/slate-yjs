@@ -1,4 +1,5 @@
 import { Operation } from 'slate';
+import invariant from 'tiny-invariant';
 import { SharedType } from '../model';
 import node from './node';
 import text from './text';
@@ -17,27 +18,38 @@ const opMappers: OpMapper = {
 /**
  * Applies a slate operation to a SharedType
  *
- * @param doc
+ * @param sharedType
  * @param op
  */
-export function applySlateOp(doc: SharedType, op: Operation): SharedType {
+export function applySlateOp(
+  sharedType: SharedType,
+  op: Operation
+): SharedType {
   const apply = opMappers[op.type] as ApplyFunc<typeof op>;
   if (!apply) {
     throw new Error(`Unknown operation: ${op.type}`);
   }
 
-  return apply(doc, op);
+  return apply(sharedType, op);
 }
 
 /**
- * Applies a slate operations to a SharedType
+ * Applies slate operations to a SharedType
  *
- * @param doc
+ * @param sharedType
  * @param op
  */
-export function applySlateOps(
-  doc: SharedType,
-  operations: Operation[]
+export default function applySlateOps(
+  sharedType: SharedType,
+  ops: Operation[]
 ): SharedType {
-  return operations.reduce(applySlateOp, doc);
+  invariant(sharedType.doc, 'Shared type without attached document');
+
+  if (ops.length > 0) {
+    sharedType.doc.transact(() => {
+      ops.forEach((op) => applySlateOp(sharedType, op));
+    });
+  }
+
+  return sharedType;
 }

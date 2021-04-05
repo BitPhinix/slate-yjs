@@ -1,5 +1,6 @@
 {
   "name": "slate-yjs",
+  "sideEffects": false,
   "version": "0.1.7",
   "description": "Yjs bindings for Slate.",
   "keywords": [
@@ -24,7 +25,6 @@
     "node": ">=6.0.0"
   },
   "scripts": {
-    "prepare": "install-peers",
     "lint": "eslint ./test/**/*.ts ./src/**/*.ts --quiet",
     "fix": "eslint ./test/**/*.ts ./src/**/*.ts --quiet --fix",
     "build": "rimraf dist && npm run build:main & npm run build:module",
@@ -32,7 +32,8 @@
     "build:module": "tsc -p tsconfig.module.json",
     "test": "jest --forceExit --coverage",
     "test:watch": "jest --forceExit --coverage --watch",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "commit": "cz"
   },
   "devDependencies": {
     "@commitlint/cli": "11.0.0",
@@ -56,11 +57,14 @@
     "jest-config": "26.6.3",
     "lint-staged": "10.5.4",
     "prettier": "2.2.1",
+    "react": "^17.0.1",
     "rimraf": "3.0.2",
     "semantic-release": "17.4.2",
+    "slate": "^0.59.0",
     "ts-jest": "26.5.4",
     "ts-node": "9.1.0",
-    "typescript": "4.2.3"
+    "typescript": "4.2.3",
+    "yjs": "^13.5.4"
   },
   "dependencies": {
     "tiny-invariant": "1.1.0",
@@ -69,7 +73,7 @@
   "peerDependencies": {
     "react": "^17.0.1",
     "slate": "^0.59.0",
-    "yjs": "^13.3.2"
+    "yjs": "^13.5.4"
   },
   "bugs": {
     "url": "https://github.com/BitPhinix/slate-yjs/issues"

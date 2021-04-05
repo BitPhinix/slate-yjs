@@ -1,14 +1,16 @@
-import { Editor, Operation, Transforms } from 'slate';
+import { Editor, Operation } from 'slate';
 import invariant from 'tiny-invariant';
 import * as Y from 'yjs';
-import { applySlateOps } from '../apply';
-import { toSlateOps } from '../convert';
+import applySlateOps from '../applyToYjs';
+import applyYjsEvents from '../applyToSlate';
 import { SharedType } from '../model';
 import { toSlateDoc } from '../utils/convert';
 
+const IS_REMOTE: WeakSet<Editor> = new WeakSet();
+const IS_LOCAL: WeakSet<Editor> = new WeakSet();
+const SHARED_TYPES: WeakMap<Editor, SharedType> = new WeakMap();
+
 export interface YjsEditor extends Editor {
-  isRemote: boolean;
-  isLocal: boolean;
   sharedType: SharedType;
 }
 
@@ -24,37 +26,72 @@ export const YjsEditor = {
   },
 
   /**
-   * Apply slate ops to Yjs
+   * Returns whether the editor currently is applying remove changes.
    */
-  applySlateOps: (e: YjsEditor, operations: Operation[]): void => {
-    invariant(e.sharedType.doc, 'shared type is not bound to a document');
+  sharedType: (editor: YjsEditor): SharedType => {
+    const sharedType = SHARED_TYPES.get(editor);
+    invariant(sharedType, 'YjsEditor without attached shared type');
+    return sharedType;
+  },
 
-    e.isLocal = true;
-
-    e.sharedType.doc.transact(() => {
-      applySlateOps(e.sharedType, operations);
+  /**
+   * Applies a slate operations to the bound shared type.
+   */
+  applySlateOperations: (editor: YjsEditor, operations: Operation[]): void => {
+    YjsEditor.asLocal(editor, () => {
+      applySlateOps(YjsEditor.sharedType(editor), operations);
     });
+  },
 
-    // eslint-disable-next-line no-return-assign
-    Promise.resolve().then(() => (e.isLocal = false));
+  /**
+   * Returns whether the editor currently is applying remove changes.
+   */
+  isRemote: (editor: YjsEditor): boolean => {
+    return IS_REMOTE.has(editor);
+  },
+
+  /**
+   * Performs an action as a remote operation.
+   */
+  asRemote: (editor: YjsEditor, fn: () => void): void => {
+    const wasRemote = YjsEditor.isRemote(editor);
+    IS_REMOTE.add(editor);
+
+    fn();
+
+    if (!wasRemote) {
+      Promise.resolve().then(() => IS_REMOTE.delete(editor));
+    }
   },
 
   /**
    * Apply Yjs events to slate
    */
-  applyYjsEvents: (e: YjsEditor, events: Y.YEvent[]): void => {
-    e.isRemote = true;
-
-    Editor.withoutNormalizing(e, () => {
-      toSlateOps(events).forEach((op) => {
-        Transforms.transform(e, op);
-      });
+  applyYjsEvents: (editor: YjsEditor, events: Y.YEvent[]): void => {
+    YjsEditor.asRemote(editor, () => {
+      applyYjsEvents(editor, events);
     });
+  },
 
-    e.onChange();
+  /**
+   * Performs an action as a local operation.
+   */
+  asLocal: (editor: YjsEditor, fn: () => void): void => {
+    const wasLocal = YjsEditor.isLocal(editor);
+    IS_LOCAL.add(editor);
 
-    // eslint-disable-next-line no-return-assign
-    Promise.resolve().then(() => (e.isRemote = false));
+    fn();
+
+    if (!wasLocal) {
+      IS_LOCAL.delete(editor);
+    }
+  },
+
+  /**
+   * Returns whether the editor currently is applying a remove change to the yjs doc.
+   */
+  isLocal: (editor: YjsEditor): boolean => {
+    return IS_LOCAL.has(editor);
   },
 };
 
@@ -65,15 +102,14 @@ export function withYjs<T extends Editor>(
   const e = editor as T & YjsEditor;
 
   e.sharedType = sharedType;
-  e.isRemote = false;
-  e.isLocal = false;
+  SHARED_TYPES.set(editor, sharedType);
 
   setTimeout(() => {
     YjsEditor.synchronizeValue(e);
   });
 
   sharedType.observeDeep((events) => {
-    if (!e.isLocal) {
+    if (!YjsEditor.isLocal(e)) {
       YjsEditor.applyYjsEvents(e, events);
     }
   });
@@ -81,13 +117,11 @@ export function withYjs<T extends Editor>(
   const { onChange } = editor;
 
   e.onChange = () => {
-    if (!e.isRemote) {
-      YjsEditor.applySlateOps(e, e.operations);
+    if (!YjsEditor.isRemote(e)) {
+      YjsEditor.applySlateOperations(e, e.operations);
     }
 
-    if (onChange) {
-      onChange();
-    }
+    onChange();
   };
 
   return e;
