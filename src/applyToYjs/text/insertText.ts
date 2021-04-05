@@ -1,4 +1,5 @@
 import { InsertTextOperation } from 'slate';
+import invariant from 'tiny-invariant';
 import { SharedType, SyncElement } from '../../model';
 import { getTarget } from '../../path';
 
@@ -13,7 +14,10 @@ export default function insertText(
   op: InsertTextOperation
 ): SharedType {
   const node = getTarget(doc, op.path) as SyncElement;
-  const nodeText = SyncElement.getText(node)!;
+  const nodeText = SyncElement.getText(node);
+
+  invariant(nodeText, 'Apply text operation to non text node');
+
   nodeText.insert(op.offset, op.text);
   return doc;
 }

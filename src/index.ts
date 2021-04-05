@@ -1,6 +1,22 @@
-export * from './apply';
-export * from './convert';
-export * from './model';
-export * from './path';
-export * from './plugin';
-export * from './utils';
+import { SyncElement, SyncNode, SharedType } from './model';
+import { toSharedType, toSlateDoc } from './utils';
+import {
+  CursorEditor,
+  useCursors,
+  withCursor,
+  withYjs,
+  YjsEditor,
+} from './plugin';
+
+export {
+  SharedType,
+  CursorEditor,
+  SyncElement,
+  SyncNode,
+  useCursors,
+  withCursor,
+  withYjs,
+  YjsEditor,
+  toSharedType,
+  toSlateDoc,
+};
