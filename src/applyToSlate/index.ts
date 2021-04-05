@@ -34,7 +34,6 @@ export default function applyYjsEvents(
   editor: Editor,
   events: Y.YEvent[]
 ): void {
-
   Editor.withoutNormalizing(editor, () => {
     events.forEach((event) => applyYjsEvent(editor, event));
   });
