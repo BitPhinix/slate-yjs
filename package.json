@@ -36,8 +36,8 @@
     "commit": "cz"
   },
   "devDependencies": {
-    "@commitlint/cli": "11.0.0",
-    "@commitlint/config-conventional": "11.0.0",
+    "@commitlint/cli": "12.1.1",
+    "@commitlint/config-conventional": "12.1.1",
     "@types/jest": "26.0.22",
     "@types/lodash": "4.14.168",
     "@types/node": "10.17.56",
