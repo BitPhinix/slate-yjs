@@ -57,14 +57,14 @@
     "jest-config": "26.6.3",
     "lint-staged": "10.5.4",
     "prettier": "2.2.1",
-    "react": "^17.0.1",
+    "react": "17.0.2",
     "rimraf": "3.0.2",
     "semantic-release": "17.4.2",
-    "slate": "^0.59.0",
+    "slate": "0.59.0",
     "ts-jest": "26.5.4",
     "ts-node": "9.1.0",
     "typescript": "4.2.3",
-    "yjs": "^13.5.4"
+    "yjs": "13.5.4"
   },
   "dependencies": {
     "tiny-invariant": "1.1.0",
