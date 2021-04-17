@@ -40,7 +40,7 @@
     "@commitlint/config-conventional": "12.1.1",
     "@types/jest": "26.0.22",
     "@types/lodash": "4.14.168",
-    "@types/node": "10.17.56",
+    "@types/node": "10.17.58",
     "@types/react": "17.0.3",
     "@types/shelljs": "0.8.8",
     "@typescript-eslint/eslint-plugin": "4.21.0",
