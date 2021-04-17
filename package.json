@@ -48,7 +48,7 @@
     "cz-conventional-changelog": "3.3.0",
     "eslint": "7.24.0",
     "eslint-config-airbnb-typescript-prettier": "4.2.0",
-    "eslint-config-prettier": "8.1.0",
+    "eslint-config-prettier": "8.2.0",
     "eslint-plugin-prettier": "3.3.1",
     "esrever": "0.2.0",
     "husky": "5.2.0",
