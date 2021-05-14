@@ -12,6 +12,12 @@
   "main": "dist/main/index.js",
   "typings": "dist/main/index.d.ts",
   "module": "dist/module/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/module/index.js",
+      "require": "./dist/main/index.js"
+    }
+  },
   "files": [
     "dist"
   ],
