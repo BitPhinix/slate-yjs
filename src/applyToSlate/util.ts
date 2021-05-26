@@ -1,10 +1,17 @@
-import { Editor, Transforms } from 'slate';
+import { Editor } from 'slate';
 
 export const withoutSelectionMod = (editor: Editor, cb: () => any): void => {
-  const { selection } = editor;
+  const { apply } = editor;
+  // eslint-disable-next-line no-param-reassign
+  editor.apply = (op) => {
+    if (op.type === 'set_selection') return;
+
+    apply(op);
+  };
   cb();
-  if (selection) Transforms.select(editor, selection);
-  else Transforms.deselect(editor);
+
+  // eslint-disable-next-line no-param-reassign
+  editor.apply = apply;
 };
 
 export const withoutNormalizingAndSelectionMod = (
