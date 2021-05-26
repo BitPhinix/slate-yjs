@@ -2,6 +2,7 @@ import { Editor, Transforms } from 'slate';
 import invariant from 'tiny-invariant';
 import * as Y from 'yjs';
 import { toSlatePath } from '../utils/convert';
+import { withoutNormalizingAndSelectionMod } from './util';
 
 /**
  * Applies a Yjs Text event to a slate editor.
@@ -15,7 +16,7 @@ export default function applyTextEvent(
   const targetPath = toSlatePath(event.path);
   let offset = 0;
 
-  Editor.withoutNormalizing(editor, () => {
+  withoutNormalizingAndSelectionMod(editor, () => {
     event.changes.delta.forEach((delta) => {
       if ('retain' in delta) {
         offset += delta.retain ?? 0;

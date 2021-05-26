@@ -3,6 +3,7 @@ import invariant from 'tiny-invariant';
 import * as Y from 'yjs';
 import { SyncElement } from '../model';
 import { toSlateNode, toSlatePath } from '../utils/convert';
+import { withoutNormalizingAndSelectionMod } from './util';
 
 /**
  * Applies a Yjs Array event to a Slate editor.
@@ -16,7 +17,7 @@ export default function applyArrayEvent(
   let offset = 0;
   const targetPath = toSlatePath(event.path);
 
-  Editor.withoutNormalizing(editor, () => {
+  withoutNormalizingAndSelectionMod(editor, () => {
     event.changes.delta.forEach((delta) => {
       if ('retain' in delta) {
         offset += delta.retain ?? 0;

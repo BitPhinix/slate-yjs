@@ -2,6 +2,7 @@ import { Editor, Transforms } from 'slate';
 import * as Y from 'yjs';
 import { SyncElement } from '../model';
 import { toSlatePath } from '../utils/convert';
+import { withoutNormalizingAndSelectionMod } from './util';
 
 /**
  * Applies a Yjs map event to a Slate editor.
@@ -31,7 +32,7 @@ export default function applyMapEvent(
       {}
     );
 
-  Editor.withoutNormalizing(editor, () => {
+  withoutNormalizingAndSelectionMod(editor, () => {
     if (removedProperties.length > 0) {
       Transforms.unsetNodes(editor, removedProperties, { at: targetPath });
     }
