@@ -30,8 +30,7 @@ export const CursorEditor = {
       absolutePositionToRelativePosition(sharedType, selection.focus);
 
     const awareness = CursorEditor.awareness(editor);
-    awareness.setLocalStateField('anchor', anchor);
-    awareness.setLocalStateField('focus', focus);
+    awareness.setLocalState({ ...awareness.getLocalState(), anchor, focus });
   },
 };
 
