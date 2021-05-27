@@ -68,7 +68,7 @@
   },
   "dependencies": {
     "tiny-invariant": "1.1.0",
-    "y-protocols": "^1.0.2"
+    "y-protocols": "^1.0.5"
   },
   "peerDependencies": {
     "react": "^17.0.1",
