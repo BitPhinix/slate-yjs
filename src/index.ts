@@ -1,5 +1,6 @@
-import { SyncElement, SyncNode, SharedType } from './model';
-import { toSharedType, toSlateDoc } from './utils';
+import { applyYjsEvents, translateYjsEvent } from './applyToSlate';
+import applySlateOps from './applyToYjs';
+import { SharedType, SyncElement, SyncNode } from './model';
 import {
   CursorEditor,
   useCursors,
@@ -7,6 +8,7 @@ import {
   withYjs,
   YjsEditor,
 } from './plugin';
+import { toSharedType, toSlateDoc } from './utils';
 
 export {
   SharedType,
@@ -19,4 +21,7 @@ export {
   YjsEditor,
   toSharedType,
   toSlateDoc,
+  translateYjsEvent,
+  applyYjsEvents,
+  applySlateOps,
 };

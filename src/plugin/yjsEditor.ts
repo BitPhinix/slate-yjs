@@ -1,8 +1,8 @@
 import { Editor, Operation } from 'slate';
 import invariant from 'tiny-invariant';
 import * as Y from 'yjs';
+import { applyYjsEvents } from '../applyToSlate';
 import applySlateOps from '../applyToYjs';
-import applyYjsEvents from '../applyToSlate';
 import { SharedType } from '../model';
 import { toSlateDoc } from '../utils/convert';
 
