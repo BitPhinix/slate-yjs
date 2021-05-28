@@ -1,43 +1,32 @@
-import { Editor, Transforms } from 'slate';
+import { Editor, Node, NodeOperation } from 'slate';
 import * as Y from 'yjs';
 import { SyncElement } from '../model';
 import { toSlatePath } from '../utils/convert';
 
 /**
- * Applies a Yjs map event to a Slate editor.
+ * Translates a Yjs map event into a slate operations.
  *
  * @param event
  */
-export default function applyMapEvent(
+export default function translateMapEvent(
   editor: Editor,
   event: Y.YMapEvent<unknown>
-): void {
+): NodeOperation[] {
   const targetPath = toSlatePath(event.path);
-  const targetElement = event.target as SyncElement;
+  const targetSyncElement = event.target as SyncElement;
+  const targetElement = Node.get(editor, targetPath);
 
   const keyChanges = Array.from(event.changes.keys.entries());
+  const newProperties = Object.fromEntries(
+    keyChanges.map(([key, info]) => [
+      key,
+      info.action === 'delete' ? null : targetSyncElement.get(key),
+    ])
+  );
 
-  const removedProperties = keyChanges
-    .filter(([, info]) => info.action === 'delete')
-    .map(([key]) => key);
+  const properties = Object.fromEntries(
+    keyChanges.map(([key]) => [key, targetElement[key]])
+  );
 
-  const newProperties: Record<string, unknown> = keyChanges
-    .filter(([, info]) => info.action !== 'delete')
-    .reduce(
-      (curr, [key]) => ({
-        ...curr,
-        [key]: targetElement.get(key),
-      }),
-      {}
-    );
-
-  Editor.withoutNormalizing(editor, () => {
-    if (removedProperties.length > 0) {
-      Transforms.unsetNodes(editor, removedProperties, { at: targetPath });
-    }
-
-    if (Object.keys(newProperties).length > 0) {
-      Transforms.setNodes(editor, newProperties, { at: targetPath });
-    }
-  });
+  return [{ type: 'set_node', newProperties, properties, path: targetPath }];
 }
