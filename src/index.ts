@@ -8,7 +8,7 @@ import {
   withYjs,
   YjsEditor,
 } from './plugin';
-import { toSharedType, toSlateDoc } from './utils';
+import { toSharedType, toSlateDoc, toSyncElement } from './utils';
 
 export {
   SharedType,
@@ -21,6 +21,7 @@ export {
   YjsEditor,
   toSharedType,
   toSlateDoc,
+  toSyncElement,
   translateYjsEvent,
   applyYjsEvents,
   applySlateOps,
