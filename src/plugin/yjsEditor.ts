@@ -117,10 +117,13 @@ export function withYjs<T extends Editor>(
   const { onChange } = editor;
 
   e.onChange = () => {
-    if (!YjsEditor.isRemote(e)) {
-      YjsEditor.applySlateOperations(e, e.operations);
+    const yjsApplyAsync = async() => {
+    if (!exports.YjsEditor.isRemote(e)) {
+        console.log("autosave: entering this block");
+        exports.YjsEditor.applySlateOperations(e, e.operations);
+        }
     }
-
+    yjsApplyAsync()
     onChange();
   };
 
