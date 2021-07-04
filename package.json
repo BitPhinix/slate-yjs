@@ -71,7 +71,7 @@
     "y-protocols": "^1.0.5"
   },
   "peerDependencies": {
-    "react": "^17.0.1",
+    "react": ">=16.8.0",
     "slate": "^0.59.0",
     "yjs": "^13.5.4"
   },
