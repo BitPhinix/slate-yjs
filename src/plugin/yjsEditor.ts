@@ -8,6 +8,7 @@ import { toSlateDoc } from '../utils/convert';
 
 const IS_REMOTE: WeakSet<Editor> = new WeakSet();
 const IS_LOCAL: WeakSet<Editor> = new WeakSet();
+const LOCAL_OPERATIONS: WeakMap<Editor, Operation[]> = new WeakMap();
 const SHARED_TYPES: WeakMap<Editor, SharedType> = new WeakMap();
 
 export interface YjsEditor extends Editor {
@@ -32,6 +33,17 @@ export const YjsEditor = {
     const sharedType = SHARED_TYPES.get(editor);
     invariant(sharedType, 'YjsEditor without attached shared type');
     return sharedType;
+  },
+
+  localOperations(editor: YjsEditor): Operation[] {
+    const operations = LOCAL_OPERATIONS.get(editor);
+    invariant(operations, 'YjsEditor without attached local operations');
+    return operations;
+  },
+
+  setLocalOperations(editor: YjsEditor, operations: Operation[]): void {
+    LOCAL_OPERATIONS.set(editor, operations);
+    editor.localOperations = operations;
   },
 
   /**
@@ -60,7 +72,7 @@ export const YjsEditor = {
     fn();
 
     if (!wasRemote) {
-      Promise.resolve().then(() => IS_REMOTE.delete(editor));
+      IS_REMOTE.delete(editor);
     }
   },
 
@@ -68,8 +80,10 @@ export const YjsEditor = {
    * Apply Yjs events to slate
    */
   applyYjsEvents: (editor: YjsEditor, events: Y.YEvent[]): void => {
-    YjsEditor.asRemote(editor, () => {
-      applyYjsEvents(editor, events);
+    Editor.withoutNormalizing(editor, () => {
+      YjsEditor.asRemote(editor, () => {
+        applyYjsEvents(editor, events);
+      });
     });
   },
 
@@ -103,6 +117,7 @@ export function withYjs<T extends Editor>(
 
   e.sharedType = sharedType;
   SHARED_TYPES.set(editor, sharedType);
+  LOCAL_OPERATIONS.set(editor, []);
 
   setTimeout(() => {
     YjsEditor.synchronizeValue(e);
@@ -114,11 +129,21 @@ export function withYjs<T extends Editor>(
     }
   });
 
-  const { onChange } = editor;
+  const { apply, onChange } = e;
+
+  e.apply = (op: Operation) => {
+    if (!YjsEditor.isRemote(e)) {
+      YjsEditor.localOperations(e).push(op);
+    }
+
+    apply(op);
+  };
 
   e.onChange = () => {
-    if (!YjsEditor.isRemote(e)) {
-      YjsEditor.applySlateOperations(e, e.operations);
+    const localOperations = YjsEditor.localOperations(e);
+    if (localOperations.length > 0) {
+      YjsEditor.applySlateOperations(e, localOperations);
+      YjsEditor.setLocalOperations(e, []);
     }
 
     onChange();
