@@ -15,62 +15,65 @@ describe('YjsEditor', () => {
     { type: 'paragraph', children: [{ text: '' }] },
   ];
 
-  const newElement: Element = {
-    type: 'paragraph',
-    children: [{ text: 'new' }],
-  };
-
   beforeEach(async () => {
     yjsEditor = await createTestEditor(initialValue);
   });
 
-  it('should sync changes to the shared type with slate', async () => {
-    await waitForSlateOnChangeAround(() =>
-      yjsEditor.sharedType.push([toSyncElement(newElement)])
-    );
-
-    expect(yjsEditor.children).toEqual<Node[]>([...initialValue, newElement]);
-    // make sure we didn't erroneously add elements to the shared type - can happen
-    // if the observer we have for it applies "local" events
-    expect(toSlateDoc(yjsEditor.sharedType)).toEqual<Node[]>(
-      yjsEditor.children
-    );
-  });
-
-  it('should apply slate operations to yjs', async () => {
-    await waitForSlateOnChangeAround(() => yjsEditor.insertNode(newElement));
-
-    expect(toSlateDoc(yjsEditor.sharedType)).toEqual<Node[]>([
-      ...initialValue,
-      newElement,
-    ]);
-  });
-
-  it('should apply slate normalizations to yjs', async () => {
-    const normalization: Element = {
+  describe('shared type <=> slate sync', () => {
+    const newElement: Element = {
       type: 'paragraph',
-      children: [{ text: 'some normalization' }],
+      children: [{ text: 'new' }],
     };
 
-    const { normalizeNode } = yjsEditor;
+    it('should sync changes to the shared type with slate', async () => {
+      await waitForSlateOnChangeAround(() =>
+        yjsEditor.sharedType.push([toSyncElement(newElement)])
+      );
 
-    yjsEditor.normalizeNode = (entry) => {
-      const isNewElement = entry[0].text === newElement.children[0].text;
-      if (isNewElement) {
-        yjsEditor.insertNode(normalization);
-      }
+      // make sure we didn't erroneously add elements to the shared type - can happen
+      // if the observer we have for it applies "local" events
+      expect(toSlateDoc(yjsEditor.sharedType)).toEqual<Node[]>([
+        ...initialValue,
+        newElement,
+      ]);
+      expect(yjsEditor.children).toEqual<Node[]>([...initialValue, newElement]);
+    });
 
-      normalizeNode(entry);
-    };
+    it('should apply slate operations to yjs', async () => {
+      await waitForSlateOnChangeAround(() => yjsEditor.insertNode(newElement));
 
-    await waitForSlateOnChangeAround(() =>
-      yjsEditor.sharedType.push([toSyncElement(newElement)])
-    );
+      expect(toSlateDoc(yjsEditor.sharedType)).toEqual<Node[]>([
+        ...initialValue,
+        newElement,
+      ]);
+    });
 
-    expect(toSlateDoc(yjsEditor.sharedType)).toEqual<Node[]>([
-      ...initialValue,
-      newElement,
-      normalization,
-    ]);
+    it('should apply slate normalizations to yjs', async () => {
+      const normalization: Element = {
+        type: 'paragraph',
+        children: [{ text: 'some normalization' }],
+      };
+
+      const { normalizeNode } = yjsEditor;
+
+      yjsEditor.normalizeNode = (entry) => {
+        const isNewElement = entry[0].text === newElement.children[0].text;
+        if (isNewElement) {
+          yjsEditor.insertNode(normalization);
+        }
+
+        normalizeNode(entry);
+      };
+
+      await waitForSlateOnChangeAround(() =>
+        yjsEditor.sharedType.push([toSyncElement(newElement)])
+      );
+
+      expect(toSlateDoc(yjsEditor.sharedType)).toEqual<Node[]>([
+        ...initialValue,
+        newElement,
+        normalization,
+      ]);
+    });
   });
 });
