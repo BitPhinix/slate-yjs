@@ -3,11 +3,11 @@ import invariant from 'tiny-invariant';
 import * as Y from 'yjs';
 import { applyYjsEvents } from '../applyToSlate';
 import applySlateOps from '../applyToYjs';
-import { SharedType } from '../model';
-import { toSlateDoc } from '../utils/convert';
+import { SharedType, slateYjsSymbol } from '../model';
+import { toSlateDoc } from '../utils';
 
 const IS_REMOTE: WeakSet<Editor> = new WeakSet();
-const IS_LOCAL: WeakSet<Editor> = new WeakSet();
+const LOCAL_OPERATIONS: WeakMap<Editor, Set<Operation>> = new WeakMap();
 const SHARED_TYPES: WeakMap<Editor, SharedType> = new WeakMap();
 
 export interface YjsEditor extends Editor {
@@ -35,15 +35,6 @@ export const YjsEditor = {
   },
 
   /**
-   * Applies a slate operations to the bound shared type.
-   */
-  applySlateOperations: (editor: YjsEditor, operations: Operation[]): void => {
-    YjsEditor.asLocal(editor, () => {
-      applySlateOps(YjsEditor.sharedType(editor), operations);
-    });
-  },
-
-  /**
    * Returns whether the editor currently is applying remote changes.
    */
   isRemote: (editor: YjsEditor): boolean => {
@@ -60,40 +51,51 @@ export const YjsEditor = {
     fn();
 
     if (!wasRemote) {
-      Promise.resolve().then(() => IS_REMOTE.delete(editor));
+      IS_REMOTE.delete(editor);
     }
-  },
-
-  /**
-   * Apply Yjs events to slate
-   */
-  applyYjsEvents: (editor: YjsEditor, events: Y.YEvent[]): void => {
-    YjsEditor.asRemote(editor, () => {
-      applyYjsEvents(editor, events);
-    });
-  },
-
-  /**
-   * Performs an action as a local operation.
-   */
-  asLocal: (editor: YjsEditor, fn: () => void): void => {
-    const wasLocal = YjsEditor.isLocal(editor);
-    IS_LOCAL.add(editor);
-
-    fn();
-
-    if (!wasLocal) {
-      IS_LOCAL.delete(editor);
-    }
-  },
-
-  /**
-   * Returns whether the editor currently is applying a remote change to the yjs doc.
-   */
-  isLocal: (editor: YjsEditor): boolean => {
-    return IS_LOCAL.has(editor);
   },
 };
+
+function localOperations(editor: YjsEditor): Set<Operation> {
+  const operations = LOCAL_OPERATIONS.get(editor);
+  invariant(operations, 'YjsEditor without attached local operations');
+  return operations;
+}
+
+function trackLocalOperations(editor: YjsEditor, operation: Operation): void {
+  if (!YjsEditor.isRemote(editor)) {
+    localOperations(editor).add(operation);
+  }
+}
+
+/**
+ * Applies a slate operations to the bound shared type.
+ */
+function applyLocalOperations(editor: YjsEditor): void {
+  const editorLocalOperations = localOperations(editor);
+
+  applySlateOps(
+    YjsEditor.sharedType(editor),
+    Array.from(editorLocalOperations),
+    slateYjsSymbol
+  );
+
+  editorLocalOperations.clear();
+}
+
+/**
+ * Apply Yjs events to slate
+ */
+function applyRemoteYjsEvents(editor: YjsEditor, events: Y.YEvent[]): void {
+  Editor.withoutNormalizing(editor, () =>
+    YjsEditor.asRemote(editor, () =>
+      applyYjsEvents(
+        editor,
+        events.filter((event) => event.transaction.origin !== slateYjsSymbol)
+      )
+    )
+  );
+}
 
 export function withYjs<T extends Editor>(
   editor: T,
@@ -103,23 +105,22 @@ export function withYjs<T extends Editor>(
 
   e.sharedType = sharedType;
   SHARED_TYPES.set(editor, sharedType);
+  LOCAL_OPERATIONS.set(editor, new Set());
 
-  setTimeout(() => {
-    YjsEditor.synchronizeValue(e);
-  });
+  setTimeout(() => YjsEditor.synchronizeValue(e), 0);
 
-  sharedType.observeDeep((events) => {
-    if (!YjsEditor.isLocal(e)) {
-      YjsEditor.applyYjsEvents(e, events);
-    }
-  });
+  sharedType.observeDeep((events) => applyRemoteYjsEvents(e, events));
 
-  const { onChange } = editor;
+  const { apply, onChange } = e;
+
+  e.apply = (op: Operation) => {
+    trackLocalOperations(e, op);
+
+    apply(op);
+  };
 
   e.onChange = () => {
-    if (!YjsEditor.isRemote(e)) {
-      YjsEditor.applySlateOperations(e, e.operations);
-    }
+    applyLocalOperations(e);
 
     onChange();
   };

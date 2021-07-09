@@ -38,7 +38,7 @@ export const useCursors = (
         })
         .filter((cursor) => cursor.anchor && cursor.focus);
 
-      setCursorData((newCursorData as unknown) as Cursor[]);
+      setCursorData(newCursorData as unknown as Cursor[]);
     });
   }, [editor]);
 

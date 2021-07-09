@@ -35,20 +35,18 @@ export function applySlateOp(
 
 /**
  * Applies slate operations to a SharedType
- *
- * @param sharedType
- * @param op
  */
 export default function applySlateOps(
   sharedType: SharedType,
-  ops: Operation[]
+  ops: Operation[],
+  origin: unknown
 ): SharedType {
   invariant(sharedType.doc, 'Shared type without attached document');
 
   if (ops.length > 0) {
     sharedType.doc.transact(() => {
       ops.forEach((op) => applySlateOp(sharedType, op));
-    });
+    }, origin);
   }
 
   return sharedType;

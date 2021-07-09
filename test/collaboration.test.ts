@@ -345,8 +345,8 @@ describe('slate operations propagate between editors', () => {
   tests.forEach(([testName, input, ...cases]) => {
     it(`${testName}`, async () => {
       // Create two editors.
-      const src = createTestEditor();
-      const dst = createTestEditor();
+      const src = await createTestEditor();
+      const dst = await createTestEditor();
 
       // Set initial state for src editor, propagate changes to dst editor.
       TestEditor.applyTransform(
