@@ -30,8 +30,6 @@ export function translateYjsEvent(
 
 /**
  * Applies multiple yjs events to a slate editor.
- *
- * @param event
  */
 export function applyYjsEvents(editor: Editor, events: Y.YEvent[]): void {
   Editor.withoutNormalizing(editor, () => {
