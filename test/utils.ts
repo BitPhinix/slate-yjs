@@ -8,6 +8,7 @@ import {
   withYjs,
 } from '../src';
 import { TestEditor, withTest } from './testEditor';
+import { WithYjsOptions } from '../src/plugin';
 
 export function createText(text = ''): Text {
   return {
@@ -49,7 +50,10 @@ export function wait(ms = 0): Promise<void> {
   return new Promise<void>((resolve) => setTimeout(resolve, ms));
 }
 
-export async function createTestEditor(value?: Node[]): Promise<TestEditor> {
+export async function createTestEditor(
+  value?: Node[],
+  options?: WithYjsOptions
+): Promise<TestEditor> {
   const doc = new Y.Doc();
   const syncType = doc.getArray<SyncElement>('content');
 
@@ -57,7 +61,7 @@ export async function createTestEditor(value?: Node[]): Promise<TestEditor> {
     toSharedType(syncType, value);
   }
 
-  const editor = withTest(withYjs(createEditor(), syncType));
+  const editor = withTest(withYjs(createEditor(), syncType, options));
 
   // wait for value sync
   await wait();

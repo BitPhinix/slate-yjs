@@ -6,6 +6,7 @@ import {
   useCursors,
   withCursor,
   withYjs,
+  WithYjsOptions,
   YjsEditor,
 } from './plugin';
 import { toSharedType, toSlateDoc, toSyncElement } from './utils';
@@ -18,6 +19,7 @@ export {
   useCursors,
   withCursor,
   withYjs,
+  WithYjsOptions,
   YjsEditor,
   toSharedType,
   toSlateDoc,

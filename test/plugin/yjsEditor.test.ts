@@ -19,6 +19,20 @@ describe('YjsEditor', () => {
     yjsEditor = await createTestEditor(initialValue);
   });
 
+  describe('initial editor value sync', () => {
+    it('should set editor.children to the value of the shared type', async () => {
+      expect(yjsEditor.children).toEqual<Node[]>(initialValue);
+    });
+
+    it('should be optional', async () => {
+      yjsEditor = await createTestEditor(initialValue, {
+        synchronizeValue: false,
+      });
+
+      expect(yjsEditor.children).toEqual<Node[]>([]);
+    });
+  });
+
   describe('shared type <=> slate sync', () => {
     const newElement: Element = {
       type: 'paragraph',
