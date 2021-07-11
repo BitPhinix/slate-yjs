@@ -26,7 +26,7 @@ export const YjsEditor = {
   },
 
   /**
-   * Returns whether the editor currently is applying remove changes.
+   * Returns whether the editor currently is applying remote changes.
    */
   sharedType: (editor: YjsEditor): SharedType => {
     const sharedType = SHARED_TYPES.get(editor);
@@ -44,7 +44,7 @@ export const YjsEditor = {
   },
 
   /**
-   * Returns whether the editor currently is applying remove changes.
+   * Returns whether the editor currently is applying remote changes.
    */
   isRemote: (editor: YjsEditor): boolean => {
     return IS_REMOTE.has(editor);
@@ -88,7 +88,7 @@ export const YjsEditor = {
   },
 
   /**
-   * Returns whether the editor currently is applying a remove change to the yjs doc.
+   * Returns whether the editor currently is applying a remote change to the yjs doc.
    */
   isLocal: (editor: YjsEditor): boolean => {
     return IS_LOCAL.has(editor);
