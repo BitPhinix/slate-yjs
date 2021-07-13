@@ -100,7 +100,7 @@ function applyRemoteYjsEvents(editor: YjsEditor, events: Y.YEvent[]): void {
 export function withYjs<T extends Editor>(
   editor: T,
   sharedType: SharedType,
-  { synchronizeValue }: WithYjsOptions = { synchronizeValue: true }
+  { synchronizeValue = true }: WithYjsOptions = {}
 ): T & YjsEditor {
   const e = editor as T & YjsEditor;
 
@@ -131,6 +131,6 @@ export function withYjs<T extends Editor>(
   return e;
 }
 
-export interface WithYjsOptions {
+export type WithYjsOptions = {
   synchronizeValue?: boolean;
-}
+};
