@@ -99,7 +99,8 @@ function applyRemoteYjsEvents(editor: YjsEditor, events: Y.YEvent[]): void {
 
 export function withYjs<T extends Editor>(
   editor: T,
-  sharedType: SharedType
+  sharedType: SharedType,
+  { synchronizeValue = true }: WithYjsOptions = {}
 ): T & YjsEditor {
   const e = editor as T & YjsEditor;
 
@@ -107,7 +108,9 @@ export function withYjs<T extends Editor>(
   SHARED_TYPES.set(editor, sharedType);
   LOCAL_OPERATIONS.set(editor, new Set());
 
-  setTimeout(() => YjsEditor.synchronizeValue(e), 0);
+  if (synchronizeValue) {
+    setTimeout(() => YjsEditor.synchronizeValue(e), 0);
+  }
 
   sharedType.observeDeep((events) => applyRemoteYjsEvents(e, events));
 
@@ -127,3 +130,7 @@ export function withYjs<T extends Editor>(
 
   return e;
 }
+
+export type WithYjsOptions = {
+  synchronizeValue?: boolean;
+};
