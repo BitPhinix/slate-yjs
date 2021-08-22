@@ -1,5 +1,5 @@
 import { Node } from 'slate';
-import { toSlateDoc } from '../src';
+import { SharedType } from '../src/model/sharedType';
 import { TestEditor, TransformFunc } from './testEditor';
 import { createNode, createTestEditor, wait } from './utils';
 
@@ -189,7 +189,9 @@ const runOneTest = async (ti: Test, tj: Test) => {
 
   // Verify initial states match.
   expect(ei.children).toEqual(ej.children);
-  expect(toSlateDoc(ei.sharedType)).toEqual(toSlateDoc(ej.sharedType));
+  expect(SharedType.slateDoc(ei.sharedType)).toEqual(
+    SharedType.slateDoc(ej.sharedType)
+  );
 
   // Apply 1st transform to 1st editor, capture updates.
   TestEditor.applyTransform(ei, ti.transform);
@@ -210,7 +212,9 @@ const runOneTest = async (ti: Test, tj: Test) => {
 
   // Verify final states match.
   expect(ei.children).toEqual(ej.children);
-  expect(toSlateDoc(ei.sharedType)).toEqual(toSlateDoc(ej.sharedType));
+  expect(SharedType.slateDoc(ei.sharedType)).toEqual(
+    SharedType.slateDoc(ej.sharedType)
+  );
 };
 
 describe('model concurrent edits in separate editors', () => {

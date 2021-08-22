@@ -44,7 +44,7 @@ Adding a 2-way binding from the editor to a Yjs document is as easy as:
 
 ```ts
 import { withYjs, SyncElement } from 'slate-yjs';
-import * as Y from 'yjs';
+import Y from 'yjs';
 
 const doc = new Y.Doc();
 const sharedType = doc.getArray<SyncElement>('content');

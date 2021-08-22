@@ -1,6 +1,6 @@
 import { Editor, Location, Node, Path, Point, Transforms } from 'slate';
 import invariant from 'tiny-invariant';
-import * as Y from 'yjs';
+import Y from 'yjs';
 import { YjsEditor } from '../src/plugin/yjsEditor';
 
 export interface TestEditor extends YjsEditor {

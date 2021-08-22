@@ -1,8 +1,9 @@
 import { Editor, Operation } from 'slate';
-import * as Y from 'yjs';
-import translateArrayEvent from './arrayEvent';
-import translateMapEvent from './mapEvent';
-import translateTextEvent from './textEvent';
+import Y from 'yjs';
+import { SharedType } from '../model/types';
+import { translateArrayEvent } from './arrayEvent';
+import { translateMapEvent } from './mapEvent';
+import { translateTextEvent } from './textEvent';
 
 /**
  * Translates a Yjs event into slate editor operations.
@@ -11,18 +12,19 @@ import translateTextEvent from './textEvent';
  */
 export function translateYjsEvent(
   editor: Editor,
+  sharedType: SharedType,
   event: Y.YEvent
 ): Operation[] {
   if (event instanceof Y.YArrayEvent) {
-    return translateArrayEvent(editor, event);
+    return translateArrayEvent(editor, sharedType, event);
   }
 
   if (event instanceof Y.YMapEvent) {
-    return translateMapEvent(editor, event);
+    return translateMapEvent(editor, sharedType, event);
   }
 
   if (event instanceof Y.YTextEvent) {
-    return translateTextEvent(editor, event);
+    return translateTextEvent(editor, sharedType, event);
   }
 
   throw new Error('Unsupported yjs event');
@@ -31,10 +33,14 @@ export function translateYjsEvent(
 /**
  * Applies multiple yjs events to a slate editor.
  */
-export function applyYjsEvents(editor: Editor, events: Y.YEvent[]): void {
+export function applyYjsEvents(
+  editor: Editor,
+  sharedType: SharedType,
+  events: Y.YEvent[]
+): void {
   Editor.withoutNormalizing(editor, () => {
     events.forEach((event) =>
-      translateYjsEvent(editor, event).forEach(editor.apply)
+      translateYjsEvent(editor, sharedType, event).forEach(editor.apply)
     );
   });
 }

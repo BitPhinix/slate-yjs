@@ -1,62 +1,84 @@
-import { Editor, Node, Text, TextOperation } from 'slate';
+import { Editor, Node, Operation, Text } from 'slate';
 import invariant from 'tiny-invariant';
-import * as Y from 'yjs';
-import { toSlatePath } from '../utils/convert';
+import Y from 'yjs';
+import { SharedType, SyncDescendant } from '../model/types';
+import { toSlatePath, toSlatePoint } from '../utils/location';
 
 /**
  * Translates a Yjs text event into a slate operations.
  *
  * @param event
  */
-export default function translateTextEvent(
+export function translateTextEvent(
   editor: Editor,
+  sharedType: SharedType,
   event: Y.YTextEvent
-): TextOperation[] {
-  const targetPath = toSlatePath(event.path);
-  const targetText = Node.get(editor, targetPath);
-
-  invariant(
-    Text.isText(targetText),
-    'Cannot apply text event to non-text node'
-  );
+): Operation[] {
+  const parent = event.target.parent as SyncDescendant;
+  const parentPath = toSlatePath(sharedType, event.path.slice(0, -1));
+  const textPath = event.path.slice(-1);
 
   let offset = 0;
-  let { text } = targetText;
-  const ops: TextOperation[] = [];
+  const ops: Operation[] = [];
 
-  event.changes.delta.forEach((delta) => {
-    if ('retain' in delta) {
-      offset += delta.retain ?? 0;
+  event.changes.delta.forEach((change) => {
+    if ('retain' in change) {
+      offset += change.retain ?? 0;
     }
 
-    if ('delete' in delta) {
-      const endOffset = offset + (delta.delete ?? 0);
+    if ('delete' in change) {
+      const start = toSlatePoint(parent, textPath, offset);
+      const end = toSlatePoint(parent, textPath, offset + (change.delete ?? 0));
 
-      ops.push({
-        type: 'remove_text',
-        offset,
-        path: targetPath,
-        text: text.slice(offset, endOffset),
-      });
+      // Start and end path length are always 1 since we move
+      // relative from the text parent
+      invariant(start.path.length === 1);
+      invariant(end.path.length === 1);
 
-      text = text.slice(0, offset) + text.slice(endOffset);
+      const [startPathOffset] = start.path;
+      const [endPathOffset] = end.path;
+
+      for (
+        let pathOffset = endPathOffset;
+        pathOffset >= startPathOffset;
+        pathOffset--
+      ) {
+        const targetPath = [...parentPath, pathOffset];
+        const targetNode = Node.get(editor, targetPath);
+
+        invariant(Text.isText(targetNode));
+
+        if (pathOffset !== startPathOffset && pathOffset !== endPathOffset) {
+          ops.push({
+            type: 'remove_node',
+            node: targetNode,
+            path: targetPath,
+          });
+          continue;
+        }
+
+        const startOffset = pathOffset === startPathOffset ? start.offset : 0;
+        const endOffset =
+          pathOffset === endPathOffset ? end.offset : targetNode.text.length;
+
+        ops.push({
+          type: 'remove_text',
+          offset: startOffset,
+          path: targetPath,
+          text: targetNode.text.slice(startOffset, endOffset),
+        });
+      }
     }
 
-    if ('insert' in delta) {
+    if ('insert' in change) {
       invariant(
-        typeof delta.insert === 'string',
-        `Unexpected text insert content type: expected string, got ${typeof delta.insert}`
+        typeof change.insert === 'string',
+        `Unexpected text insert content type: expected string, got ${typeof change.insert}`
       );
 
-      ops.push({
-        type: 'insert_text',
-        offset,
-        text: delta.insert,
-        path: targetPath,
-      });
+      console.log(change);
 
-      offset += delta.insert.length;
-      text = text.slice(0, offset) + delta.insert + text.slice(offset);
+      throw new Error('TODO');
     }
   });
 

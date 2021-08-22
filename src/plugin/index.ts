@@ -1,3 +1,3 @@
-export * from './yjsEditor';
+export * from './yjs';
 export * from './cursorEditor';
 export * from './useCursors';

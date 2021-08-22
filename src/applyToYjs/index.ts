@@ -1,15 +1,14 @@
-import { Operation } from 'slate';
+import { Descendant, Operation } from 'slate';
 import invariant from 'tiny-invariant';
-import { SharedType } from '../model';
-import node from './node';
-import text from './text';
+import { SharedType } from '../model/types';
+import { textMapper } from './text';
+
 import { ApplyFunc, OpMapper } from './types';
 
 const nullOp: ApplyFunc = (doc: SharedType) => doc;
 
 const opMappers: OpMapper = {
-  ...text,
-  ...node,
+  ...textMapper,
 
   // SetSelection is currently a null op since we don't support cursors
   set_selection: nullOp,
@@ -23,6 +22,7 @@ const opMappers: OpMapper = {
  */
 export function applySlateOp(
   sharedType: SharedType,
+  doc: Descendant[],
   op: Operation
 ): SharedType {
   const apply = opMappers[op.type] as ApplyFunc<typeof op>;
@@ -30,14 +30,15 @@ export function applySlateOp(
     throw new Error(`Unknown operation: ${op.type}`);
   }
 
-  return apply(sharedType, op);
+  return apply(sharedType, doc, op);
 }
 
 /**
  * Applies slate operations to a SharedType
  */
-export default function applySlateOps(
+export function applySlateOps(
   sharedType: SharedType,
+  doc: Descendant[],
   ops: Operation[],
   origin: unknown
 ): SharedType {
@@ -45,7 +46,7 @@ export default function applySlateOps(
 
   if (ops.length > 0) {
     sharedType.doc.transact(() => {
-      ops.forEach((op) => applySlateOp(sharedType, op));
+      ops.forEach((op) => applySlateOp(sharedType, doc, op));
     }, origin);
   }
 

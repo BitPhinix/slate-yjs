@@ -1,5 +1,5 @@
 import { Node } from 'slate';
-import { toSlateDoc } from '../src';
+import { SharedType } from '../src/model/sharedType';
 import { TestEditor, TransformFunc } from './testEditor';
 import { createNode, createTestEditor, createValue, wait } from './utils';
 
@@ -361,8 +361,8 @@ describe('slate operations propagate between editors', () => {
 
       // Verify initial states.
       expect(src.children).toEqual(input);
-      expect(toSlateDoc(src.sharedType)).toEqual(input);
-      expect(toSlateDoc(dst.sharedType)).toEqual(input);
+      expect(SharedType.slateDoc(src.sharedType)).toEqual(input);
+      expect(SharedType.slateDoc(dst.sharedType)).toEqual(input);
       expect(dst.children).toEqual(input);
 
       // Allow for multiple rounds of applying transforms and verifying state.
@@ -382,8 +382,8 @@ describe('slate operations propagate between editors', () => {
 
         // Verify final states.
         expect(src.children).toEqual(output);
-        expect(toSlateDoc(src.sharedType)).toEqual(output);
-        expect(toSlateDoc(dst.sharedType)).toEqual(output);
+        expect(SharedType.slateDoc(src.sharedType)).toEqual(output);
+        expect(SharedType.slateDoc(dst.sharedType)).toEqual(output);
         expect(dst.children).toEqual(output);
       }
     });

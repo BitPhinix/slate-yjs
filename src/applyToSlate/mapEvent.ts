@@ -1,18 +1,19 @@
 import { Editor, Node, NodeOperation } from 'slate';
-import * as Y from 'yjs';
-import { SyncElement } from '../model';
-import { toSlatePath } from '../utils/convert';
+import Y from 'yjs';
+import { SharedType, SyncElement } from '../model/types';
+import { toSlatePath } from '../utils/location';
 
 /**
  * Translates a Yjs map event into a slate operations.
  *
  * @param event
  */
-export default function translateMapEvent(
+export function translateMapEvent(
   editor: Editor,
+  sharedType: SharedType,
   event: Y.YMapEvent<unknown>
 ): NodeOperation[] {
-  const targetPath = toSlatePath(event.path);
+  const targetPath = toSlatePath(sharedType, event.path);
   const targetSyncElement = event.target as SyncElement;
   const targetElement = Node.get(editor, targetPath);
 

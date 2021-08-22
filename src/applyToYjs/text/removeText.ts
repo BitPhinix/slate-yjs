@@ -1,6 +1,7 @@
-import { RemoveTextOperation } from 'slate';
-import { SharedType, SyncElement } from '../../model';
-import { getTarget } from '../../path';
+import { Descendant, RemoveTextOperation } from 'slate';
+
+import { isSyncLeaf, SharedType } from '../../model/types';
+import { getTarget } from '../../utils/location';
 
 /**
  * Applies a remove text operation to a SharedType.
@@ -8,12 +9,16 @@ import { getTarget } from '../../path';
  * @param doc
  * @param op
  */
-export default function removeText(
-  doc: SharedType,
+export function removeText(
+  sharedType: SharedType,
+  _doc: Descendant[],
   op: RemoveTextOperation
-): SharedType {
-  const node = getTarget(doc, op.path) as SyncElement;
-  const nodeText = SyncElement.getText(node)!;
-  nodeText.delete(op.offset, op.text.length);
-  return doc;
+): void {
+  const [syncLeaf, startOffset] = getTarget(sharedType, op.path);
+
+  if (!isSyncLeaf(syncLeaf)) {
+    throw new Error('Operation does not point to a leaf');
+  }
+
+  syncLeaf.delete(startOffset + op.offset, op.text.length);
 }

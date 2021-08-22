@@ -1,14 +1,8 @@
 import { createEditor, Node, Text } from 'slate';
-import * as Y from 'yjs';
-import {
-  SharedType,
-  SyncElement,
-  toSharedType,
-  toSlateDoc,
-  withYjs,
-} from '../src';
+import Y from 'yjs';
 import { TestEditor, withTest } from './testEditor';
 import { WithYjsOptions } from '../src/plugin';
+import { SharedType } from '../src/model/sharedType';
 
 export function createText(text = ''): Text {
   return {
@@ -36,7 +30,7 @@ export function createValue(children?: Node[]): { children: Node[] } {
 
 export function createDoc(children?: Node[]): Y.Doc {
   const doc = new Y.Doc();
-  toSharedType(doc.getArray('content'), createValue(children).children);
+  SharedType.slateDoc(doc.getArray('content'), createValue(children).children);
   return doc;
 }
 

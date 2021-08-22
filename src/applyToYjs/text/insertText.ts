@@ -1,7 +1,6 @@
-import { InsertTextOperation } from 'slate';
-import invariant from 'tiny-invariant';
-import { SharedType, SyncElement } from '../../model';
-import { getTarget } from '../../path';
+import { Descendant, InsertTextOperation, Node } from 'slate';
+import { isSyncLeaf, SharedType } from '../../model/types';
+import { getTarget } from '../../utils/location';
 
 /**
  * Applies a insert text operation to a SharedType.
@@ -9,15 +8,18 @@ import { getTarget } from '../../path';
  * @param doc
  * @param op
  */
-export default function insertText(
-  doc: SharedType,
+export function insertText(
+  sharedType: SharedType,
+  doc: Descendant[],
   op: InsertTextOperation
-): SharedType {
-  const node = getTarget(doc, op.path) as SyncElement;
-  const nodeText = SyncElement.getText(node);
+): void {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { text, ...attributes } = Node.get({ children: doc }, op.path);
+  const [syncLeaf, startOffset] = getTarget(sharedType, op.path);
 
-  invariant(nodeText, 'Apply text operation to non text node');
+  if (!isSyncLeaf(syncLeaf)) {
+    throw new Error('Operation does not point to a leaf');
+  }
 
-  nodeText.insert(op.offset, op.text);
-  return doc;
+  syncLeaf.insert(startOffset + op.offset, op.text, attributes);
 }

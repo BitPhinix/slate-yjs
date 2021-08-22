@@ -1,19 +1,21 @@
 import { Editor, Node, NodeOperation, Text } from 'slate';
 import invariant from 'tiny-invariant';
-import * as Y from 'yjs';
-import { SyncElement } from '../model';
-import { toSlateNode, toSlatePath } from '../utils/convert';
+import Y from 'yjs';
+import { SharedType, SyncElement } from '../model/types';
+import { fromSyncNode } from '../utils/convert';
+import { toSlatePath } from '../utils/location';
 
 /**
  * Translates a Yjs array event into a slate operations.
  *
  * @param event
  */
-export default function translateArrayEvent(
+export function translateArrayEvent(
   editor: Editor,
+  sharedType: SharedType,
   event: Y.YArrayEvent<SyncElement>
 ): NodeOperation[] {
-  const targetPath = toSlatePath(event.path);
+  const targetPath = toSlatePath(sharedType, event.path);
   const targetElement = Node.get(editor, targetPath);
 
   invariant(
@@ -45,8 +47,7 @@ export default function translateArrayEvent(
         )}`
       );
 
-      const toInsert = delta.insert.map(toSlateNode);
-
+      const toInsert = delta.insert.flatMap(fromSyncNode);
       toInsert.forEach((node, i) => {
         ops.push({
           type: 'insert_node',

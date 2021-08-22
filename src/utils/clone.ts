@@ -1,29 +1,35 @@
-import * as Y from 'yjs';
-import { SyncElement } from '../model';
+import Y from 'yjs';
+import {
+  isSharedType,
+  isSyncLeaf,
+  SyncDescendant,
+  SyncNode,
+} from '../model/types';
 
-export default function cloneSyncElement(element: SyncElement): SyncElement {
-  const text = SyncElement.getText(element);
-  const children = SyncElement.getChildren(element);
-
-  const clone = new Y.Map();
-
-  if (text !== undefined) {
-    const textElement = new Y.Text(text.toString());
-    clone.set('text', textElement);
+export function clone(node: SyncNode): SyncNode {
+  if (isSyncLeaf(node)) {
+    const leaf = new Y.Text();
+    leaf.applyDelta(node.toDelta(), { sanitize: false });
+    return leaf;
   }
 
-  if (children !== undefined) {
-    const childElements = children.map(cloneSyncElement);
-    const childContainer = new Y.Array();
-    childContainer.insert(0, childElements);
-    clone.set('children', childContainer);
+  if (isSharedType(node)) {
+    const sharedType = new Y.Array<SyncDescendant>();
+    sharedType.insert(0, node.toArray());
+    return sharedType;
   }
 
-  Array.from(element.entries()).forEach(([key, value]) => {
-    if (key !== 'children' && key !== 'text') {
-      clone.set(key, value);
+  const element = new Y.Map<unknown>();
+  for (const [key, value] of node.entries()) {
+    if (key !== 'children') {
+      element.set(key, value);
+      continue;
     }
-  });
 
-  return clone;
+    const children = new Y.Array();
+    children.insert(0, value.map(clone));
+    element.set('children', children);
+  }
+
+  return element;
 }

@@ -1,6 +1,6 @@
 import { Editor, Operation } from 'slate';
 import invariant from 'tiny-invariant';
-import * as Y from 'yjs';
+import Y from 'yjs';
 import { applyYjsEvents } from '../applyToSlate';
 import applySlateOps from '../applyToYjs';
 import { SharedType, slateYjsSymbol } from '../model';
