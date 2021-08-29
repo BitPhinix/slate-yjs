@@ -1,12 +1,11 @@
 import { Editor, Operation } from 'slate';
 import Y from 'yjs';
 import { SharedType } from '../model/types';
-import { translateArrayEvent } from './arrayEvent';
-import { translateMapEvent } from './mapEvent';
+import { translateXmlEvent } from './xmlEvent';
 import { translateTextEvent } from './textEvent';
 
 /**
- * Translates a Yjs event into slate editor operations.
+ * Translates a Yjs event into slate operations.
  *
  * @param event
  */
@@ -15,12 +14,8 @@ export function translateYjsEvent(
   sharedType: SharedType,
   event: Y.YEvent
 ): Operation[] {
-  if (event instanceof Y.YArrayEvent) {
-    return translateArrayEvent(editor, sharedType, event);
-  }
-
-  if (event instanceof Y.YMapEvent) {
-    return translateMapEvent(editor, sharedType, event);
+  if (event instanceof Y.YXmlEvent) {
+    return translateXmlEvent(editor, sharedType, event);
   }
 
   if (event instanceof Y.YTextEvent) {

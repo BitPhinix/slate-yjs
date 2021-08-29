@@ -1,6 +1,7 @@
 import Y from 'yjs';
 import {
-  isSharedType,
+  isSyncDescendant,
+  isSyncElement,
   isSyncLeaf,
   SyncDescendant,
   SyncNode,
@@ -8,28 +9,31 @@ import {
 
 export function clone(node: SyncNode): SyncNode {
   if (isSyncLeaf(node)) {
-    const leaf = new Y.Text();
+    const leaf = new Y.XmlText();
     leaf.applyDelta(node.toDelta(), { sanitize: false });
     return leaf;
   }
 
-  if (isSharedType(node)) {
-    const sharedType = new Y.Array<SyncDescendant>();
-    sharedType.insert(0, node.toArray());
-    return sharedType;
+  if (isSyncElement(node)) {
+    const element = new Y.XmlElement();
+
+    const children = node.toArray().map((child) => {
+      if (!isSyncDescendant(child)) {
+        throw new Error('Unexpected sync element child type');
+      }
+
+      return clone(child) as SyncDescendant;
+    });
+
+    element.insert(0, children);
+    Object.entries(node.getAttributes()).forEach(([key, value]) => {
+      element.setAttribute(key, value);
+    });
+
+    return element;
   }
 
-  const element = new Y.Map<unknown>();
-  for (const [key, value] of node.entries()) {
-    if (key !== 'children') {
-      element.set(key, value);
-      continue;
-    }
-
-    const children = new Y.Array();
-    children.insert(0, value.map(clone));
-    element.set('children', children);
-  }
-
-  return element;
+  const sharedType = new Y.XmlFragment();
+  sharedType.insert(0, node.toArray() as SyncDescendant[]);
+  return sharedType;
 }

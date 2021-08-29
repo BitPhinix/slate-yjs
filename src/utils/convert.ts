@@ -3,6 +3,7 @@ import Y from 'yjs';
 import {
   InsertDelta,
   isSharedType,
+  isSyncDescendant,
   isSyncElement,
   isSyncLeaf,
   SyncDescendant,
@@ -17,7 +18,7 @@ export function toSyncLeaf(texts: Text[]): SyncLeaf {
     attributes,
   }));
 
-  const leaf = new Y.Text();
+  const leaf = new Y.XmlText();
   leaf.applyDelta(delta);
   return leaf;
 }
@@ -25,19 +26,18 @@ export function toSyncLeaf(texts: Text[]): SyncLeaf {
 function toSyncElement(element: Element): SyncElement {
   const { children, ...attributes } = element;
 
-  const syncElement = new Y.Map();
+  const syncElement = new Y.XmlElement();
   // eslint-disable-next-line @typescript-eslint/no-use-before-define
-  syncElement.set('children', toSyncDescendants(children));
+  syncElement.insert(0, toSyncDescendants(children));
   Object.entries(attributes).forEach(([key, value]) =>
-    syncElement.set(key, value)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    syncElement.setAttribute(key, value as any)
   );
 
   return syncElement;
 }
 
-export function toSyncDescendants(
-  nodes: Descendant[]
-): Y.Array<SyncDescendant> {
+export function toSyncDescendants(nodes: Descendant[]): SyncDescendant[] {
   const descendants: SyncDescendant[] = [];
   let leafGroup: Text[] = [];
 
@@ -62,9 +62,7 @@ export function toSyncDescendants(
 
   flushLeafGroup();
 
-  const syncDescendants: Y.Array<SyncDescendant> = new Y.Array();
-  syncDescendants.push(descendants);
-  return syncDescendants;
+  return descendants;
 }
 
 export function fromSyncLeaf(syncLeaf: SyncLeaf): Text[] {
@@ -76,31 +74,30 @@ export function fromSyncLeaf(syncLeaf: SyncLeaf): Text[] {
 }
 
 export function fromSyncElement(syncElement: SyncElement): Element {
-  const slateElement: Element = { children: [] };
-
-  for (const [key, value] of syncElement.entries()) {
-    if (key !== 'children') {
-      slateElement[key] = value;
-      continue;
+  const children = syncElement.toArray().flatMap<Descendant>((child) => {
+    if (isSyncLeaf(child)) {
+      return fromSyncLeaf(child);
     }
 
-    const children = value as SyncDescendant[];
-    children.forEach((child) => {
-      if (isSyncLeaf(child)) {
-        slateElement.children.concat(fromSyncLeaf(child));
-        return;
-      }
+    if (!isSyncElement(child)) {
+      throw new Error('Unexpected SyncElement child type');
+    }
 
-      slateElement.children.push(fromSyncElement(child));
-    });
-  }
+    return fromSyncElement(child);
+  });
 
-  return slateElement;
+  return { ...syncElement.getAttributes(), children };
 }
 
 export function fromSyncNode(syncNode: SyncNode): Descendant[] {
   if (isSharedType(syncNode)) {
-    return syncNode.map(fromSyncNode).flat();
+    return syncNode.toArray().flatMap((node) => {
+      if (!isSyncDescendant(node)) {
+        throw new Error('Unexpected SharedType child type');
+      }
+
+      return fromSyncNode(node);
+    });
   }
 
   if (isSyncElement(syncNode)) {

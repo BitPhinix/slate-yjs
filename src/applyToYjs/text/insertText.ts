@@ -1,4 +1,4 @@
-import { Descendant, InsertTextOperation, Node } from 'slate';
+import { Editor, InsertTextOperation, Node } from 'slate';
 import { isSyncLeaf, SharedType } from '../../model/types';
 import { getTarget } from '../../utils/location';
 
@@ -10,11 +10,11 @@ import { getTarget } from '../../utils/location';
  */
 export function insertText(
   sharedType: SharedType,
-  doc: Descendant[],
+  editor: Editor,
   op: InsertTextOperation
 ): void {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { text, ...attributes } = Node.get({ children: doc }, op.path);
+  const { text, ...attributes } = Node.get(editor, op.path);
   const [syncLeaf, startOffset] = getTarget(sharedType, op.path);
 
   if (!isSyncLeaf(syncLeaf)) {

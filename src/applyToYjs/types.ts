@@ -1,9 +1,9 @@
-import { Descendant, Operation } from 'slate';
+import { Editor, Operation } from 'slate';
 import { SharedType } from '../model/types';
 
 export type ApplyFunc<O extends Operation = Operation> = (
   sharedType: SharedType,
-  doc: Descendant[],
+  editor: Editor,
   op: O
 ) => void;
 

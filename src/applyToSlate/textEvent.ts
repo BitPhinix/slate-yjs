@@ -1,11 +1,12 @@
-import { Editor, Node, Operation, Text } from 'slate';
-import invariant from 'tiny-invariant';
+import { Editor, Node, Operation, Path, Text } from 'slate';
 import Y from 'yjs';
 import { SharedType, SyncDescendant } from '../model/types';
 import { toSlatePath, toSlatePoint } from '../utils/location';
+import { deepEqual } from '../utils/object';
+import { getMarks } from '../utils/slate';
 
 /**
- * Translates a Yjs text event into a slate operations.
+ * Translates a YTextEvent event into a slate operations.
  *
  * @param event
  */
@@ -32,9 +33,6 @@ export function translateTextEvent(
 
       // Start and end path length are always 1 since we move
       // relative from the text parent
-      invariant(start.path.length === 1);
-      invariant(end.path.length === 1);
-
       const [startPathOffset] = start.path;
       const [endPathOffset] = end.path;
 
@@ -46,7 +44,9 @@ export function translateTextEvent(
         const targetPath = [...parentPath, pathOffset];
         const targetNode = Node.get(editor, targetPath);
 
-        invariant(Text.isText(targetNode));
+        if (!Text.isText(targetNode)) {
+          throw new Error('Cannot apply text action to non-text node');
+        }
 
         if (pathOffset !== startPathOffset && pathOffset !== endPathOffset) {
           ops.push({
@@ -70,15 +70,68 @@ export function translateTextEvent(
       }
     }
 
-    if ('insert' in change) {
-      invariant(
-        typeof change.insert === 'string',
-        `Unexpected text insert content type: expected string, got ${typeof change.insert}`
-      );
+    if ('insert' in change && change.insert) {
+      const insertPoint = toSlatePoint(parent, textPath, offset);
+      const targetNode = Node.get(editor, insertPoint.path);
 
-      console.log(change);
+      if (typeof change.insert !== 'string') {
+        throw new Error(
+          `Unexpected insert type: expected string got '${change.insert}'`
+        );
+      }
 
-      throw new Error('TODO');
+      // Yjs typings are wrong
+      const insertAttributes = (
+        change as { attributes: Record<string, unknown> }
+      ).attributes;
+
+      // Insert of a new text node
+      if (!Text.isText(targetNode)) {
+        if (insertPoint.offset !== 0) {
+          throw new Error(
+            'Cannot insert text in the middle of a non-text node'
+          );
+        }
+
+        ops.push({
+          type: 'insert_node',
+          node: { ...insertAttributes, text: change.insert },
+          path: insertPoint.path,
+        });
+        return;
+      }
+
+      const targetAttributes = getMarks(targetNode);
+
+      // Plain text insert
+      if (deepEqual(targetAttributes, insertAttributes)) {
+        ops.push({
+          type: 'insert_text',
+          offset: insertPoint.offset,
+          path: insertPoint.path,
+          text: change.insert,
+        });
+        return;
+      }
+
+      if (insertPoint.offset > 0) {
+        ops.push({
+          type: 'split_node',
+          path: insertPoint.path,
+          position: insertPoint.offset,
+          properties: {},
+        });
+      }
+
+      const path =
+        insertPoint.offset > 0 ? Path.next(insertPoint.path) : insertPoint.path;
+
+      // Insert of a text node in the middle of an existing one
+      ops.push({
+        type: 'insert_node',
+        path,
+        node: { ...insertAttributes, text: change.insert },
+      });
     }
   });
 

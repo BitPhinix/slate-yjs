@@ -1,4 +1,4 @@
-import { Descendant, Operation } from 'slate';
+import { Descendant, Editor, Operation } from 'slate';
 import invariant from 'tiny-invariant';
 import { SharedType } from '../model/types';
 import { textMapper } from './text';
@@ -22,15 +22,16 @@ const opMappers: OpMapper = {
  */
 export function applySlateOp(
   sharedType: SharedType,
-  doc: Descendant[],
+  editor: Editor,
   op: Operation
-): SharedType {
+): void {
+  // TODO: Handle "set_marks" operation pairs differently
   const apply = opMappers[op.type] as ApplyFunc<typeof op>;
   if (!apply) {
     throw new Error(`Unknown operation: ${op.type}`);
   }
 
-  return apply(sharedType, doc, op);
+  apply(sharedType, editor, op);
 }
 
 /**

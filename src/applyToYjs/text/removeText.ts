@@ -1,5 +1,4 @@
-import { Descendant, RemoveTextOperation } from 'slate';
-
+import { Editor, RemoveTextOperation } from 'slate';
 import { isSyncLeaf, SharedType } from '../../model/types';
 import { getTarget } from '../../utils/location';
 
@@ -11,7 +10,7 @@ import { getTarget } from '../../utils/location';
  */
 export function removeText(
   sharedType: SharedType,
-  _doc: Descendant[],
+  _editor: Editor,
   op: RemoveTextOperation
 ): void {
   const [syncLeaf, startOffset] = getTarget(sharedType, op.path);
