@@ -7,6 +7,7 @@ module.exports = {
     'no-plusplus': 'off',
     'import/prefer-default-export': 'off',
     'import/no-default-export': 'error',
+    'consistent-return': 'off',
   },
   parserOptions: {
     project: './tsconfig.eslint.json',

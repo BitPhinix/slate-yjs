@@ -1,23 +1,27 @@
 import { Editor, RemoveTextOperation } from 'slate';
 import { isSyncLeaf, SharedType } from '../../model/types';
-import { getTarget } from '../../utils/location';
+import { getYTarget } from '../../utils/location';
 
 /**
- * Applies a remove text operation to a SharedType.
+ * Applies a insert text operation to a SharedType.
  *
  * @param doc
  * @param op
  */
 export function removeText(
   sharedType: SharedType,
-  _editor: Editor,
+  editor: Editor,
   op: RemoveTextOperation
 ): void {
-  const [syncLeaf, startOffset] = getTarget(sharedType, op.path);
+  const { element, textRange } = getYTarget(sharedType, editor, op.path);
 
-  if (!isSyncLeaf(syncLeaf)) {
-    throw new Error('Operation does not point to a leaf');
+  if (!isSyncLeaf(element) || !textRange) {
+    throw new Error('Cannot delete text from a non-leaf element');
   }
 
-  syncLeaf.delete(startOffset + op.offset, op.text.length);
+  if (textRange.endOffset < op.offset + op.text.length) {
+    throw new Error('Cannot delete across leafs');
+  }
+
+  return element.delete(textRange.startOffset + op.offset, op.text.length);
 }

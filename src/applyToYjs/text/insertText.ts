@@ -1,6 +1,7 @@
-import { Editor, InsertTextOperation, Node } from 'slate';
+import { Editor, InsertTextOperation, Node, Text } from 'slate';
 import { isSyncLeaf, SharedType } from '../../model/types';
-import { getTarget } from '../../utils/location';
+import { getYTarget } from '../../utils/location';
+import { getMarks } from '../../utils/slate';
 
 /**
  * Applies a insert text operation to a SharedType.
@@ -13,13 +14,17 @@ export function insertText(
   editor: Editor,
   op: InsertTextOperation
 ): void {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { text, ...attributes } = Node.get(editor, op.path);
-  const [syncLeaf, startOffset] = getTarget(sharedType, op.path);
+  const { element, textRange } = getYTarget(sharedType, editor, op.path);
 
-  if (!isSyncLeaf(syncLeaf)) {
-    throw new Error('Operation does not point to a leaf');
+  if (!isSyncLeaf(element) || !textRange) {
+    throw new Error('Cannot insert text into a non-leaf');
   }
 
-  syncLeaf.insert(startOffset + op.offset, op.text, attributes);
+  const targetNode = Node.get(editor, op.path);
+  if (!Text.isText(targetNode)) {
+    throw new Error('Cannot insert text into non-text node');
+  }
+  const marks = getMarks(targetNode);
+
+  return element.insert(textRange.startOffset + op.offset, op.text, marks);
 }

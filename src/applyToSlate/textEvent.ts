@@ -93,27 +93,26 @@ export function translateTextEvent(
           );
         }
 
-        ops.push({
+        return ops.push({
           type: 'insert_node',
           node: { ...insertAttributes, text: change.insert },
           path: insertPoint.path,
         });
-        return;
       }
 
       const targetAttributes = getMarks(targetNode);
 
       // Plain text insert
       if (deepEqual(targetAttributes, insertAttributes)) {
-        ops.push({
+        return ops.push({
           type: 'insert_text',
           offset: insertPoint.offset,
           path: insertPoint.path,
           text: change.insert,
         });
-        return;
       }
 
+      // Insert of a text node in the middle of an existing one
       if (insertPoint.offset > 0) {
         ops.push({
           type: 'split_node',
@@ -126,7 +125,6 @@ export function translateTextEvent(
       const path =
         insertPoint.offset > 0 ? Path.next(insertPoint.path) : insertPoint.path;
 
-      // Insert of a text node in the middle of an existing one
       ops.push({
         type: 'insert_node',
         path,

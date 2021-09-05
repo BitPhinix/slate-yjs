@@ -1,14 +1,14 @@
 import { Descendant, Editor, Operation } from 'slate';
 import invariant from 'tiny-invariant';
 import { SharedType } from '../model/types';
-import { textMapper } from './text';
+import { TEXT_MAPPER } from './text';
 
 import { ApplyFunc, OpMapper } from './types';
 
 const nullOp: ApplyFunc = (doc: SharedType) => doc;
 
 const opMappers: OpMapper = {
-  ...textMapper,
+  ...TEXT_MAPPER,
 
   // SetSelection is currently a null op since we don't support cursors
   set_selection: nullOp,

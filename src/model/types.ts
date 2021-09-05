@@ -11,8 +11,10 @@ export type SharedType = Y.XmlFragment;
 
 export type SyncNode = SyncElement | SyncLeaf | SharedType;
 export type SyncDescendant = SyncElement | SyncLeaf;
+export type SyncParent = SyncElement | SharedType;
 
 export type YPath = (string | number)[];
+export type TextRange = { startOffset: number; endOffset: number };
 
 export function isSyncLeaf(v: unknown): v is SyncLeaf {
   return v instanceof Y.XmlText;
