@@ -22,5 +22,12 @@ export default function setNode(
     node.set(key, value);
   });
 
+  Object.entries(op.properties).forEach(([key]) => {
+    // eslint-disable-next-line no-prototype-builtins
+    if (!op.newProperties.hasOwnProperty(key)) {
+      node.delete(key);
+    }
+  });
+
   return doc;
 }
