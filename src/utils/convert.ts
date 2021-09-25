@@ -30,6 +30,7 @@ function toSyncElement(element: Element): SyncElement {
   // eslint-disable-next-line @typescript-eslint/no-use-before-define
   syncElement.insert(0, toSyncDescendants(children));
   Object.entries(attributes).forEach(([key, value]) =>
+    // Yjs typings are incorrect
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     syncElement.setAttribute(key, value as any)
   );

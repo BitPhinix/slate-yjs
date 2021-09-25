@@ -4,7 +4,6 @@ import {
   isSyncElement,
   isSyncLeaf,
   SyncDescendant,
-  SyncLeaf,
   SyncNode,
 } from '../model/types';
 

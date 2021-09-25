@@ -1,14 +1,15 @@
-import { Descendant, Editor, Operation } from 'slate';
+import { Editor, Operation } from 'slate';
 import invariant from 'tiny-invariant';
 import { SharedType } from '../model/types';
+import { NODE_MAPPER } from './node';
 import { TEXT_MAPPER } from './text';
-
 import { ApplyFunc, OpMapper } from './types';
 
 const nullOp: ApplyFunc = (doc: SharedType) => doc;
 
 const opMappers: OpMapper = {
   ...TEXT_MAPPER,
+  ...NODE_MAPPER,
 
   // SetSelection is currently a null op since we don't support cursors
   set_selection: nullOp,
@@ -39,7 +40,7 @@ export function applySlateOp(
  */
 export function applySlateOps(
   sharedType: SharedType,
-  doc: Descendant[],
+  editor: Editor,
   ops: Operation[],
   origin: unknown
 ): SharedType {
@@ -47,7 +48,7 @@ export function applySlateOps(
 
   if (ops.length > 0) {
     sharedType.doc.transact(() => {
-      ops.forEach((op) => applySlateOp(sharedType, doc, op));
+      ops.forEach((op) => applySlateOp(sharedType, editor, op));
     }, origin);
   }
 

@@ -1,4 +1,4 @@
-import { Node, Path, Point } from 'slate';
+import { Node, Path, Point, Text } from 'slate';
 import {
   InsertDelta,
   isSyncLeaf,
@@ -7,18 +7,7 @@ import {
   SyncParent,
   TextRange,
   YPath,
-  YRange,
 } from '../model/types';
-
-export function isCollapsed(yRange: YRange): boolean {
-  const { start, end } = yRange;
-
-  if (start.offset !== end.offset || start.path.length !== end.path.length) {
-    return false;
-  }
-
-  return start.path.every((entry, i) => entry === end.path[i]);
-}
 
 function getPathLength(descendant: SyncDescendant): number {
   if (isSyncLeaf(descendant)) {
@@ -34,7 +23,7 @@ function getPathLength(descendant: SyncDescendant): number {
 // GetYTarget has a "next" affinity. E.g. if a path points to either the end of
 // a leaf group or the next element, getTarget will return the next element.
 //
-// TODO: Handle empty slate texts, following texts with the same marks.
+// TODO: Handle following texts with the same marks.
 export function getYTarget(
   root: SyncNode,
   node: Node,
@@ -49,10 +38,32 @@ export function getYTarget(
     throw new Error('Path has a have a length >= 1');
   }
 
-  if (isSyncLeaf(root)) {
+  if (isSyncLeaf(root) || Text.isText(node)) {
     throw new Error(
-      "Path doesn't match element, cannot descent into sync leaf"
+      "Path doesn't match element(s), cannot descent into sync leaf"
     );
+  }
+
+  let normalizedSlateOffset = 0;
+  let isInLeafGroup = false;
+  for (let i = 0; i < path[0]; i++) {
+    const element = node.children[i];
+
+    if (!Text.isText(element)) {
+      normalizedSlateOffset++;
+      isInLeafGroup = false;
+      continue;
+    }
+
+    if (!isInLeafGroup) {
+      isInLeafGroup = true;
+      normalizedSlateOffset++;
+      continue;
+    }
+
+    if (element.text.length > 0) {
+      normalizedSlateOffset++;
+    }
   }
 
   let currentPathOffset = 0;
@@ -60,7 +71,7 @@ export function getYTarget(
     const child = root.get(i);
     const pathLength = getPathLength(child);
 
-    if (currentPathOffset + pathLength > path[0]) {
+    if (currentPathOffset + pathLength > normalizedSlateOffset) {
       currentPathOffset += pathLength;
       continue;
     }
@@ -74,7 +85,7 @@ export function getYTarget(
         };
       }
 
-      return getYTarget(child, path.slice(1));
+      return getYTarget(child, node.children[path[0]], path.slice(1));
     }
 
     if (path.length > 1) {
@@ -84,7 +95,7 @@ export function getYTarget(
     }
 
     const delta = child.toDelta() as InsertDelta;
-    const deltaOffset = path[0] - currentPathOffset;
+    const deltaOffset = normalizedSlateOffset - currentPathOffset;
     const anchorOffset = delta
       .slice(0, deltaOffset)
       .reduce((length, { insert }) => length + insert.length, 0);
@@ -101,8 +112,8 @@ export function getYTarget(
   }
 
   // Insert new element at the end
-  if (path.length === 1 && currentPathOffset === path[0]) {
-    return { parent: root, pathOffset: path[0] };
+  if (path.length === 1 && currentPathOffset === normalizedSlateOffset) {
+    return { parent: root, pathOffset: normalizedSlateOffset };
   }
 
   throw new Error("Path doesn't match root element, offset out of bounds");

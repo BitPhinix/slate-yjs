@@ -2,25 +2,34 @@ import { Editor, Operation } from 'slate';
 import invariant from 'tiny-invariant';
 import Y from 'yjs';
 import { applyYjsEvents } from '../applyToSlate';
-import applySlateOps from '../applyToYjs';
-import { SharedType, slateYjsSymbol } from '../model';
-import { toSlateDoc } from '../utils';
+import { applySlateOps } from '../applyToYjs';
+import { SharedType } from '../model/types';
+import { fromSyncNode } from '../utils/convert';
 
 const IS_REMOTE: WeakSet<Editor> = new WeakSet();
 const LOCAL_OPERATIONS: WeakMap<Editor, Set<Operation>> = new WeakMap();
 const SHARED_TYPES: WeakMap<Editor, SharedType> = new WeakMap();
+const YJS_EDITOR_SYMBOL = Symbol('yjsEditor');
 
 export interface YjsEditor extends Editor {
   sharedType: SharedType;
 }
 
 export const YjsEditor = {
+  isYjsEditor(v: unknown): v is YjsEditor {
+    return (
+      v !== null &&
+      typeof v === 'object' &&
+      (v as YjsEditor).sharedType instanceof Y.XmlFragment
+    );
+  },
+
   /**
    * Set the editor value to the content of the to the editor bound shared type.
    */
   synchronizeValue: (e: YjsEditor): void => {
     Editor.withoutNormalizing(e, () => {
-      e.children = toSlateDoc(e.sharedType);
+      e.children = fromSyncNode(e.sharedType);
       e.onChange();
     });
   },
@@ -76,8 +85,9 @@ function applyLocalOperations(editor: YjsEditor): void {
 
   applySlateOps(
     YjsEditor.sharedType(editor),
+    editor,
     Array.from(editorLocalOperations),
-    slateYjsSymbol
+    YJS_EDITOR_SYMBOL
   );
 
   editorLocalOperations.clear();
@@ -86,12 +96,17 @@ function applyLocalOperations(editor: YjsEditor): void {
 /**
  * Apply Yjs events to slate
  */
-function applyRemoteYjsEvents(editor: YjsEditor, events: Y.YEvent[]): void {
+function applyRemoteYjsEvents(
+  editor: YjsEditor,
+  sharedType: SharedType,
+  events: Y.YEvent[]
+): void {
   Editor.withoutNormalizing(editor, () =>
     YjsEditor.asRemote(editor, () =>
       applyYjsEvents(
         editor,
-        events.filter((event) => event.transaction.origin !== slateYjsSymbol)
+        sharedType,
+        events.filter((event) => event.transaction.origin !== YJS_EDITOR_SYMBOL)
       )
     )
   );
@@ -112,7 +127,9 @@ export function withYjs<T extends Editor>(
     setTimeout(() => YjsEditor.synchronizeValue(e), 0);
   }
 
-  sharedType.observeDeep((events) => applyRemoteYjsEvents(e, events));
+  sharedType.observeDeep((events) =>
+    applyRemoteYjsEvents(e, sharedType, events)
+  );
 
   const { apply, onChange } = e;
 
