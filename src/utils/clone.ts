@@ -1,39 +1,23 @@
 import Y from 'yjs';
-import {
-  isSyncDescendant,
-  isSyncElement,
-  isSyncLeaf,
-  SyncDescendant,
-  SyncNode,
-} from '../model/types';
+import { InsertDelta } from '../model/types';
 
-export function clone(node: SyncNode): SyncNode {
-  if (isSyncLeaf(node)) {
-    const leaf = new Y.XmlText();
-    leaf.applyDelta(node.toDelta(), { sanitize: false });
-    return leaf;
-  }
+export function cloneInsertDeltaDeep(delta: InsertDelta): InsertDelta {
+  return delta.map((element) => {
+    if (typeof element.insert === 'string') {
+      return element;
+    }
 
-  if (isSyncElement(node)) {
-    const element = new Y.XmlElement();
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    return { ...element, insert: cloneDeep(element.insert) };
+  });
+}
 
-    const children = node.toArray().map((child) => {
-      if (!isSyncDescendant(child)) {
-        throw new Error('Unexpected sync element child type');
-      }
+export function cloneDeep(yText: Y.XmlText): Y.XmlText {
+  const clone = new Y.XmlText();
 
-      return clone(child) as SyncDescendant;
-    });
+  clone.applyDelta(cloneInsertDeltaDeep(yText.toDelta() as InsertDelta), {
+    sanitize: false,
+  });
 
-    element.insert(0, children);
-    Object.entries(node.getAttributes()).forEach(([key, value]) => {
-      element.setAttribute(key, value);
-    });
-
-    return element;
-  }
-
-  const sharedType = new Y.XmlFragment();
-  sharedType.insert(0, node.toArray() as SyncDescendant[]);
-  return sharedType;
+  return clone;
 }

@@ -8,6 +8,7 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'import/no-default-export': 'error',
     'consistent-return': 'off',
+    'no-prototype-builtins': 'off',
   },
   parserOptions: {
     project: './tsconfig.eslint.json',

@@ -1,8 +1,8 @@
 import { Editor, Operation } from 'slate';
-import { SharedType } from '../model/types';
+import Y from 'yjs';
 
 export type ApplyFunc<O extends Operation = Operation> = (
-  sharedType: SharedType,
+  root: Y.XmlText,
   editor: Editor,
   op: O
 ) => void;

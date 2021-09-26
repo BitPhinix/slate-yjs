@@ -1,28 +1,27 @@
 import { Editor, Operation } from 'slate';
-import invariant from 'tiny-invariant';
-import { SharedType } from '../model/types';
+import Y from 'yjs';
 import { NODE_MAPPER } from './node';
 import { TEXT_MAPPER } from './text';
 import { ApplyFunc, OpMapper } from './types';
 
-const nullOp: ApplyFunc = (doc: SharedType) => doc;
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+const nullOp: ApplyFunc = () => {};
 
 const opMappers: OpMapper = {
   ...TEXT_MAPPER,
   ...NODE_MAPPER,
 
-  // SetSelection is currently a null op since we don't support cursors
   set_selection: nullOp,
 };
 
 /**
- * Applies a slate operation to a SharedType
+ * Applies a slate operation to a Y.XmlText
  *
  * @param sharedType
  * @param op
  */
 export function applySlateOp(
-  sharedType: SharedType,
+  root: Y.XmlText,
   editor: Editor,
   op: Operation
 ): void {
@@ -32,25 +31,25 @@ export function applySlateOp(
     throw new Error(`Unknown operation: ${op.type}`);
   }
 
-  apply(sharedType, editor, op);
+  apply(root, editor, op);
 }
 
 /**
- * Applies slate operations to a SharedType
+ * Applies slate operations to a Y.XmlText
  */
 export function applySlateOps(
-  sharedType: SharedType,
+  root: Y.XmlText,
   editor: Editor,
   ops: Operation[],
   origin: unknown
-): SharedType {
-  invariant(sharedType.doc, 'Shared type without attached document');
-
-  if (ops.length > 0) {
-    sharedType.doc.transact(() => {
-      ops.forEach((op) => applySlateOp(sharedType, editor, op));
-    }, origin);
+): void {
+  if (!root.doc) {
+    throw new Error('Shared type without attached document');
   }
 
-  return sharedType;
+  if (ops.length > 0) {
+    root.doc.transact(() => {
+      ops.forEach((op) => applySlateOp(root, editor, op));
+    }, origin);
+  }
 }

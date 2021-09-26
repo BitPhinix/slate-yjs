@@ -1,41 +1,31 @@
-import {
-  Editor,
-  MoveNodeOperation,
-  Node,
-  Path,
-  RemoveNodeOperation,
-} from 'slate';
-import { SharedType } from '../../model/types';
-import { insertNode } from './insertNode';
-import { removeNode } from './removeNode';
+import { Editor, MoveNodeOperation } from 'slate';
+import Y from 'yjs';
+import { Delta } from '../../model/types';
+import { cloneInsertDeltaDeep } from '../../utils/clone';
+import { getYTarget } from '../../utils/location';
 
 /**
- * Applies a move node operation to a SharedType.
+ * Applies a move node operation to a Y.XmlText.
  *
  * @param sharedType
  * @param op
  */
 export function moveNode(
-  sharedType: SharedType,
+  root: Y.XmlText,
   editor: Editor,
   op: MoveNodeOperation
 ): void {
-  const node = Node.get(editor, op.path);
-  const removeOp: RemoveNodeOperation = {
-    node,
-    path: op.path,
-    type: 'remove_node',
-  };
+  const origin = getYTarget(root, editor, op.path);
+  origin.parent.delete(
+    origin.textRange.start,
+    origin.textRange.end - origin.textRange.start
+  );
 
-  removeNode(sharedType, editor, removeOp);
-  const to = Path.transform(op.newPath, removeOp);
-  if (!to) {
-    throw new Error('Operation moves node into itself');
-  }
+  const target = getYTarget(root, editor, op.path);
+  const applyDelta: Delta = [
+    { retain: target.textRange.start },
+    ...cloneInsertDeltaDeep(origin.targetDelta),
+  ];
 
-  insertNode(sharedType, editor, {
-    node,
-    path: to,
-    type: 'insert_node',
-  });
+  target.parent.applyDelta(applyDelta, { sanitize: false });
 }

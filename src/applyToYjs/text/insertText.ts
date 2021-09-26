@@ -1,30 +1,25 @@
 import { Editor, InsertTextOperation, Node, Text } from 'slate';
-import { isSyncLeaf, SharedType } from '../../model/types';
+import type Y from 'yjs';
 import { getYTarget } from '../../utils/location';
 import { getMarks } from '../../utils/slate';
 
 /**
- * Applies a insert text operation to a SharedType.
+ * Applies a insert text operation to a Y.XmlText
  *
  * @param doc
  * @param op
  */
 export function insertText(
-  sharedType: SharedType,
+  root: Y.XmlText,
   editor: Editor,
   op: InsertTextOperation
 ): void {
-  const { element, textRange } = getYTarget(sharedType, editor, op.path);
-
-  if (!isSyncLeaf(element) || !textRange) {
-    throw new Error('Cannot insert text into a non-leaf');
-  }
+  const { parent: target, textRange } = getYTarget(root, editor, op.path);
 
   const targetNode = Node.get(editor, op.path);
   if (!Text.isText(targetNode)) {
     throw new Error('Cannot insert text into non-text node');
   }
-  const marks = getMarks(targetNode);
 
-  return element.insert(textRange.startOffset + op.offset, op.text, marks);
+  target.insert(textRange.start + op.offset, op.text, getMarks(targetNode));
 }

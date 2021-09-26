@@ -1,89 +1,65 @@
-import { Editor, Node, SplitNodeOperation } from 'slate';
+import { Editor, SplitNodeOperation, Text } from 'slate';
 import Y from 'yjs';
-import {
-  InsertDelta,
-  isSyncLeaf,
-  SharedType,
-  SyncLeaf,
-} from '../../model/types';
+import { cloneInsertDeltaDeep } from '../../utils/clone';
+import { sliceInsertDelta } from '../../utils/delta';
 import { getYTarget } from '../../utils/location';
-
-function splitLeafGroup(leaf: SyncLeaf, offset: number): SyncLeaf | null {
-  if (offset === leaf.length) {
-    return null;
-  }
-
-  const delta = leaf.toDelta() as InsertDelta;
-
-  let currentOffset = 0;
-  const toInsert = delta
-    .map(({ insert, attributes }) => {
-      if (offset + insert.length >= currentOffset) {
-        return {
-          attributes,
-          insert: insert.slice(Math.max(0, offset - currentOffset)),
-        };
-      }
-
-      currentOffset += insert.length;
-      return null;
-    })
-    .filter(Boolean);
-
-  const newLeaf = new Y.XmlText();
-  newLeaf.applyDelta(toInsert);
-  return newLeaf;
-}
+import { getMarks } from '../../utils/slate';
 
 /**
- * Applies a set node operation to a SharedType.
+ * Applies a split node operation to a Y.XmlText.
  *
  * @param sharedType
  * @param op
  */
 export function splitNode(
-  sharedType: SharedType,
+  root: Y.XmlText,
   editor: Editor,
   op: SplitNodeOperation
 ): void {
-  const { element, parent, pathOffset } = getYTarget(
-    sharedType,
+  const { parent, target, targetNode, textRange } = getYTarget(
+    root,
     editor,
     op.path
   );
 
-  // Since we combine leafs into a single group this is a noop.
-  if (isSyncLeaf(element)) {
-    return;
+  if (!targetNode) {
+    throw new Error('Y target without corresponding slate node');
   }
 
-  if (!element) {
-    throw new Error('Offset out of bounds');
-  }
-
-  const node = Node.get(editor, op.path);
-  const {
-    pathOffset: childOffset,
-    textRange,
-    element: leaf,
-  } = getYTarget(element, node, [op.position]);
-
-  const moveOffset = textRange ? childOffset - 1 : childOffset;
-  const toInsert = element.slice(moveOffset, element.length - moveOffset);
-
-  if (textRange) {
-    if (!isSyncLeaf(leaf)) {
-      throw new Error('Cannot split non-leaf at text range');
+  if (!target) {
+    if (!Text.isText(targetNode)) {
+      throw new Error('Mismatch node type between y target and slate node');
     }
 
-    // TODO: Handle empty texts at the end of a group
-    const splitLeaf = splitLeafGroup(leaf, textRange.startOffset);
-    if (splitLeaf) {
-      toInsert.unshift(splitLeaf);
-    }
+    const unsetMarks = Object.fromEntries(
+      Object.keys(getMarks(targetNode)).map(([key]) => [key, null])
+    );
+
+    return parent.format(
+      textRange.start + op.position,
+      textRange.end - textRange.start - op.position,
+      { ...unsetMarks, ...op.properties }
+    );
   }
 
-  const split = new Y.XmlElement();
-  split.insert(0, toInsert);
-  parent.insert(pathOffset, [split]);
+  const splitTarget = getYTarget(target, targetNode, [op.position]);
+  const splitDelta = sliceInsertDelta(
+    splitTarget.targetDelta,
+    splitTarget.textRange.start,
+    target.length - splitTarget.textRange.start
+  );
+
+  target.delete(
+    splitTarget.textRange.start,
+    target.length - splitTarget.textRange.start
+  );
+
+  const split = new Y.XmlText();
+  split.applyDelta(cloneInsertDeltaDeep(splitDelta), { sanitize: false });
+
+  Object.entries(op.properties).forEach(([key, value]) => {
+    split.setAttribute(key, value);
+  });
+
+  return parent.insertEmbed(textRange.end, split);
 }

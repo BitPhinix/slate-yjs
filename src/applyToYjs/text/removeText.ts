@@ -1,27 +1,18 @@
 import { Editor, RemoveTextOperation } from 'slate';
-import { isSyncLeaf, SharedType } from '../../model/types';
+import type Y from 'yjs';
 import { getYTarget } from '../../utils/location';
 
 /**
- * Applies a insert text operation to a SharedType.
+ * Applies a remove text operation to a Y.XmlText
  *
  * @param doc
  * @param op
  */
 export function removeText(
-  sharedType: SharedType,
+  root: Y.XmlText,
   editor: Editor,
   op: RemoveTextOperation
 ): void {
-  const { element, textRange } = getYTarget(sharedType, editor, op.path);
-
-  if (!isSyncLeaf(element) || !textRange) {
-    throw new Error('Cannot delete text from a non-leaf element');
-  }
-
-  if (textRange.endOffset < op.offset + op.text.length) {
-    throw new Error('Cannot delete across leafs');
-  }
-
-  return element.delete(textRange.startOffset + op.offset, op.text.length);
+  const { parent: target, textRange } = getYTarget(root, editor, op.path);
+  target.delete(textRange.start + op.offset, op.text.length);
 }
