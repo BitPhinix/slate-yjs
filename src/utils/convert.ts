@@ -21,6 +21,7 @@ export function toSlateNode(element: SyncElement): Node {
 
   Array.from(element.entries()).forEach(([key, value]) => {
     if (key !== 'children' && key !== 'text') {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (node as any)[key] = value;
     }
   });

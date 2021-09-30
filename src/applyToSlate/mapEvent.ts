@@ -25,6 +25,7 @@ export default function translateMapEvent(
   );
 
   const properties = Object.fromEntries(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     keyChanges.map(([key]) => [key, (targetElement as any)[key]])
   );
   return [{ type: 'set_node', newProperties, properties, path: targetPath }];
