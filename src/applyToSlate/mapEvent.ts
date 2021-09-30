@@ -25,8 +25,7 @@ export default function translateMapEvent(
   );
 
   const properties = Object.fromEntries(
-    keyChanges.map(([key]) => [key, targetElement[key]])
+    keyChanges.map(([key]) => [key, (targetElement as any)[key]])
   );
-
   return [{ type: 'set_node', newProperties, properties, path: targetPath }];
 }

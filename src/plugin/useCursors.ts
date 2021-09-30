@@ -44,7 +44,7 @@ export const useCursors = (
 
   const decorate = useCallback(
     ([node, path]: NodeEntry) => {
-      const ranges: Range[] = [];
+      const ranges: Cursor[] = [];
 
       if (Text.isText(node) && cursors?.length) {
         cursors.forEach((cursor) => {

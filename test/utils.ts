@@ -9,6 +9,7 @@ import {
 } from '../src';
 import { TestEditor, withTest } from './testEditor';
 import { WithYjsOptions } from '../src/plugin';
+import { CustomElement } from '../src/model';
 
 export function createText(text = ''): Text {
   return {
@@ -19,8 +20,8 @@ export function createText(text = ''): Text {
 export function createNode(
   type = 'paragraph',
   text = '',
-  data?: Partial<Node>
-): Node {
+  data?: Partial<CustomElement>
+): CustomElement {
   return {
     type,
     children: [createText(text)],

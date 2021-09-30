@@ -13,15 +13,15 @@ export function toSlateNode(element: SyncElement): Node {
 
   const node: Partial<Node> = {};
   if (text !== undefined) {
-    node.text = text.toString();
+    (node as Text).text = text.toString();
   }
   if (children !== undefined) {
-    node.children = children.map(toSlateNode);
+    (node as Element).children = children.map(toSlateNode);
   }
 
   Array.from(element.entries()).forEach(([key, value]) => {
     if (key !== 'children' && key !== 'text') {
-      node[key] = value;
+      (node as any)[key] = value;
     }
   });
 

@@ -1,5 +1,6 @@
-import { Node, Element } from 'slate';
+import { Node } from 'slate';
 import { toSlateDoc, toSyncElement, YjsEditor } from '../../src';
+import { CustomElement } from '../../src/model';
 import { createTestEditor } from '../utils';
 
 // onChange fires in the next tick, see slate createEditor
@@ -11,7 +12,7 @@ async function waitForSlateOnChangeAround(callback: () => void) {
 describe('YjsEditor', () => {
   let yjsEditor: YjsEditor;
 
-  const initialValue: Node[] = [
+  const initialValue: CustomElement[] = [
     { type: 'paragraph', children: [{ text: '' }] },
   ];
 
@@ -34,7 +35,7 @@ describe('YjsEditor', () => {
   });
 
   describe('shared type <=> slate sync', () => {
-    const newElement: Element = {
+    const newElement: CustomElement = {
       type: 'paragraph',
       children: [{ text: 'new' }],
     };
@@ -63,7 +64,7 @@ describe('YjsEditor', () => {
     });
 
     it('should apply slate normalizations to yjs', async () => {
-      const normalization: Element = {
+      const normalization: CustomElement = {
         type: 'paragraph',
         children: [{ text: 'some normalization' }],
       };
@@ -71,7 +72,9 @@ describe('YjsEditor', () => {
       const { normalizeNode } = yjsEditor;
 
       yjsEditor.normalizeNode = (entry) => {
-        const isNewElement = entry[0].text === newElement.children[0].text;
+        const isNewElement =
+          (entry[0] as CustomElement).text ===
+          (newElement.children[0] as CustomElement).text;
         if (isNewElement) {
           yjsEditor.insertNode(normalization);
         }

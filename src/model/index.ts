@@ -1,4 +1,4 @@
-import { Range } from 'slate';
+import { Descendant, Range, Text } from 'slate';
 import * as Y from 'yjs';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -12,7 +12,17 @@ export interface Cursor extends Range {
   data: {
     [key: string]: unknown;
   };
+  isForward?: boolean;
+  isCaret?: boolean;
 }
+
+export interface CustomNode {
+  children: Descendant[];
+  type?: string;
+  [key: string]: unknown;
+}
+
+export declare type CustomElement = CustomNode | Text;
 
 export const SyncElement = {
   getText(element: SyncElement): Y.Text | undefined {

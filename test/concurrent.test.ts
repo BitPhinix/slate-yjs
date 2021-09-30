@@ -1,5 +1,6 @@
 import { Node } from 'slate';
 import { toSlateDoc } from '../src';
+import { CustomElement } from '../src/model';
 import { TestEditor, TransformFunc } from './testEditor';
 import { createNode, createTestEditor, wait } from './utils';
 
@@ -179,7 +180,7 @@ const runOneTest = async (ti: Test, tj: Test) => {
   // Set initial state for 1st editor, propagate changes to 2nd.
   TestEditor.applyTransform(
     ei,
-    TestEditor.makeInsertNodes(initialState as Node[], [0])
+    TestEditor.makeInsertNodes(initialState as CustomElement[], [0])
   );
   await wait();
 
