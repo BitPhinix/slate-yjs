@@ -1,4 +1,4 @@
-import { Editor, Location, Path, Point, Transforms } from 'slate';
+import { Editor, Location, Operation, Path, Point, Transforms } from 'slate';
 import invariant from 'tiny-invariant';
 import * as Y from 'yjs';
 import { CustomElement } from '../src/model';
@@ -62,6 +62,20 @@ export const TestEditor = {
     transforms.forEach((transform) => {
       TestEditor.applyTransform(e, transform);
     });
+  },
+
+  /**
+   * Add undo TransformFuncs to slate
+   */
+
+  undo: (): TransformFunc => {
+    return (e: Editor) => {
+      const inverseOps = e.operations.map(Operation.inverse).reverse();
+      // eslint-disable-next-line no-restricted-syntax
+      for (const op of inverseOps) {
+        e.apply(op);
+      }
+    };
   },
 
   makeInsertText: (text: string, at: Location): TransformFunc => {

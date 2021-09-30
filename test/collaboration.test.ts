@@ -200,6 +200,18 @@ const tests = [
     ],
   ],
   [
+    'Remove text properties',
+    [
+      createNode('paragraph', 'first', { test: '1234' }),
+      createNode('paragraph', 'second'),
+    ],
+    [TestEditor.makeSetNodes([1, 0], { data: '4567' }), TestEditor.undo()],
+    [
+      createNode('paragraph', 'first', { test: '1234' }),
+      createNode('paragraph', 'second'),
+    ],
+  ],
+  [
     'Set properties of a text node',
     [
       createNode('paragraph', 'first', { test: '1234' }),
