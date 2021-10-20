@@ -6,7 +6,9 @@ export type SyncElement = Y.Map<any>;
 export type SharedType = Y.Array<SyncElement>;
 export type SyncNode = SharedType | SyncElement;
 
-export const slateYjsSymbol = Symbol('slate-yjs');
+export const slateYjsOriginSymbol = Symbol(
+  'Denotes that an event originated from slate-yjs'
+);
 
 export interface Cursor extends Range {
   data: {

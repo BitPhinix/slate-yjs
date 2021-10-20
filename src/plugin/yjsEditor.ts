@@ -3,7 +3,7 @@ import invariant from 'tiny-invariant';
 import * as Y from 'yjs';
 import { applyYjsEvents } from '../applyToSlate';
 import applySlateOps from '../applyToYjs';
-import { SharedType, slateYjsSymbol } from '../model';
+import { SharedType, slateYjsOriginSymbol } from '../model';
 import { toSlateDoc } from '../utils';
 
 const IS_REMOTE: WeakSet<Editor> = new WeakSet();
@@ -77,7 +77,7 @@ function applyLocalOperations(editor: YjsEditor): void {
   applySlateOps(
     YjsEditor.sharedType(editor),
     Array.from(editorLocalOperations),
-    slateYjsSymbol
+    slateYjsOriginSymbol
   );
 
   editorLocalOperations.clear();
@@ -91,7 +91,9 @@ function applyRemoteYjsEvents(editor: YjsEditor, events: Y.YEvent[]): void {
     YjsEditor.asRemote(editor, () =>
       applyYjsEvents(
         editor,
-        events.filter((event) => event.transaction.origin !== slateYjsSymbol)
+        events.filter(
+          (event) => event.transaction.origin !== slateYjsOriginSymbol
+        )
       )
     )
   );
