@@ -1,4 +1,4 @@
-# Slate Yjs - [Live Demo](https://bitphinix.github.io/slate-yjs-example)
+# Slate-Yjs
 
 [![codecov](https://codecov.io/gh/BitPhinix/slate-yjs/branch/master/graph/badge.svg?token=ZHUA26IWP0)](https://codecov.io/gh/BitPhinix/slate-yjs)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/BitPhinix/slate-yjs/graphs/commit-activity)
@@ -8,76 +8,41 @@
 [![tests](https://img.shields.io/github/workflow/status/bitphinix/slate-yjs/test)](https://github.com/BitPhinix/slate-yjs/actions)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/BitPhinix/slate-yjs/actions?query=workflow%3Arelease)
 
-Yjs bindings for Slate.
+Slate-Yjs aims to be the goto, all in one, collaboration solution for slate. Get started in seconds, scale to infinity, customize to your hearts content.
 
-Heavily inspired by [slate-collaborative](https://github.com/cudr/slate-collaborative)
+**:warning: This is the active development branch for v4. Don't use any code in here in production. Things will break and the api will change. :warning:**
 
-![](/preview.gif?raw=true)
+## Sponsors 💖
 
-# Installation
+I'm currently looking for sponsors to found further development of slate-yjs. These awesome sponsors already fund the development of slate-yjs:
 
-Via npm:
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://www.sanalabs.com/">
+        <img src="https://github.com/sanalabs.png?size=100" width="100"><br>
+        <strong>Sana Labs</strong>
+      </a>
+    </td>
+  </tr>
+</table>
 
-```bash
-npm install slate-yjs
-```
+[Become a sponsor!](https://opencollective.com/y-collective/projects/slate-yjs)
 
-Via yarn:
+## Packages
 
-```bash
-yarn add slate-yjs
-```
+### @slate-yjs/core
 
-# Why use `slate-yjs` over `slate-collaborative`?
+Core, frontend independent slate binding for yjs.
 
-Performance. `slate-collaborative` works well for small documents but can cause 20 seconds + load times on heavier ones which slate-yjs can load in a fraction of a second.
+### @slate-yjs/react
 
-For a more in-depth comparison take a look at these [benchmarks](https://github.com/dmonad/crdt-benchmarks)
+React specific slate plugins to provide functionally like cursor rendering.
 
-You might also want to take a look at ["CRDTs are the future"](https://josephg.com/blog/crdts-are-the-future/) from the creator of [sharedb](https://github.com/share/sharedb)
+### @slate-yjs/plate
 
-# API
+[Plate](https://github.com/udecode/plate) plugins wrapping the by @slate-yjs/react, @slate-yjs provided functionality.
 
-## YjsEditor
+## Backend
 
-Adding a 2-way binding from the editor to a Yjs document is as easy as:
-
-```ts
-import { withYjs, SyncElement } from 'slate-yjs';
-import Y from 'yjs';
-
-const doc = new Y.Doc();
-const sharedType = doc.getArray<SyncElement>('content');
-const yjsEditor = withYjs(editor, sharedType);
-```
-
-## Cursors
-
-Slate-yjs support syncing collaborative cursors using awareness:
-
-```ts
-import { withCursor, useCursors } from 'slate-yjs';
-
-// Adds (and syncs) cursor information (anchor, focus) to the awareness local state.
-const cursorEditor = withCursor(yjsEditor, provider.awareness);
-
-// Returns a decorator that annotates text nodes with cursor information and
-// a array containing all cursor information.
-const { decorate, cursors } = useCursors(cursorEditor);
-```
-
-## Example project
-
-Take a look at the example project [here](https://github.com/BitPhinix/slate-yjs-example)
-
-# Contribute
-
-Please refer to each project's style and contribution guidelines for submitting patches and additions. In general, we follow the "fork-and-pull" Git workflow.
-
-1. Fork the repo on GitHub
-2. Clone the project to your machine
-3. Commit changes to your branch
-4. Push your work back up to your fork
-5. Submit a Pull request so that we can review your changes
-
-NOTE: Be sure to merge the latest from "upstream" before making a pull request!
+https://www.hocuspocus.dev/examples/slate/

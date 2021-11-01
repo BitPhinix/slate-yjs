@@ -1,24 +1,4 @@
 {
-  "compilerOptions": {
-    "target": "ES6",
-    "outDir": "dist/main",
-    "rootDir": "src",
-    "moduleResolution": "node",
-    "module": "commonjs",
-    "declaration": true,
-    "inlineSourceMap": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "forceConsistentCasingInFileNames": true,
-    "traceResolution": false,
-    "listEmittedFiles": false,
-    "listFiles": false,
-    "pretty": true,
-    "lib": ["ES2020", "DOM"]
-  },
-  "include": ["src"]
+  "files": [],
+  "references": [{ "path": "./packages/core" }]
 }

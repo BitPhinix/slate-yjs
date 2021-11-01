@@ -1,0 +1,40 @@
+{
+  "name": "@slate-yjs/core",
+  "sideEffects": false,
+  "version": "0.0.1",
+  "description": "Yjs binding for Slate.",
+  "keywords": [
+    "slate",
+    "yjs",
+    "collaborative"
+  ],
+  "main": "dist/index.js",
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
+  "umd": "dist/core.js",
+  "umdMin": "dist/core.min.js",
+  "files": [
+    "dist/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BitPhinix/slate-yjs.git"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "slate": "~0.59.0",
+    "yjs": "^13.5.17"
+  },
+  "dependencies": {
+    "tiny-invariant": "1.1.0",
+    "y-protocols": "^1.0.5"
+  },
+  "peerDependencies": {
+    "slate": "^0.59.0",
+    "yjs": "^13.5.17"
+  },
+  "bugs": {
+    "url": "https://github.com/BitPhinix/slate-yjs/issues"
+  },
+  "homepage": "https://github.com/BitPhinix/slate-yjs#readme"
+}
