@@ -1,7 +1,7 @@
 <br/>
 
 <p align="center">
-  <a href="#"><img width="600" src="./docs/images/banner.png" /></a>
+  <a href="#"><img width="600" src="./docs/images/banner.svg" /></a>
 </p>
 
 <p align="center">
@@ -17,8 +17,8 @@ Slate-yjs aims to be the goto collaboration solution for slate. Get started in s
 <br/>
 
 <p align="center">
-  <a href="#sponsors"><strong>Sponsors</strong></a> ·
-  <a href="#why yjs?"><strong>Why Yjs?</strong></a> ·
+  <a href="#sponsors-"><strong>Sponsors</strong></a> ·
+  <a href="#why-yjs"><strong>Why Yjs?</strong></a> ·
   <a href=""><strong>Live demo</strong></a> ·
   <a href=""><strong>Documentation</strong></a> ·
   <a href="#packages"><strong>Packages</strong></a> ·
