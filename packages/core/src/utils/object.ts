@@ -26,3 +26,23 @@ export function deepEqual(
     return isObject(val2) && deepEqual(val1, val2);
   });
 }
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function pick<TObj extends {}, TKeys extends keyof TObj>(
+  obj: TObj,
+  ...keys: TKeys[]
+): Pick<TObj, TKeys> {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([key]) => keys.includes(key as TKeys))
+  ) as Pick<TObj, TKeys>;
+}
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function omit<TObj extends {}, TKeys extends keyof TObj>(
+  obj: TObj,
+  ...keys: TKeys[]
+): Omit<TObj, TKeys> {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([key]) => !keys.includes(key as TKeys))
+  ) as Omit<TObj, TKeys>;
+}

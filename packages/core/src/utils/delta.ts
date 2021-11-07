@@ -4,6 +4,10 @@ export function getInsertLength({ insert }: DeltaInsert): number {
   return typeof insert === 'string' ? insert.length : 1;
 }
 
+export function getInsertDeltaLength(delta: InsertDelta): number {
+  return delta.reduce((curr, element) => curr + getInsertLength(element), 0);
+}
+
 export function sliceInsertDelta(
   delta: InsertDelta,
   start: number,

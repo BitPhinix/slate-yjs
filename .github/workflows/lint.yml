@@ -23,7 +23,7 @@ jobs:
           node-version: 12
           registry-url: https://registry.npmjs.org/
       - name: Install Dependencies
-        run: npm install
+        run: yarn
       - name: Lint
         uses: reviewdog/action-eslint@v1
         with:

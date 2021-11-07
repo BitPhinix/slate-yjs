@@ -31,9 +31,14 @@ export function setNode(
     });
   }
 
+  const unset = Object.fromEntries(
+    Object.keys(op.properties).map((key) => [key, null])
+  );
+  const newProperties = { ...unset, ...op.newProperties };
+
   parent.format(
     textRange.start,
     textRange.end - textRange.start,
-    op.newProperties
+    newProperties
   );
 }

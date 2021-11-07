@@ -151,6 +151,7 @@ const tests = [
     [TestEditor.makeRemoveNodes([0])],
     [createNode('paragraph', 'second'), createNode('paragraph', 'third')],
   ],
+
   [
     'Remove two non-consecutive paragraph nodes',
     [

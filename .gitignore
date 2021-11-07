@@ -1,12 +1,31 @@
-node_modules
-coverage
-.nyc_output
-.DS_Store
+# Ignore the compiled output.
+dist/
+
+# TypeScript incremental compilation cache
+*.tsbuildinfo
+
+# Logs
+logs
 *.log
-.vscode
-.idea
-dist
-compiled
-.awcache
-.rpt2_cache
-docs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Coverage (from Jest)
+coverage/
+
+# JUnit Reports (used mainly in CircleCI)
+reports/
+junit.xml
+
+# Node modules
+node_modules/
+
+# Mac OS
+.DS_Store
+
+# Intellij Configuration Files
+.idea/
+
+# Local Netlify folder
+.netlify

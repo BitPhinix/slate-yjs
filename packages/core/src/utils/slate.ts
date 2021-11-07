@@ -1,9 +1,11 @@
-import { Text } from 'slate';
+import { Descendant, Text } from 'slate';
+import { omit } from './object';
 
-export function getMarks({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  text,
-  ...marks
-}: Text): Record<string, unknown> {
-  return marks;
+export function getProperties<TNode extends Descendant>(
+  node: TNode
+): Omit<TNode, TNode extends Text ? 'text' : 'children'> {
+  return omit(
+    node,
+    (Text.isText(node) ? 'text' : 'children') as keyof TNode
+  ) as unknown as Omit<TNode, TNode extends Text ? 'text' : 'children'>;
 }

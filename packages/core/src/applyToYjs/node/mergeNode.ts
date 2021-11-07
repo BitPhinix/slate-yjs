@@ -3,7 +3,7 @@ import * as Y from 'yjs';
 import { Delta, InsertDelta } from '../../model/types';
 import { cloneInsertDeltaDeep } from '../../utils/clone';
 import { getYTarget } from '../../utils/location';
-import { getMarks } from '../../utils/slate';
+import { getProperties } from '../../utils/slate';
 
 /**
  * Applies a merge node operation to a Y.XmlText.
@@ -38,7 +38,7 @@ export function mergeNode(
     return parent.format(
       textRange.start,
       textRange.start - textRange.end,
-      getMarks(node)
+      getProperties(node)
     );
   }
 

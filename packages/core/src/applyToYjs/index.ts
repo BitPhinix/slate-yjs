@@ -1,6 +1,5 @@
 import { Editor, Operation } from 'slate';
 import * as Y from 'yjs';
-import { yTextToSlateElement } from '../utils/convert';
 import { NODE_MAPPER } from './node';
 import { TEXT_MAPPER } from './text';
 import { ApplyFunc, OpMapper } from './types';

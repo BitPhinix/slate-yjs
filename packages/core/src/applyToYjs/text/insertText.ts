@@ -1,7 +1,7 @@
 import { Editor, InsertTextOperation, Node, Text } from 'slate';
 import type Y from 'yjs';
 import { getYTarget } from '../../utils/location';
-import { getMarks } from '../../utils/slate';
+import { getProperties } from '../../utils/slate';
 
 /**
  * Applies a insert text operation to a Y.XmlText
@@ -21,5 +21,9 @@ export function insertText(
     throw new Error('Cannot insert text into non-text node');
   }
 
-  target.insert(textRange.start + op.offset, op.text, getMarks(targetNode));
+  target.insert(
+    textRange.start + op.offset,
+    op.text,
+    getProperties(targetNode)
+  );
 }

@@ -1,5 +1,4 @@
 import { Editor, Location, Node, Path, Point, Transforms } from 'slate';
-import invariant from 'tiny-invariant';
 import * as Y from 'yjs';
 import { YjsEditor } from '../src';
 
@@ -33,7 +32,6 @@ export const TestEditor = {
    */
   applyYjsUpdateToYjs: (e: TestEditor, update: Uint8Array): void => {
     e.shouldCaptureYjsUpdates = false;
-    invariant(e.sharedRoot.doc, 'Shared root should be bound to a document');
     Y.applyUpdate(e.sharedRoot.doc, update);
     e.shouldCaptureYjsUpdates = true;
   },
@@ -63,65 +61,68 @@ export const TestEditor = {
     });
   },
 
-  makeInsertText: (text: string, at: Location): TransformFunc => {
-    return (e: Editor) => {
+  makeInsertText:
+    (text: string, at: Location): TransformFunc =>
+    (e: Editor) => {
       Transforms.insertText(e, text, { at });
-    };
-  },
+    },
 
-  makeRemoveCharacters: (count: number, at: Location): TransformFunc => {
-    return (e: Editor) => {
+  makeRemoveCharacters:
+    (count: number, at: Location): TransformFunc =>
+    (e: Editor) => {
       Transforms.delete(e, { distance: count, at });
-    };
-  },
+    },
 
-  makeInsertNodes: (nodes: Node | Node[], at: Location): TransformFunc => {
-    return (e: Editor) => {
+  makeInsertNodes:
+    (nodes: Node | Node[], at: Location): TransformFunc =>
+    (e: Editor) => {
       Transforms.insertNodes(e, nodes, { at });
-    };
-  },
+    },
 
-  makeMergeNodes: (at: Path): TransformFunc => {
-    return (e: Editor) => {
+  makeMergeNodes:
+    (at: Path): TransformFunc =>
+    (e: Editor) => {
       Transforms.mergeNodes(e, { at });
-    };
-  },
+    },
 
-  makeMoveNodes: (from: Path, to: Path): TransformFunc => {
-    return (e: Editor) => {
+  makeMoveNodes:
+    (from: Path, to: Path): TransformFunc =>
+    (e: Editor) => {
       Transforms.moveNodes(e, { at: from, to });
-    };
-  },
+    },
 
-  makeRemoveNodes: (at: Path): TransformFunc => {
-    return (e: Editor) => {
+  makeRemoveNodes:
+    (at: Path): TransformFunc =>
+    (e: Editor) => {
       Transforms.removeNodes(e, { at });
-    };
-  },
+    },
 
-  makeSetNodes: (at: Location, props: Partial<Node>): TransformFunc => {
-    return (e: Editor) => {
+  makeSetNodes:
+    (at: Location, props: Partial<Node>): TransformFunc =>
+    (e: Editor) => {
       Transforms.setNodes(e, props, { at });
-    };
-  },
+    },
 
-  makeSplitNodes: (at: Location): TransformFunc => {
-    return (e: Editor) => {
+  makeSplitNodes:
+    (at: Location): TransformFunc =>
+    (e: Editor) => {
       Transforms.splitNodes(e, { at });
-    };
-  },
+    },
 
-  makeSetSelection: (anchor: Point, focus: Point): TransformFunc => {
-    return (e: Editor) => {
+  makeSetSelection:
+    (anchor: Point, focus: Point): TransformFunc =>
+    (e: Editor) => {
       Transforms.setSelection(e, { anchor, focus });
-    };
-  },
+    },
 };
 
 export function withTest<T extends YjsEditor>(editor: T): T & TestEditor {
   const e = editor as T & TestEditor;
 
-  invariant(e.sharedRoot.doc, 'Shared type should be bound to a document');
+  if (!e.sharedRoot.doc) {
+    throw new Error('Shared type should be bound to a document');
+  }
+
   e.sharedRoot.doc.on('update', (updateMessage: Uint8Array) => {
     TestEditor.captureYjsUpdate(e, updateMessage);
   });

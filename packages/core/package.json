@@ -8,29 +8,36 @@
     "yjs",
     "collaborative"
   ],
-  "main": "dist/index.js",
-  "module": "dist/index.es.js",
+  "type": "module",
+  "source": "src/index.ts",
+  "exports": {
+    "require": "./dist/core.cjs",
+    "default": "./dist/core.modern.js"
+  },
+  "main": "dist/core.cjs",
+  "module": "dist/core.module.js",
+  "unpkg": "dist/core.umd.js",
   "types": "dist/index.d.ts",
-  "umd": "dist/core.js",
-  "umdMin": "dist/core.min.js",
-  "files": [
-    "dist/"
-  ],
+  "scripts": {
+    "build": "yarn run microbundle",
+    "dev": "yarn run microbundle watch"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/BitPhinix/slate-yjs.git"
   },
   "license": "MIT",
   "devDependencies": {
-    "slate": "~0.59.0",
+    "jest-diff": "^27.3.1",
+    "microbundle": "^0.14.1",
+    "slate": "~0.67.1",
     "yjs": "^13.5.17"
   },
   "dependencies": {
-    "tiny-invariant": "1.1.0",
     "y-protocols": "^1.0.5"
   },
   "peerDependencies": {
-    "slate": "^0.59.0",
+    "slate": "^0.67.1",
     "yjs": "^13.5.17"
   },
   "bugs": {

@@ -1,10 +1,10 @@
 import { Editor, Element, Node, Operation, Path, Text } from 'slate';
 import * as Y from 'yjs';
 import { Delta, InsertDelta, YNodePath } from '../model/types';
-import { deltaInsertToSlateNode, yTextToSlateElement } from '../utils/convert';
+import { deltaInsertToSlateNode } from '../utils/convert';
 import { getNodeLength } from '../utils/location';
-import { deepEqual } from '../utils/object';
-import { getMarks } from '../utils/slate';
+import { deepEqual, pick } from '../utils/object';
+import { getProperties } from '../utils/slate';
 
 function getSlateOffsets(node: Element, yOffset: number): [number, number] {
   let currentOffset = 0;
@@ -46,6 +46,67 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
 
   // Apply changes in reverse order to avoid path changes.
   delta.reverse().forEach((change) => {
+    if ('attributes' in change && 'retain' in change) {
+      const [startPathOffset, startTextOffset] = getSlateOffsets(
+        node,
+        yOffset - change.retain
+      );
+      const [endPathOffset, endTextOffset] = getSlateOffsets(node, yOffset);
+
+      for (
+        let pathOffset =
+          endTextOffset === 0 ? endPathOffset - 1 : endPathOffset;
+        pathOffset >= startPathOffset;
+        pathOffset--
+      ) {
+        const child = node.children[pathOffset];
+        let childPath = [...slatePath, pathOffset];
+
+        const newProperties = change.attributes;
+        const properties = pick(
+          node,
+          ...(Object.keys(change.attributes) as Array<keyof Element>)
+        );
+
+        if (
+          Text.isText(child) &&
+          (pathOffset === startPathOffset || pathOffset === endPathOffset)
+        ) {
+          const start = pathOffset === startPathOffset ? startTextOffset : 0;
+          let end =
+            pathOffset === endPathOffset ? endTextOffset : child.text.length;
+
+          if (start !== 0) {
+            ops.push({
+              type: 'split_node',
+              path: childPath,
+              position: start,
+              properties: newProperties,
+            });
+
+            childPath = Path.next(childPath);
+            end -= start;
+          }
+
+          if (end !== child.text.length) {
+            ops.push({
+              type: 'split_node',
+              path: childPath,
+              position: end,
+              properties,
+            });
+          }
+        }
+
+        ops.push({
+          type: 'set_node',
+          newProperties,
+          path: childPath,
+          properties,
+        });
+      }
+    }
+
     if ('retain' in change) {
       yOffset -= change.retain;
     }
@@ -104,7 +165,7 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
       if (Text.isText(child)) {
         if (
           typeof change.insert === 'string' &&
-          deepEqual(change.attributes ?? {}, getMarks(child))
+          deepEqual(change.attributes ?? {}, getProperties(child))
         ) {
           return ops.push({
             type: 'insert_text',
@@ -128,7 +189,7 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
             type: 'split_node',
             path: childPath,
             position: textOffset,
-            properties: getMarks(child),
+            properties: getProperties(child),
           });
         }
 

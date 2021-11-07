@@ -1,14 +1,13 @@
 import { Element, Node, Text } from 'slate';
 import * as Y from 'yjs';
 import { DeltaInsert, InsertDelta } from '../model/types';
-import { getMarks } from './slate';
+import { getProperties } from './slate';
 
 export function yTextToSlateElement(yText: Y.XmlText): Element {
   const delta = yText.toDelta() as InsertDelta;
 
-  // TODO: Store attributes of first text node
-  // eslint-disable-next-line @typescript-eslint/no-use-before-define
   const children =
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     delta.length > 0 ? delta.map(deltaInsertToSlateNode) : [{ text: '' }];
 
   return { ...yText.getAttributes(), children };
@@ -25,7 +24,7 @@ export function deltaInsertToSlateNode(insert: DeltaInsert): Node {
 export function slateNodesToInsertDelta(nodes: Node[]): InsertDelta {
   return nodes.map((node) => {
     if (Text.isText(node)) {
-      return { insert: node.text, attributes: getMarks(node) };
+      return { insert: node.text, attributes: getProperties(node) };
     }
 
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
