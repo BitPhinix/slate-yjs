@@ -1,0 +1,4 @@
+blockquote::before {
+  content: ' ';
+  @apply bg-gray-400 w-1 min-w-max mr-3;
+}

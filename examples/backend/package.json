@@ -1,0 +1,20 @@
+{
+  "name": "@slate-yjs/demos-backed",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node --loader ts-node/esm --experimental-specifier-resolution=node src/index.ts",
+    "dev": "nodemon -e ts --watch ./ --exec yarn start"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15",
+    "ts-node": "^10.4.0"
+  },
+  "dependencies": {
+    "@hocuspocus/extension-logger": "^1.0.0-alpha.51",
+    "@hocuspocus/server": "^1.0.0-alpha.77",
+    "@slate-yjs/core": "workspace:^",
+    "yjs": "^13.5.20"
+  }
+}

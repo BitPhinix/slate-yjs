@@ -31,9 +31,11 @@
     "@typescript-eslint/no-use-before-define": ["error"],
     "no-shadow": "off",
     "@typescript-eslint/no-shadow": ["error"],
+    "no-param-reassign": "off",
     // React
     "react/jsx-filename-extension": ["error", { "extensions": [".tsx"] }],
     "react/prop-types": ["off", {}],
+    "react/jsx-props-no-spreading": "off",
     // import
     "import/extensions": [
       "error",

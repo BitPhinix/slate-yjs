@@ -1,0 +1,3 @@
+.navigation-dropdown:focus-within > .navigation-dropdown-content {
+  @apply visible opacity-100 translate-y-1;
+}
