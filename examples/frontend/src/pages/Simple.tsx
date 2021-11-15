@@ -1,5 +1,5 @@
 import { withYjs } from '@slate-yjs/core';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { createEditor, Descendant } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react';
 import { HocuspocusProvider } from '@hocuspocus/provider';
@@ -7,9 +7,11 @@ import * as Y from 'yjs';
 import { Element } from '../components/Element/Element';
 import { Leaf } from '../components/Leaf';
 import { withMarkdown } from '../plugins/withMarkdown';
+import { ConnectionToggle } from '../components/ConnectionToggle/ConnectionToggle';
 
 export function Simple() {
   const [value, setValue] = useState<Descendant[]>([]);
+  const [connected, setConnected] = useState(false);
 
   const [yDoc, provider] = useMemo(() => {
     const yDoc = new Y.Doc();
@@ -18,6 +20,8 @@ export function Simple() {
       name: 'slate-yjs-demo',
       document: yDoc,
       connect: false,
+      onConnect: () => setConnected(true),
+      onDisconnect: () => setConnected(false),
     });
 
     return [yDoc, provider];
@@ -27,6 +31,14 @@ export function Simple() {
     provider.connect();
     return () => provider.disconnect();
   }, []);
+
+  const toggleConnection = useCallback(() => {
+    if (connected) {
+      return provider.disconnect();
+    }
+
+    provider.connect();
+  }, [provider, connected]);
 
   const editor = useMemo(
     () =>
@@ -47,6 +59,7 @@ export function Simple() {
           renderLeaf={Leaf}
         />
       </Slate>
+      <ConnectionToggle connected={connected} onClick={toggleConnection} />
     </div>
   );
 }

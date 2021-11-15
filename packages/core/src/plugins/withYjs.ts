@@ -1,18 +1,22 @@
-import { Editor, Operation } from 'slate';
+import { Descendant, Editor, Operation } from 'slate';
 import * as Y from 'yjs';
 import { applyYjsEvents } from '../applyToSlate';
 import { applySlateOp } from '../applyToYjs';
 import { yTextToSlateElement } from '../utils/convert';
 
+type LocalOperation = { op: Operation; doc: Descendant[] };
+
 const DEFAULT_ORIGIN = Symbol('slate-yjs');
 const ORIGIN: WeakMap<Editor, unknown> = new WeakMap();
+const LOCAL_OPERATIONS: WeakMap<Editor, LocalOperation[]> = new WeakMap();
 
 export type YjsEditor = Editor & {
   sharedRoot: Y.XmlText;
   localOrigin: unknown;
 
   applyRemoteEvents: (events: Y.YEvent[], origin: unknown) => void;
-  applyLocalOperation: (op: Operation) => void;
+  storeLocalOperation: (op: Operation) => void;
+  flushLocalOperations: () => void;
 
   initialize: () => void;
 };
@@ -25,17 +29,25 @@ export const YjsEditor = {
       (value as YjsEditor).localOrigin !== undefined &&
       typeof (value as YjsEditor).applyRemoteEvents === 'function' &&
       typeof (value as YjsEditor).applyRemoteEvents === 'function' &&
-      typeof (value as YjsEditor).applyLocalOperation === 'function' &&
+      typeof (value as YjsEditor).storeLocalOperation === 'function' &&
       typeof (value as YjsEditor).initialize === 'function'
     );
+  },
+
+  localOperations(editor: YjsEditor): LocalOperation[] {
+    return LOCAL_OPERATIONS.get(editor) ?? [];
   },
 
   applyRemoveEvents(editor: YjsEditor, events: Y.YEvent[], origin: unknown) {
     editor.applyRemoteEvents(events, origin);
   },
 
-  applyLocalOperation(editor: YjsEditor, op: Operation) {
-    editor.applyLocalOperation(op);
+  storeLocalOperation(editor: YjsEditor, op: Operation) {
+    editor.storeLocalOperation(op);
+  },
+
+  flushLocalOperations(editor: YjsEditor) {
+    editor.flushLocalOperations();
   },
 
   initialize(editor: YjsEditor) {
@@ -83,18 +95,40 @@ export function withYjs<T extends Editor>(
     e.onChange();
   };
 
-  e.applyLocalOperation = (op) => {
-    applySlateOp(root, e, op, e.localOrigin);
+  e.storeLocalOperation = (op) => {
+    LOCAL_OPERATIONS.set(e, [
+      ...YjsEditor.localOperations(e),
+      { op, doc: editor.children },
+    ]);
   };
 
-  const { apply } = e;
+  e.flushLocalOperations = () => {
+    const localOperations = YjsEditor.localOperations(e);
+    LOCAL_OPERATIONS.delete(e);
+
+    if (!e.sharedRoot.doc) {
+      throw new Error("sharedRoot isn't attach to a ydoc");
+    }
+
+    e.sharedRoot.doc.transact(() => {
+      localOperations.forEach((op) => {
+        applySlateOp(e.sharedRoot, { children: op.doc }, op.op);
+      });
+    }, e.localOrigin);
+  };
+
+  const { apply, onChange } = e;
   e.apply = (op) => {
-    // TODO: Only flush on onChange
     if (YjsEditor.remoteOrigin(e) === undefined) {
-      YjsEditor.applyLocalOperation(e, op);
+      YjsEditor.storeLocalOperation(e, op);
     }
 
     apply(op);
+  };
+
+  e.onChange = () => {
+    YjsEditor.flushLocalOperations(e);
+    onChange();
   };
 
   root.observeDeep((events, transaction) => {

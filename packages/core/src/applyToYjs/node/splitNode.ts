@@ -1,22 +1,16 @@
-import { Editor, SplitNodeOperation, Text } from 'slate';
+import { Node, SplitNodeOperation, Text } from 'slate';
 import * as Y from 'yjs';
 import { InsertDelta } from '../../model/types';
 import { cloneInsertDeltaDeep } from '../../utils/clone';
 import { sliceInsertDelta } from '../../utils/delta';
 import { getNodeLength, getYTarget } from '../../utils/location';
 
-/**
- * Applies a split node operation to a Y.XmlText.
- *
- * @param sharedType
- * @param op
- */
 export function splitNode(
   root: Y.XmlText,
-  editor: Editor,
+  slateRoot: Node,
   op: SplitNodeOperation
 ): void {
-  const target = getYTarget(root, editor, op.path);
+  const target = getYTarget(root, slateRoot, op.path);
   if (!target.targetNode) {
     throw new Error('Y target without corresponding slate node');
   }

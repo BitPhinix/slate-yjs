@@ -1,22 +1,16 @@
-import { Editor, MergeNodeOperation, Node, Path, Text } from 'slate';
+import { MergeNodeOperation, Node, Path, Text } from 'slate';
 import * as Y from 'yjs';
 import { Delta, InsertDelta } from '../../model/types';
 import { cloneInsertDeltaDeep } from '../../utils/clone';
 import { getYTarget } from '../../utils/location';
 import { getProperties } from '../../utils/slate';
 
-/**
- * Applies a merge node operation to a Y.XmlText.
- *
- * @param sharedType
- * @param op
- */
 export function mergeNode(
   root: Y.XmlText,
-  editor: Editor,
+  slateRoot: Node,
   op: MergeNodeOperation
 ): void {
-  const target = getYTarget(root, editor, op.path);
+  const target = getYTarget(root, slateRoot, op.path);
   const prev = getYTarget(
     target.parent,
     target.parentNode,
@@ -30,15 +24,15 @@ export function mergeNode(
   if (!prev.target || !target.target) {
     const { parent, textRange } = target;
 
-    const node = Node.get(editor, Path.previous(op.path));
-    if (!Text.isText(node)) {
+    const previousSibling = Node.get(slateRoot, Path.previous(op.path));
+    if (!Text.isText(previousSibling)) {
       throw new Error('Path points to a y text but not a slate node');
     }
 
     return parent.format(
       textRange.start,
       textRange.start - textRange.end,
-      getProperties(node)
+      getProperties(previousSibling)
     );
   }
 

@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import React from 'react';
 import { Link, LinkProps } from 'react-router-dom';
-import BurgerMenuIcon from '../../../assets/burger-menu.svg';
+import MenuIcon from '../../../assets/menu.svg';
 import './style.css';
 
 function DropdownElement({ children, className, ...props }: LinkProps) {
@@ -17,7 +17,7 @@ function DropdownElement({ children, className, ...props }: LinkProps) {
   );
 }
 
-export function Navbar() {
+export function Navigator() {
   return (
     <div className="top-4 left-4 fixed">
       <div className="relative navigation-dropdown">
@@ -25,12 +25,7 @@ export function Navbar() {
           className="hover:bg-gray-100 text-white p-3 rounded"
           type="button"
         >
-          <img
-            src={BurgerMenuIcon}
-            width={24}
-            height={24}
-            alt="Dropdown Opener"
-          />
+          <img src={MenuIcon} width={24} height={24} alt="Dropdown Opener" />
         </button>
         <nav
           className={clsx(

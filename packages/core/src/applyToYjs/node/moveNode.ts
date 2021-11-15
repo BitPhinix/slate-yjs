@@ -1,24 +1,18 @@
-import { Editor, MoveNodeOperation, Node, Path, Text } from 'slate';
+import { MoveNodeOperation, Node, Path, Text } from 'slate';
 import * as Y from 'yjs';
 import { Delta, InsertDelta } from '../../model/types';
 import { cloneInsertDeltaDeep } from '../../utils/clone';
 import { getInsertDeltaLength } from '../../utils/delta';
 import { getYTarget } from '../../utils/location';
 
-/**
- * Applies a move node operation to a Y.XmlText.
- *
- * @param sharedType
- * @param op
- */
 export function moveNode(
   root: Y.XmlText,
-  editor: Editor,
+  slateRoot: Node,
   op: MoveNodeOperation
 ): void {
   const newParentPath = Path.parent(op.newPath);
   const newPathOffset = op.newPath[op.newPath.length - 1];
-  const parent = Node.get(editor, newParentPath);
+  const parent = Node.get(slateRoot, newParentPath);
   if (Text.isText(parent)) {
     throw new Error('Cannot move slate node into text element');
   }
@@ -27,8 +21,8 @@ export function moveNode(
     Math.min(newPathOffset, parent.children.length),
   ];
 
-  const origin = getYTarget(root, editor, op.path);
-  const target = getYTarget(root, editor, normalizedNewPath);
+  const origin = getYTarget(root, slateRoot, op.path);
+  const target = getYTarget(root, slateRoot, normalizedNewPath);
   const insertDelta = cloneInsertDeltaDeep(origin.targetDelta);
 
   origin.parent.delete(

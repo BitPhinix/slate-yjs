@@ -8,8 +8,8 @@ export function getNodeLength(node: Node): number {
 }
 
 export function getYTarget(
-  root: Y.XmlText,
-  node: Node,
+  yRoot: Y.XmlText,
+  slateRoot: Node,
   path: Path
 ): {
   textRange: TextRange;
@@ -23,7 +23,7 @@ export function getYTarget(
     throw new Error('Path has to a have a length >= 1');
   }
 
-  if (Text.isText(node)) {
+  if (Text.isText(slateRoot)) {
     throw new Error('Cannot descent into slate text');
   }
 
@@ -31,7 +31,7 @@ export function getYTarget(
 
   let yOffset = 0;
   for (let i = 0; i < pathOffset; i++) {
-    const element = node.children[i];
+    const element = slateRoot.children[i];
 
     if (!element) {
       throw new Error("Path doesn't match slate node, offset out of bounds");
@@ -40,8 +40,8 @@ export function getYTarget(
     yOffset += Text.isText(element) ? element.text.length : 1;
   }
 
-  const targetNode = node.children[pathOffset];
-  const delta = root.toDelta() as InsertDelta;
+  const targetNode = slateRoot.children[pathOffset];
+  const delta = yRoot.toDelta() as InsertDelta;
   const targetLength = targetNode ? getNodeLength(targetNode) : 0;
 
   const targetDelta = sliceInsertDelta(delta, yOffset, targetLength);
@@ -61,10 +61,10 @@ export function getYTarget(
   }
 
   return {
-    parent: root,
+    parent: yRoot,
     textRange: { start: yOffset, end: yOffset + targetLength },
     target: yTarget instanceof Y.XmlText ? yTarget : undefined,
-    parentNode: node,
+    parentNode: slateRoot,
     targetNode,
     targetDelta,
   };

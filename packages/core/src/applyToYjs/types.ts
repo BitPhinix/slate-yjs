@@ -1,9 +1,9 @@
-import { Editor, Operation } from 'slate';
+import { Node, Operation } from 'slate';
 import * as Y from 'yjs';
 
 export type ApplyFunc<O extends Operation = Operation> = (
   root: Y.XmlText,
-  editor: Editor,
+  slateRoot: Node,
   op: O
 ) => void;
 

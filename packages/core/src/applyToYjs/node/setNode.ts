@@ -1,19 +1,13 @@
-import { Editor, SetNodeOperation } from 'slate';
+import { Node, SetNodeOperation } from 'slate';
 import * as Y from 'yjs';
 import { getYTarget } from '../../utils/location';
 
-/**
- * Applies a set node operation to a Y.XmlText.
- *
- * @param sharedType
- * @param op
- */
 export function setNode(
   root: Y.XmlText,
-  editor: Editor,
+  slateRoot: Node,
   op: SetNodeOperation
 ): void {
-  const { target, textRange, parent } = getYTarget(root, editor, op.path);
+  const { target, textRange, parent } = getYTarget(root, slateRoot, op.path);
 
   if (target) {
     Object.entries(op.newProperties).forEach(([key, value]) => {

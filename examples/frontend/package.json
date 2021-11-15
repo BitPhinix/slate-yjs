@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "vite",
+    "dev": "yarn start",
     "build": "vite build",
     "serve": "vite preview"
   },

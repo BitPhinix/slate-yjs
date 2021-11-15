@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import '../index.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { NotFound } from './pages/NotFound';
-import { Navbar } from './components/Navbar/Navbar';
+import { Navigator } from './components/Navigator/Navigator';
 import { Simple } from './pages/Simple';
 
 ReactDOM.render(
@@ -13,7 +13,7 @@ ReactDOM.render(
         <Route path="/" element={<Simple />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
-      <Navbar />
+      <Navigator />
     </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')
