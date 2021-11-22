@@ -28,17 +28,13 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "jest-diff": "^27.3.1",
     "microbundle": "^0.14.1",
-    "slate": "~0.67.1",
-    "yjs": "^13.5.17"
-  },
-  "dependencies": {
-    "y-protocols": "^1.0.5"
+    "slate": "~0.70.0",
+    "yjs": "^13.5.20"
   },
   "peerDependencies": {
     "slate": "^0.67.1",
-    "yjs": "^13.5.17"
+    "yjs": "^13.5.20"
   },
   "bugs": {
     "url": "https://github.com/BitPhinix/slate-yjs/issues"

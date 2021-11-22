@@ -3,24 +3,22 @@ import * as Y from 'yjs';
 import { translateYTextEvent } from './textEvent';
 
 /**
- * Translates yjs events into slate operations. The
- * editor state has to match the yText state before the events occurred.
+ * Translate a yjs event into slate operations. The editor state has to match the
+ * yText state before the event occurred.
  *
  * @param sharedType
  * @param op
  */
-export function translateYjsEvents(
+export function translateYjsEvent(
   root: Y.XmlText,
   editor: Editor,
-  events: Y.YEvent[]
+  event: Y.YEvent
 ): Operation[] {
-  return events.flatMap((event) => {
-    if (event instanceof Y.YTextEvent) {
-      return translateYTextEvent(root, editor, event);
-    }
+  if (event instanceof Y.YTextEvent) {
+    return translateYTextEvent(root, editor, event);
+  }
 
-    throw new Error('Unexpected Y event type');
-  });
+  throw new Error('Unexpected Y event type');
 }
 
 /**
@@ -37,6 +35,8 @@ export function applyYjsEvents(
   events: Y.YEvent[]
 ) {
   Editor.withoutNormalizing(editor, () => {
-    translateYjsEvents(root, editor, events).forEach((op) => editor.apply(op));
+    events.forEach((event) => {
+      translateYjsEvent(root, editor, event).forEach((op) => editor.apply(op));
+    });
   });
 }

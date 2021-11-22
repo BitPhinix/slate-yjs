@@ -1,5 +1,5 @@
 {
-  "name": "@slate-yjs/demos-backed",
+  "name": "@slate-yjs/example-backend",
   "version": "0.0.1",
   "private": true,
   "type": "module",

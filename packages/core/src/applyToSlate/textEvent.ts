@@ -1,36 +1,19 @@
 import { Editor, Element, Node, Operation, Path, Text } from 'slate';
 import * as Y from 'yjs';
-import { Delta, InsertDelta, YNodePath } from '../model/types';
+import { Delta } from '../model/types';
 import { deltaInsertToSlateNode } from '../utils/convert';
-import { getNodeLength } from '../utils/location';
+import {
+  getSlateNodeYLength,
+  getSlatePath,
+  yOffsetToSlateOffsets,
+} from '../utils/location';
 import { deepEqual, pick } from '../utils/object';
 import { getProperties } from '../utils/slate';
 
-function getSlateOffsets(node: Element, yOffset: number): [number, number] {
-  let currentOffset = 0;
-  for (let pathOffset = 0; pathOffset < node.children.length; pathOffset++) {
-    const child = node.children[pathOffset];
-    const nodeLength = Text.isText(child) ? child.text.length : 1;
-
-    if (
-      currentOffset + nodeLength > yOffset &&
-      (nodeLength > 0 || pathOffset === node.children.length - 1)
-    ) {
-      return [pathOffset, yOffset - currentOffset];
-    }
-
-    currentOffset += nodeLength;
-  }
-
-  if (currentOffset + 1 < yOffset) {
-    throw new Error("yOffset doesn't match slate node, index out of bounds");
-  }
-
-  return [node.children.length, 0];
-}
-
 function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
   const ops: Operation[] = [];
+
+  console.log({ node, slatePath, delta });
 
   let yOffset = delta.reduce((length, change) => {
     if ('retain' in change) {
@@ -47,11 +30,14 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
   // Apply changes in reverse order to avoid path changes.
   delta.reverse().forEach((change) => {
     if ('attributes' in change && 'retain' in change) {
-      const [startPathOffset, startTextOffset] = getSlateOffsets(
+      const [startPathOffset, startTextOffset] = yOffsetToSlateOffsets(
         node,
         yOffset - change.retain
       );
-      const [endPathOffset, endTextOffset] = getSlateOffsets(node, yOffset);
+      const [endPathOffset, endTextOffset] = yOffsetToSlateOffsets(
+        node,
+        yOffset
+      );
 
       for (
         let pathOffset =
@@ -112,11 +98,14 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
     }
 
     if ('delete' in change) {
-      const [startPathOffset, startTextOffset] = getSlateOffsets(
+      const [startPathOffset, startTextOffset] = yOffsetToSlateOffsets(
         node,
         yOffset - change.delete
       );
-      const [endPathOffset, endTextOffset] = getSlateOffsets(node, yOffset);
+      const [endPathOffset, endTextOffset] = yOffsetToSlateOffsets(
+        node,
+        yOffset
+      );
 
       for (
         let pathOffset =
@@ -151,14 +140,18 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
           node: child,
           path: childPath,
         });
-        yOffset -= getNodeLength(child);
+        yOffset -= getSlateNodeYLength(child);
       }
 
       return;
     }
 
     if ('insert' in change) {
-      const [pathOffset, textOffset] = getSlateOffsets(node, yOffset);
+      const [pathOffset, textOffset] = yOffsetToSlateOffsets(
+        node,
+        yOffset,
+        true
+      );
       const child = node.children[pathOffset];
       const childPath = [...slatePath, pathOffset];
 
@@ -211,59 +204,6 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
   return ops;
 }
 
-function getYNodePath(root: Y.XmlText, yText: Y.XmlText) {
-  const pathNodes = [yText];
-  while (pathNodes[0] !== root) {
-    const { parent } = pathNodes[0];
-
-    if (!parent) {
-      throw new Error("yText isn't a descendant of root element");
-    }
-
-    if (!(parent instanceof Y.XmlText)) {
-      throw new Error('Unexpected y parent type');
-    }
-
-    pathNodes.unshift(parent);
-  }
-
-  return pathNodes;
-}
-
-function yNodeToSlatePath(node: Node, yNodePath: YNodePath): Path {
-  if (yNodePath.length < 2) {
-    return [];
-  }
-
-  const [current, yChild] = yNodePath;
-  const currentDelta = current.toDelta() as InsertDelta;
-
-  let yOffset = 0;
-  for (const element of currentDelta) {
-    if (element.insert === yChild) {
-      break;
-    }
-
-    yOffset += typeof element.insert === 'string' ? element.insert.length : 1;
-  }
-
-  if (Text.isText(node)) {
-    throw new Error('Cannot descend into text');
-  }
-
-  const [pathOffset] = getSlateOffsets(node, yOffset);
-  return [
-    pathOffset,
-    ...yNodeToSlatePath(node.children[pathOffset], yNodePath.slice(-1)),
-  ];
-}
-
-function getSlatePath(root: Y.XmlText, node: Node, yText: Y.XmlText): Path {
-  const yNodePath = getYNodePath(root, yText);
-  const path = yNodeToSlatePath(node, yNodePath);
-  return path;
-}
-
 export function translateYTextEvent(
   root: Y.XmlText,
   editor: Editor,
@@ -277,7 +217,6 @@ export function translateYTextEvent(
   }
 
   const ops: Operation[] = [];
-
   const slatePath = getSlatePath(root, editor, target);
   const targetElement = Node.get(editor, slatePath);
 

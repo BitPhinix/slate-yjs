@@ -28,8 +28,8 @@ export const YjsEditor = {
       (value as YjsEditor).sharedRoot instanceof Y.XmlText &&
       (value as YjsEditor).localOrigin !== undefined &&
       typeof (value as YjsEditor).applyRemoteEvents === 'function' &&
-      typeof (value as YjsEditor).applyRemoteEvents === 'function' &&
       typeof (value as YjsEditor).storeLocalOperation === 'function' &&
+      typeof (value as YjsEditor).flushLocalOperations === 'function' &&
       typeof (value as YjsEditor).initialize === 'function'
     );
   },
@@ -107,7 +107,7 @@ export function withYjs<T extends Editor>(
     LOCAL_OPERATIONS.delete(e);
 
     if (!e.sharedRoot.doc) {
-      throw new Error("sharedRoot isn't attach to a ydoc");
+      throw new Error("sharedRoot isn't attach to a yDoc");
     }
 
     e.sharedRoot.doc.transact(() => {

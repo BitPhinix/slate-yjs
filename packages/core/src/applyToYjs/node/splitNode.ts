@@ -3,7 +3,7 @@ import * as Y from 'yjs';
 import { InsertDelta } from '../../model/types';
 import { cloneInsertDeltaDeep } from '../../utils/clone';
 import { sliceInsertDelta } from '../../utils/delta';
-import { getNodeLength, getYTarget } from '../../utils/location';
+import { getSlateNodeYLength, getYTarget } from '../../utils/location';
 
 export function splitNode(
   root: Y.XmlText,
@@ -46,10 +46,10 @@ export function splitNode(
 
   const ySplitOffset = target.targetNode.children
     .slice(0, op.position)
-    .reduce((length, child) => length + getNodeLength(child), 0);
+    .reduce((length, child) => length + getSlateNodeYLength(child), 0);
 
   const length = target.targetNode.children.reduce(
-    (current, child) => current + getNodeLength(child),
+    (current, child) => current + getSlateNodeYLength(child),
     0
   );
 

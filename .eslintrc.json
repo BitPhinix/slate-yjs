@@ -48,6 +48,10 @@
         "tsx": "never"
       }
     ],
+    "import/no-extraneous-dependencies": [
+      "error",
+      { "devDependencies": ["**/test/**", "**/*.config.js"] }
+    ],
     "no-restricted-syntax": "off",
     "no-continue": "off",
     "no-underscore-dangle": "off",
