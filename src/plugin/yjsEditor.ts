@@ -12,6 +12,8 @@ const SHARED_TYPES: WeakMap<Editor, SharedType> = new WeakMap();
 
 export interface YjsEditor extends Editor {
   sharedType: SharedType;
+
+  destroy: () => void;
 }
 
 export const YjsEditor = {
@@ -53,6 +55,13 @@ export const YjsEditor = {
     if (!wasRemote) {
       IS_REMOTE.delete(editor);
     }
+  },
+
+  /**
+   * Unobserves the shared type.
+   */
+  destroy: (editor: YjsEditor): void => {
+    editor.destroy();
   },
 };
 
@@ -112,20 +121,25 @@ export function withYjs<T extends Editor>(
     setTimeout(() => YjsEditor.synchronizeValue(e), 0);
   }
 
-  sharedType.observeDeep((events) => applyRemoteYjsEvents(e, events));
+  const applyEvents = (events: Y.YEvent[]) => applyRemoteYjsEvents(e, events);
+  sharedType.observeDeep(applyEvents);
 
-  const { apply, onChange } = e;
-
+  const { apply, onChange, destroy } = e;
   e.apply = (op: Operation) => {
     trackLocalOperations(e, op);
-
     apply(op);
   };
 
   e.onChange = () => {
     applyLocalOperations(e);
-
     onChange();
+  };
+
+  e.destroy = () => {
+    sharedType.unobserveDeep(applyEvents);
+    if (destroy) {
+      destroy();
+    }
   };
 
   return e;
