@@ -4,7 +4,7 @@ export function isObject(v: unknown): v is InspectableObject {
   return v !== null && typeof v === 'object';
 }
 
-export function deepEqual(
+export function deepEquals(
   obj: InspectableObject,
   other: InspectableObject
 ): boolean {
@@ -23,7 +23,7 @@ export function deepEqual(
       return val1 === val2;
     }
 
-    return isObject(val2) && deepEqual(val1, val2);
+    return isObject(val2) && deepEquals(val1, val2);
   });
 }
 

@@ -1,4 +1,3 @@
-import { BaseRange } from 'slate';
 import type Y from 'yjs';
 
 export type DeltaAttributes = {
@@ -21,14 +20,15 @@ export type YPath = (string | number)[];
 export type TextRange = { start: number; end: number };
 
 export type YNodePath = Y.XmlText[];
+export type RelativePositionRef = {
+  affinity: 'forward' | 'backward';
+  position: Y.RelativePosition;
+};
 
-export type RelativeRange<T extends BaseRange = BaseRange> = Omit<
-  T,
-  'anchor' | 'focus'
-> & {
+export type RelativeRange = {
   anchor: Y.RelativePosition;
   focus: Y.RelativePosition;
-};
+} & Record<string, unknown>;
 
 export type HistoryStackItem = {
   meta: Map<string, unknown>;

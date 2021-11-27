@@ -1,4 +1,4 @@
-import { YjsEditor } from '@slate-yjs/core';
+import { YHistoryEditor, YjsEditor } from '@slate-yjs/core';
 import { Descendant } from 'slate';
 import { ReactEditor } from 'slate-react';
 
@@ -42,7 +42,7 @@ export type CustomElement =
   | HeadingTwo
   | BlockQuote;
 
-export type CustomEditor = ReactEditor & YjsEditor;
+export type CustomEditor = ReactEditor & YjsEditor & YHistoryEditor;
 
 declare module 'slate' {
   interface CustomTypes {

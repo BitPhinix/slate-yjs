@@ -9,11 +9,6 @@ import {
   YjsEditor,
 } from './plugins';
 import { slateNodesToInsertDelta, yTextToSlateElement } from './utils/convert';
-import {
-  absolutePositionToSlatePoint,
-  slatePointToRelativePosition,
-  slateToRelativeRange,
-} from './utils/location';
 
 export {
   // Core binding
@@ -26,10 +21,7 @@ export {
   YHistoryEditor,
   // Utility functions
   applySlateOp,
-  translateYjsEvent as translateYjsEvents,
+  translateYjsEvent,
   yTextToSlateElement,
   slateNodesToInsertDelta,
-  slatePointToRelativePosition,
-  absolutePositionToSlatePoint,
-  slateToRelativeRange,
 };

@@ -7,13 +7,11 @@ import {
   getSlatePath,
   yOffsetToSlateOffsets,
 } from '../utils/location';
-import { deepEqual, pick } from '../utils/object';
+import { deepEquals, pick } from '../utils/object';
 import { getProperties } from '../utils/slate';
 
 function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
   const ops: Operation[] = [];
-
-  console.log({ node, slatePath, delta });
 
   let yOffset = delta.reduce((length, change) => {
     if ('retain' in change) {
@@ -104,7 +102,8 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
       );
       const [endPathOffset, endTextOffset] = yOffsetToSlateOffsets(
         node,
-        yOffset
+        yOffset,
+        { assoc: -1 }
       );
 
       for (
@@ -147,18 +146,16 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
     }
 
     if ('insert' in change) {
-      const [pathOffset, textOffset] = yOffsetToSlateOffsets(
-        node,
-        yOffset,
-        true
-      );
+      const [pathOffset, textOffset] = yOffsetToSlateOffsets(node, yOffset, {
+        insert: true,
+      });
       const child = node.children[pathOffset];
       const childPath = [...slatePath, pathOffset];
 
       if (Text.isText(child)) {
         if (
           typeof change.insert === 'string' &&
-          deepEqual(change.attributes ?? {}, getProperties(child))
+          deepEquals(change.attributes ?? {}, getProperties(child))
         ) {
           return ops.push({
             type: 'insert_text',

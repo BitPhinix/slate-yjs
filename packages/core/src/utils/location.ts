@@ -1,14 +1,9 @@
 import { Element, Node, Path, Point, Range, Text } from 'slate';
 import * as Y from 'yjs';
-import {
-  InsertDelta,
-  RelativeRange,
-  TextRange,
-  YNodePath,
-} from '../model/types';
+import { InsertDelta, RelativeRange, TextRange } from '../model/types';
 import { sliceInsertDelta } from './delta';
 
-export function getSlateNodeYLength(node: Node): number {
+export function getSlateNodeYLength(node: Node | undefined): number {
   if (!node) {
     return 0;
   }
@@ -16,7 +11,7 @@ export function getSlateNodeYLength(node: Node): number {
   return Text.isText(node) ? node.text.length : 1;
 }
 
-export function slatePathToYOffset(element: Element, pathOffset: number) {
+export function slatePathOffsetToYOffset(element: Element, pathOffset: number) {
   return element.children
     .slice(0, pathOffset)
     .reduce((yOffset, node) => yOffset + getSlateNodeYLength(node), 0);
@@ -44,7 +39,7 @@ export function getYTarget(
 
   const [pathOffset, ...childPath] = path;
 
-  const yOffset = slatePathToYOffset(slateRoot, pathOffset);
+  const yOffset = slatePathOffsetToYOffset(slateRoot, pathOffset);
   const targetNode = slateRoot.children[pathOffset];
 
   // TODO: Perf, we don't need the entire delta here.
@@ -80,16 +75,24 @@ export function getYTarget(
 export function yOffsetToSlateOffsets(
   parent: Element,
   yOffset: number,
-  insert = false
+  opts: { assoc?: number; insert?: boolean } = {}
 ): [number, number] {
+  const { assoc = 0, insert = false } = opts;
+
   let currentOffset = 0;
+  let lastNonEmptyPathOffset = 0;
   for (let pathOffset = 0; pathOffset < parent.children.length; pathOffset++) {
     const child = parent.children[pathOffset];
     const nodeLength = Text.isText(child) ? child.text.length : 1;
 
+    if (nodeLength > 0) {
+      lastNonEmptyPathOffset = pathOffset;
+    }
+
+    const endOffset = currentOffset + nodeLength;
     if (
-      (currentOffset + nodeLength > yOffset && nodeLength > 0) ||
-      (!insert && pathOffset === parent.children.length - 1)
+      nodeLength > 0 &&
+      (assoc >= 0 ? endOffset > yOffset : endOffset >= yOffset)
     ) {
       return [pathOffset, yOffset - currentOffset];
     }
@@ -97,68 +100,68 @@ export function yOffsetToSlateOffsets(
     currentOffset += nodeLength;
   }
 
-  if (currentOffset + 1 < yOffset) {
+  if (yOffset > currentOffset + (insert ? 1 : 0)) {
     throw new Error('yOffset out of bounds');
   }
 
-  return [parent.children.length, 0];
+  if (insert) {
+    return [parent.children.length, 0];
+  }
+
+  const child = parent.children[lastNonEmptyPathOffset];
+  const textOffset = Text.isText(child) ? child.text.length : 1;
+  return [lastNonEmptyPathOffset, textOffset];
 }
 
-function getYNodePath(sharedRoot: Y.XmlText, yText: Y.XmlText) {
-  const pathNodes = [yText];
-  while (pathNodes[0] !== sharedRoot) {
-    const { parent } = pathNodes[0];
+export function getSlatePath(
+  sharedRoot: Y.XmlText,
+  slateRoot: Node,
+  yText: Y.XmlText
+): Path {
+  const yNodePath = [yText];
+  while (yNodePath[0] !== sharedRoot) {
+    const { parent: yParent } = yNodePath[0];
 
-    if (!parent) {
+    if (!yParent) {
       throw new Error("yText isn't a descendant of root element");
     }
 
-    if (!(parent instanceof Y.XmlText)) {
+    if (!(yParent instanceof Y.XmlText)) {
       throw new Error('Unexpected y parent type');
     }
 
-    pathNodes.unshift(parent);
+    yNodePath.unshift(yParent);
   }
 
-  return pathNodes;
-}
-
-function yNodeToSlatePath(slateRoot: Node, yNodePath: YNodePath): Path {
   if (yNodePath.length < 2) {
     return [];
   }
 
-  const [current, yChild] = yNodePath;
-  const currentDelta = current.toDelta() as InsertDelta;
-
-  let yOffset = 0;
-  for (const element of currentDelta) {
-    if (element.insert === yChild) {
-      break;
+  let slateParent = slateRoot;
+  return yNodePath.reduce<Path>((path, yParent, idx) => {
+    const yChild = yNodePath[idx + 1];
+    if (!yChild) {
+      return path;
     }
 
-    yOffset += typeof element.insert === 'string' ? element.insert.length : 1;
-  }
+    let yOffset = 0;
+    const currentDelta = yParent.toDelta() as InsertDelta;
+    for (const element of currentDelta) {
+      if (element.insert === yChild) {
+        break;
+      }
 
-  if (Text.isText(slateRoot)) {
-    throw new Error('Cannot descend into text');
-  }
+      yOffset += typeof element.insert === 'string' ? element.insert.length : 1;
+    }
 
-  const [pathOffset] = yOffsetToSlateOffsets(slateRoot, yOffset);
-  return [
-    pathOffset,
-    ...yNodeToSlatePath(slateRoot.children[pathOffset], yNodePath.slice(-1)),
-  ];
-}
+    if (Text.isText(slateParent)) {
+      throw new Error('Cannot descent into slate text');
+    }
 
-export function getSlatePath(
-  root: Y.XmlText,
-  slateRoot: Node,
-  yText: Y.XmlText
-): Path {
-  const yNodePath = getYNodePath(root, yText);
-  const path = yNodeToSlatePath(slateRoot, yNodePath);
-  return path;
+    const [pathOffset] = yOffsetToSlateOffsets(slateParent, yOffset);
+    slateParent = slateParent.children[pathOffset];
+    return path.concat(pathOffset);
+  }, []);
 }
 
 export function slatePointToRelativePosition(
@@ -180,14 +183,15 @@ export function slatePointToRelativePosition(
 
   return Y.createRelativePositionFromTypeIndex(
     parent,
-    textRange.start + point.offset
+    textRange.start + point.offset,
+    point.offset === textRange.end ? -1 : 0
   );
 }
 
 export function absolutePositionToSlatePoint(
   sharedRoot: Y.XmlText,
   slateRoot: Node,
-  { type, index }: Y.AbsolutePosition
+  { type, index, assoc }: Y.AbsolutePosition
 ): Point {
   if (!(type instanceof Y.XmlText)) {
     throw new Error('Absolute position points to a non-XMLText');
@@ -202,7 +206,9 @@ export function absolutePositionToSlatePoint(
     );
   }
 
-  const [pathOffset, textOffset] = yOffsetToSlateOffsets(parent, index);
+  const [pathOffset, textOffset] = yOffsetToSlateOffsets(parent, index, {
+    assoc,
+  });
   return { path: [...parentPath, pathOffset], offset: textOffset };
 }
 
@@ -223,40 +229,58 @@ export function relativePositionToSlatePoint(
   return absPos && absolutePositionToSlatePoint(sharedRoot, slateRoot, absPos);
 }
 
-export function slateToRelativeRange<T extends Range>(
+export function relativeRangeToSlateRange(
   sharedRoot: Y.XmlText,
   slateRoot: Node,
-  { anchor, focus, ...data }: T
-): RelativeRange<T> {
-  return {
-    anchor: slatePointToRelativePosition(sharedRoot, slateRoot, anchor),
-    focus: slatePointToRelativePosition(sharedRoot, slateRoot, focus),
-    ...data,
-  };
+  relativeRange: RelativeRange
+) {
+  const {
+    anchor: relativeAnchor,
+    focus: relativeFocus,
+    ...data
+  } = relativeRange;
+
+  const anchor = relativePositionToSlatePoint(
+    sharedRoot,
+    slateRoot,
+    relativeAnchor
+  );
+
+  if (!anchor) {
+    return null;
+  }
+
+  const focus = relativePositionToSlatePoint(
+    sharedRoot,
+    slateRoot,
+    relativeFocus
+  );
+
+  if (!focus) {
+    return null;
+  }
+
+  return { anchor, focus, ...data };
 }
 
-export function relativeToSlateRange<T extends Range>(
+export function slateRangeToRelativeRange(
   sharedRoot: Y.XmlText,
   slateRoot: Node,
-  { anchor, focus, ...data }: RelativeRange<T>
-): T | null {
-  const slateAnchor = relativePositionToSlatePoint(
+  range: Range
+): RelativeRange {
+  const { anchor, focus, ...data } = range;
+
+  const relativeAnchor = slatePointToRelativePosition(
     sharedRoot,
     slateRoot,
     anchor
   );
-  if (!slateAnchor) {
-    return null;
-  }
 
-  const slateFocus = relativePositionToSlatePoint(sharedRoot, slateRoot, focus);
-  if (!slateFocus) {
-    return null;
-  }
+  const relativeFocus = slatePointToRelativePosition(
+    sharedRoot,
+    slateRoot,
+    focus
+  );
 
-  return {
-    anchor: slateAnchor,
-    focus: slateFocus,
-    ...data,
-  } as unknown as T;
+  return { anchor: relativeAnchor, focus: relativeFocus, ...data };
 }

@@ -1,4 +1,4 @@
-import { withYjs } from '@slate-yjs/core';
+import { withYjs, withYHistory } from '@slate-yjs/core';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { createEditor, Descendant } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react';
@@ -44,7 +44,9 @@ export function Simple() {
     () =>
       withMarkdown(
         withReact(
-          withYjs(createEditor(), yDoc.get('content', Y.XmlText) as Y.XmlText)
+          withYHistory(
+            withYjs(createEditor(), yDoc.get('content', Y.XmlText) as Y.XmlText)
+          )
         )
       ),
     []
