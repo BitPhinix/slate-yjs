@@ -3,24 +3,28 @@ import * as Y from 'yjs';
 import { getYTarget } from '../../utils/location';
 
 export function setNode(
-  root: Y.XmlText,
+  sharedRoot: Y.XmlText,
   slateRoot: Node,
   op: SetNodeOperation
 ): void {
-  const { target, textRange, parent } = getYTarget(root, slateRoot, op.path);
+  const { yTarget, textRange, yParent } = getYTarget(
+    sharedRoot,
+    slateRoot,
+    op.path
+  );
 
-  if (target) {
+  if (yTarget) {
     Object.entries(op.newProperties).forEach(([key, value]) => {
       if (value === null) {
-        return target.removeAttribute(key);
+        return yTarget.removeAttribute(key);
       }
 
-      target.setAttribute(key, value);
+      yTarget.setAttribute(key, value);
     });
 
     return Object.entries(op.properties).forEach(([key]) => {
       if (!op.newProperties.hasOwnProperty(key)) {
-        target.removeAttribute(key);
+        yTarget.removeAttribute(key);
       }
     });
   }
@@ -30,7 +34,7 @@ export function setNode(
   );
   const newProperties = { ...unset, ...op.newProperties };
 
-  parent.format(
+  yParent.format(
     textRange.start,
     textRange.end - textRange.start,
     newProperties

@@ -2,7 +2,7 @@ import { Node, Operation } from 'slate';
 import * as Y from 'yjs';
 
 export type ApplyFunc<O extends Operation = Operation> = (
-  root: Y.XmlText,
+  sharedRoot: Y.XmlText,
   slateRoot: Node,
   op: O
 ) => void;

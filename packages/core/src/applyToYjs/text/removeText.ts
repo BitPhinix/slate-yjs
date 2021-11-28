@@ -3,10 +3,14 @@ import type Y from 'yjs';
 import { getYTarget } from '../../utils/location';
 
 export function removeText(
-  root: Y.XmlText,
+  sharedRoot: Y.XmlText,
   slateRoot: Node,
   op: RemoveTextOperation
 ): void {
-  const { parent: target, textRange } = getYTarget(root, slateRoot, op.path);
+  const { yParent: target, textRange } = getYTarget(
+    sharedRoot,
+    slateRoot,
+    op.path
+  );
   target.delete(textRange.start + op.offset, op.text.length);
 }

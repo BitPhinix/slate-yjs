@@ -202,7 +202,7 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
 }
 
 export function translateYTextEvent(
-  root: Y.XmlText,
+  sharedRoot: Y.XmlText,
   editor: Editor,
   event: Y.YTextEvent
 ): Operation[] {
@@ -214,7 +214,7 @@ export function translateYTextEvent(
   }
 
   const ops: Operation[] = [];
-  const slatePath = getSlatePath(root, editor, target);
+  const slatePath = getSlatePath(sharedRoot, editor, target);
   const targetElement = Node.get(editor, slatePath);
 
   if (Text.isText(targetElement)) {

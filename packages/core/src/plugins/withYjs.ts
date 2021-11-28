@@ -2,12 +2,15 @@ import { BaseEditor, Descendant, Editor, Operation, Point } from 'slate';
 import * as Y from 'yjs';
 import { applyYjsEvents } from '../applyToSlate';
 import { applySlateOp } from '../applyToYjs';
-import { RelativePositionRef } from '../model/types';
 import { yTextToSlateElement } from '../utils/convert';
 import {
+  getStoredPosition,
+  getStoredPositions,
   relativePositionToSlatePoint,
+  removeStoredPosition,
+  setStoredPosition,
   slatePointToRelativePosition,
-} from '../utils/location';
+} from '../utils/position';
 import { assertDocumentAttachment } from '../utils/yjs';
 
 type LocalChange = { op: Operation; doc: Descendant[] };
@@ -17,8 +20,6 @@ const DEFAULT_LOCATION_STORAGE_ORIGIN = Symbol('slate-yjs-location-storage');
 
 const ORIGIN: WeakMap<Editor, unknown> = new WeakMap();
 const LOCAL_CHANGES: WeakMap<Editor, LocalChange[]> = new WeakMap();
-
-const STORED_LOCATION_PREFIX = '__slateYjsLocation_';
 
 export type YjsEditor = BaseEditor & {
   sharedRoot: Y.XmlText;
@@ -93,62 +94,39 @@ export const YjsEditor = {
     }
   },
 
-  storePosition(
-    editor: YjsEditor,
-    key: string,
-    point: Point,
-    options: {
-      affinity?: 'backward' | 'forward' | null;
-    } = {}
-  ): void {
+  storePosition(editor: YjsEditor, key: string, point: Point): void {
     const { sharedRoot, locationStorageOrigin } = editor;
     assertDocumentAttachment(sharedRoot);
 
     const position = slatePointToRelativePosition(sharedRoot, editor, point);
-    const positionRef: RelativePositionRef = {
-      affinity: options.affinity ?? 'forward',
-      position,
-    };
 
     sharedRoot.doc.transact(() => {
-      sharedRoot.setAttribute(STORED_LOCATION_PREFIX + key, positionRef);
+      setStoredPosition(sharedRoot, key, position);
     }, locationStorageOrigin);
   },
 
-  removePosition(editor: YjsEditor, key: string): void {
+  removeStoredPosition(editor: YjsEditor, key: string): void {
     const { sharedRoot, locationStorageOrigin } = editor;
     assertDocumentAttachment(sharedRoot);
 
     sharedRoot.doc.transact(() => {
-      sharedRoot.removeAttribute(STORED_LOCATION_PREFIX + key);
+      removeStoredPosition(sharedRoot, key);
     }, locationStorageOrigin);
   },
 
-  getPosition(editor: YjsEditor, key: string): Point | null {
-    const positionRef: RelativePositionRef = editor.sharedRoot.getAttribute(
-      STORED_LOCATION_PREFIX + key
-    );
-
-    if (!positionRef) {
+  position(editor: YjsEditor, key: string): Point | null {
+    const position = getStoredPosition(editor.sharedRoot, key);
+    if (!position) {
       return null;
     }
 
-    return relativePositionToSlatePoint(
-      editor.sharedRoot,
-      editor,
-      positionRef.position
-    );
+    return relativePositionToSlatePoint(editor.sharedRoot, editor, position);
   },
 
-  storedPositionRefs(editor: YjsEditor): Record<string, RelativePositionRef> {
-    return Object.fromEntries(
-      Object.entries(editor.sharedRoot.getAttributes())
-        .filter(([key]) => key.startsWith(STORED_LOCATION_PREFIX))
-        .map(([key, value]) => [
-          key.slice(STORED_LOCATION_PREFIX.length),
-          value,
-        ])
-    );
+  storedRelativePositions(
+    editor: YjsEditor
+  ): Record<string, Y.RelativePosition> {
+    return getStoredPositions(editor.sharedRoot);
   },
 };
 
@@ -164,7 +142,7 @@ export type WithYjsOptions = {
 
 export function withYjs<T extends Editor>(
   editor: T,
-  root: Y.XmlText,
+  sharedRoot: Y.XmlText,
   {
     localOrigin,
     locationStorageOrigin,
@@ -173,7 +151,7 @@ export function withYjs<T extends Editor>(
 ): T & YjsEditor {
   const e = editor as T & YjsEditor;
 
-  e.sharedRoot = root;
+  e.sharedRoot = sharedRoot;
 
   e.localOrigin = localOrigin ?? DEFAULT_LOCAL_ORIGIN;
   e.locationStorageOrigin =
@@ -196,14 +174,14 @@ export function withYjs<T extends Editor>(
   };
 
   e.connect = () => {
-    root.observeDeep(handleYEvents);
+    sharedRoot.observeDeep(handleYEvents);
     const content = yTextToSlateElement(e.sharedRoot);
     e.children = content.children;
     e.onChange();
   };
 
   e.disconnect = () => {
-    root.unobserveDeep(handleYEvents);
+    sharedRoot.unobserveDeep(handleYEvents);
   };
 
   e.storeLocalOperation = (op) => {

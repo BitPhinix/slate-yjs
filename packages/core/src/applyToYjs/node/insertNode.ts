@@ -5,15 +5,19 @@ import { getYTarget } from '../../utils/location';
 import { getProperties } from '../../utils/slate';
 
 export function insertNode(
-  root: Y.XmlText,
+  sharedRoot: Y.XmlText,
   slateRoot: Node,
   op: InsertNodeOperation
 ): void {
-  const { parent, textRange } = getYTarget(root, slateRoot, op.path);
+  const { yParent, textRange } = getYTarget(sharedRoot, slateRoot, op.path);
 
   if (Text.isText(op.node)) {
-    return parent.insert(textRange.start, op.node.text, getProperties(op.node));
+    return yParent.insert(
+      textRange.start,
+      op.node.text,
+      getProperties(op.node)
+    );
   }
 
-  parent.insertEmbed(textRange.start, slateElementToYText(op.node));
+  yParent.insertEmbed(textRange.start, slateElementToYText(op.node));
 }

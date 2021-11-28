@@ -15,7 +15,7 @@ const opMappers: OpMapper = {
 };
 
 export function applySlateOp(
-  root: Y.XmlText,
+  sharedRoot: Y.XmlText,
   slateRoot: Node,
   op: Operation
 ): void {
@@ -24,5 +24,5 @@ export function applySlateOp(
     throw new Error(`Unknown operation: ${op.type}`);
   }
 
-  apply(root, slateRoot, op);
+  apply(sharedRoot, slateRoot, op);
 }

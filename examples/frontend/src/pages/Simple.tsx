@@ -1,4 +1,4 @@
-import { withYjs, withYHistory } from '@slate-yjs/core';
+import { withYjs, withYHistory, YjsEditor } from '@slate-yjs/core';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { createEditor, Descendant } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react';
@@ -51,6 +51,12 @@ export function Simple() {
       ),
     []
   );
+
+  // Disconnect YjsEditor on unmount in order to free up resources
+  React.useEffect(() => () => YjsEditor.disconnect(editor), [editor]);
+
+  (window as any).editor = editor;
+  (window as any).YjsEditor = YjsEditor;
 
   return (
     <div className="flex justify-center">

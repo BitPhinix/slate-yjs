@@ -4,11 +4,15 @@ import { getYTarget } from '../../utils/location';
 import { getProperties } from '../../utils/slate';
 
 export function insertText(
-  root: Y.XmlText,
+  sharedRoot: Y.XmlText,
   slateRoot: Node,
   op: InsertTextOperation
 ): void {
-  const { parent: target, textRange } = getYTarget(root, slateRoot, op.path);
+  const { yParent: target, textRange } = getYTarget(
+    sharedRoot,
+    slateRoot,
+    op.path
+  );
 
   const targetNode = Node.get(slateRoot, op.path);
   if (!Text.isText(targetNode)) {

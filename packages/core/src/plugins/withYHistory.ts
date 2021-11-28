@@ -4,7 +4,7 @@ import { HistoryStackItem, RelativeRange } from '../model/types';
 import {
   relativeRangeToSlateRange,
   slateRangeToRelativeRange,
-} from '../utils/location';
+} from '../utils/position';
 import { YjsEditor } from './withYjs';
 
 const LAST_SELECTION: WeakMap<Editor, RelativeRange | null> = new WeakMap();

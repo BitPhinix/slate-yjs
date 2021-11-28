@@ -1,6 +1,6 @@
-import { Element, Node, Path, Point, Range, Text } from 'slate';
+import { Element, Node, Path, Point, Text } from 'slate';
 import * as Y from 'yjs';
-import { InsertDelta, RelativeRange, TextRange } from '../model/types';
+import { InsertDelta, YTarget } from '../model/types';
 import { sliceInsertDelta } from './delta';
 
 export function getSlateNodeYLength(node: Node | undefined): number {
@@ -21,14 +21,7 @@ export function getYTarget(
   yRoot: Y.XmlText,
   slateRoot: Node,
   path: Path
-): {
-  textRange: TextRange;
-  parent: Y.XmlText;
-  parentNode: Node;
-  target?: Y.XmlText;
-  targetNode?: Node;
-  targetDelta: InsertDelta;
-} {
+): YTarget {
   if (path.length === 0) {
     throw new Error('Path has to a have a length >= 1');
   }
@@ -63,11 +56,11 @@ export function getYTarget(
   }
 
   return {
-    parent: yRoot,
+    yParent: yRoot,
     textRange: { start: yOffset, end: yOffset + targetLength },
-    target: yTarget instanceof Y.XmlText ? yTarget : undefined,
-    parentNode: slateRoot,
-    targetNode,
+    yTarget: yTarget instanceof Y.XmlText ? yTarget : undefined,
+    slateParent: slateRoot,
+    slateTarget: targetNode,
     targetDelta,
   };
 }
@@ -169,11 +162,11 @@ export function slatePointToRelativePosition(
   slateRoot: Node,
   point: Point
 ) {
-  const { target, parent, textRange } = getYTarget(
-    sharedRoot,
-    slateRoot,
-    point.path
-  );
+  const {
+    yTarget: target,
+    yParent: parent,
+    textRange,
+  } = getYTarget(sharedRoot, slateRoot, point.path);
 
   if (target) {
     throw new Error(
@@ -186,101 +179,4 @@ export function slatePointToRelativePosition(
     textRange.start + point.offset,
     point.offset === textRange.end ? -1 : 0
   );
-}
-
-export function absolutePositionToSlatePoint(
-  sharedRoot: Y.XmlText,
-  slateRoot: Node,
-  { type, index, assoc }: Y.AbsolutePosition
-): Point {
-  if (!(type instanceof Y.XmlText)) {
-    throw new Error('Absolute position points to a non-XMLText');
-  }
-
-  const parentPath = getSlatePath(sharedRoot, slateRoot, type);
-  const parent = Node.get(slateRoot, parentPath);
-
-  if (!Element.isElement(parent)) {
-    throw new Error(
-      "Absolute position doesn't match slateRoot, cannot descent into text"
-    );
-  }
-
-  const [pathOffset, textOffset] = yOffsetToSlateOffsets(parent, index, {
-    assoc,
-  });
-  return { path: [...parentPath, pathOffset], offset: textOffset };
-}
-
-export function relativePositionToSlatePoint(
-  sharedRoot: Y.XmlText,
-  slateRoot: Node,
-  pos: Y.RelativePosition
-) {
-  if (!sharedRoot.doc) {
-    throw new Error("sharedRoot isn't attach to a yDoc");
-  }
-
-  const absPos = Y.createAbsolutePositionFromRelativePosition(
-    pos,
-    sharedRoot.doc
-  );
-
-  return absPos && absolutePositionToSlatePoint(sharedRoot, slateRoot, absPos);
-}
-
-export function relativeRangeToSlateRange(
-  sharedRoot: Y.XmlText,
-  slateRoot: Node,
-  relativeRange: RelativeRange
-) {
-  const {
-    anchor: relativeAnchor,
-    focus: relativeFocus,
-    ...data
-  } = relativeRange;
-
-  const anchor = relativePositionToSlatePoint(
-    sharedRoot,
-    slateRoot,
-    relativeAnchor
-  );
-
-  if (!anchor) {
-    return null;
-  }
-
-  const focus = relativePositionToSlatePoint(
-    sharedRoot,
-    slateRoot,
-    relativeFocus
-  );
-
-  if (!focus) {
-    return null;
-  }
-
-  return { anchor, focus, ...data };
-}
-
-export function slateRangeToRelativeRange(
-  sharedRoot: Y.XmlText,
-  slateRoot: Node,
-  range: Range
-): RelativeRange {
-  const { anchor, focus, ...data } = range;
-
-  const relativeAnchor = slatePointToRelativePosition(
-    sharedRoot,
-    slateRoot,
-    anchor
-  );
-
-  const relativeFocus = slatePointToRelativePosition(
-    sharedRoot,
-    slateRoot,
-    focus
-  );
-
-  return { anchor: relativeAnchor, focus: relativeFocus, ...data };
 }
