@@ -1,6 +1,7 @@
 import { Node, Point, Range, Text } from 'slate';
 import * as Y from 'yjs';
-import { RelativeRange, TextRange } from '../model/types';
+import { InsertDelta, RelativeRange, TextRange } from '../model/types';
+import { getInsertDeltaLength } from './delta';
 import { getSlatePath, getYTarget, yOffsetToSlateOffsets } from './location';
 import { assertDocumentAttachment } from './yjs';
 
@@ -190,17 +191,14 @@ export function setStoredPosition(
   );
 }
 
-// TODO: Handle nested elements
-export function getStoredPositionsInTextRangeAbsolute(
-  sharedRoot: Y.XmlText,
+function getAbsolutePositionsInTextRange(
+  absolutePositions: Record<string, Y.AbsolutePosition>,
   yTarget: Y.XmlText,
   textRange?: TextRange
 ) {
-  const absolutePositionRefs = getStoredPositionsAbsolute(sharedRoot);
-
   return Object.fromEntries(
-    Object.entries(absolutePositionRefs).filter(([, position]) => {
-      if (!position || position.type !== yTarget) {
+    Object.entries(absolutePositions).filter(([, position]) => {
+      if (position.type !== yTarget) {
         return false;
       }
 
@@ -209,8 +207,101 @@ export function getStoredPositionsInTextRangeAbsolute(
       }
 
       return position.assoc >= 0
-        ? position.index < textRange.start || position.index >= textRange.end
-        : position.index <= textRange.start || position.index > textRange.end;
+        ? position.index >= textRange.start && position.index < textRange.end
+        : position.index > textRange.start && position.index >= textRange.end;
     })
   );
+}
+
+function getAbsolutePositionsInYText(
+  absolutePositions: Record<string, Y.AbsolutePosition>,
+  yText: Y.XmlText,
+  parentPath = ''
+): Record<string, Record<string, Y.AbsolutePosition>> {
+  const positions = {
+    [parentPath]: getAbsolutePositionsInTextRange(absolutePositions, yText),
+  };
+
+  const insertDelta = yText.toDelta() as InsertDelta;
+  insertDelta.forEach(({ insert }, i) => {
+    if (insert instanceof Y.XmlText) {
+      Object.assign(
+        positions,
+        getAbsolutePositionsInYText(
+          absolutePositions,
+          insert,
+          parentPath ? `${parentPath}.${i}` : i.toString()
+        )
+      );
+    }
+  });
+
+  return positions;
+}
+
+export function getStoredPositionsInDeltaAbsolute(
+  sharedRoot: Y.XmlText,
+  yText: Y.XmlText,
+  delta: InsertDelta,
+  deltaOffset = 0
+) {
+  const absolutePositions = getStoredPositionsAbsolute(sharedRoot);
+
+  const positions = {
+    '': getAbsolutePositionsInTextRange(absolutePositions, yText, {
+      start: deltaOffset,
+      end: deltaOffset + getInsertDeltaLength(delta),
+    }),
+  };
+
+  delta.forEach(({ insert }, i) => {
+    if (insert instanceof Y.XmlText) {
+      Object.assign(
+        positions,
+        getAbsolutePositionsInYText(absolutePositions, insert, i.toString())
+      );
+    }
+  });
+
+  return positions;
+}
+
+export function restoreStoredPositionsWithDeltaAbsolute(
+  sharedRoot: Y.XmlText,
+  yText: Y.XmlText,
+  absolutePositions: Record<string, Record<string, Y.AbsolutePosition>>,
+  delta: InsertDelta,
+  newDeltaOffset = 0,
+  previousDeltaOffset = 0,
+  path = ''
+) {
+  const toRestore = absolutePositions[path];
+
+  if (toRestore) {
+    Object.entries(toRestore).forEach(([key, position]) => {
+      setStoredPosition(
+        sharedRoot,
+        key,
+        Y.createRelativePositionFromTypeIndex(
+          yText,
+          position.index - previousDeltaOffset + newDeltaOffset,
+          position.assoc
+        )
+      );
+    });
+  }
+
+  delta.forEach(({ insert }, i) => {
+    if (insert instanceof Y.XmlText) {
+      restoreStoredPositionsWithDeltaAbsolute(
+        sharedRoot,
+        insert,
+        absolutePositions,
+        insert.toDelta(),
+        0,
+        0,
+        path ? `${path}.${i}` : i.toString()
+      );
+    }
+  });
 }

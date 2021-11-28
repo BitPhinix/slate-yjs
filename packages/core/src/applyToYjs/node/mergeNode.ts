@@ -4,8 +4,8 @@ import { Delta, InsertDelta } from '../../model/types';
 import { cloneInsertDeltaDeep } from '../../utils/clone';
 import { getYTarget } from '../../utils/location';
 import {
-  getStoredPositionsInTextRangeAbsolute,
-  setStoredPosition,
+  getStoredPositionsInDeltaAbsolute,
+  restoreStoredPositionsWithDeltaAbsolute,
 } from '../../utils/position';
 import { getProperties } from '../../utils/slate';
 
@@ -40,14 +40,20 @@ export function mergeNode(
     );
   }
 
-  const storedPositions = getStoredPositionsInTextRangeAbsolute(
-    sharedRoot,
-    target.yTarget
+  const deltaApplyYOffset = prev.yTarget.length;
+  const targetDelta = target.yTarget.toDelta();
+  const clonedDelta = cloneInsertDeltaDeep(
+    target.yTarget.toDelta() as InsertDelta
   );
 
-  const prevYOffset = prev.yTarget.length;
-  const delta = cloneInsertDeltaDeep(target.yTarget.toDelta() as InsertDelta);
-  const applyDelta: Delta = [{ retain: prevYOffset }, ...delta];
+  const storedPositions = getStoredPositionsInDeltaAbsolute(
+    sharedRoot,
+    target.yTarget,
+    targetDelta,
+    deltaApplyYOffset
+  );
+
+  const applyDelta: Delta = [{ retain: deltaApplyYOffset }, ...clonedDelta];
 
   prev.yTarget.applyDelta(applyDelta, {
     sanitize: false,
@@ -58,16 +64,11 @@ export function mergeNode(
     target.textRange.end - target.textRange.start
   );
 
-  // Update stored positions to point to the merged position
-  Object.entries(storedPositions).forEach(([key, position]) => {
-    setStoredPosition(
-      sharedRoot,
-      key,
-      Y.createRelativePositionFromTypeIndex(
-        prev.yParent,
-        prevYOffset + (position.index - target.textRange.start),
-        position.assoc
-      )
-    );
-  });
+  restoreStoredPositionsWithDeltaAbsolute(
+    sharedRoot,
+    prev.yTarget,
+    storedPositions,
+    clonedDelta,
+    deltaApplyYOffset
+  );
 }

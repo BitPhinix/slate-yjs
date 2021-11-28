@@ -5,8 +5,8 @@ import { cloneInsertDeltaDeep } from '../../utils/clone';
 import { getInsertDeltaLength } from '../../utils/delta';
 import { getYTarget } from '../../utils/location';
 import {
-  getStoredPositionsInTextRangeAbsolute,
-  setStoredPosition,
+  getStoredPositionsInDeltaAbsolute,
+  restoreStoredPositionsWithDeltaAbsolute,
 } from '../../utils/position';
 
 export function moveNode(
@@ -29,10 +29,10 @@ export function moveNode(
   const target = getYTarget(sharedRoot, slateRoot, normalizedNewPath);
   const insertDelta = cloneInsertDeltaDeep(origin.targetDelta);
 
-  const storedPositions = getStoredPositionsInTextRangeAbsolute(
+  const storedPositions = getStoredPositionsInDeltaAbsolute(
     sharedRoot,
     origin.yParent,
-    origin.textRange
+    origin.targetDelta
   );
 
   origin.yParent.delete(
@@ -44,25 +44,17 @@ export function moveNode(
     target.yParent.toDelta() as InsertDelta
   );
 
-  const targetYOffset = Math.min(target.textRange.start, targetLength);
-  const applyDelta: Delta = [{ retain: targetYOffset }, ...insertDelta];
+  const deltaApplyYOffset = Math.min(target.textRange.start, targetLength);
+  const applyDelta: Delta = [{ retain: deltaApplyYOffset }, ...insertDelta];
 
   target.yParent.applyDelta(applyDelta, { sanitize: false });
 
-  // Update stored positions to point to the new slate node position
-  Object.entries(storedPositions).forEach(([key, position]) => {
-    if (!position) {
-      return;
-    }
-
-    setStoredPosition(
-      sharedRoot,
-      key,
-      Y.createRelativePositionFromTypeIndex(
-        target.yParent,
-        targetYOffset + (origin.textRange.start - position.index),
-        position.assoc
-      )
-    );
-  });
+  restoreStoredPositionsWithDeltaAbsolute(
+    sharedRoot,
+    target.yParent,
+    storedPositions,
+    insertDelta,
+    deltaApplyYOffset,
+    origin.textRange.start
+  );
 }
