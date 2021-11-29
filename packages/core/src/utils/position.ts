@@ -1,7 +1,7 @@
 import { Node, Point, Range, Text } from 'slate';
 import * as Y from 'yjs';
 import { InsertDelta, RelativeRange, TextRange } from '../model/types';
-import { getInsertDeltaLength } from './delta';
+import { getInsertDeltaLength, yTextToInsertDelta } from './delta';
 import { getSlatePath, getYTarget, yOffsetToSlateOffsets } from './location';
 import { assertDocumentAttachment } from './yjs';
 
@@ -137,7 +137,7 @@ export function getStoredPosition(
     return null;
   }
 
-  return Y.createRelativePositionFromJSON(rawPosition);
+  return Y.decodeRelativePosition(rawPosition);
 }
 
 export function getStoredPositions(
@@ -187,7 +187,7 @@ export function setStoredPosition(
 
   sharedRoot.setAttribute(
     STORED_POSITION_PREFIX + key,
-    Y.relativePositionToJSON(position)
+    Y.encodeRelativePosition(position)
   );
 }
 
@@ -222,7 +222,7 @@ function getAbsolutePositionsInYText(
     [parentPath]: getAbsolutePositionsInTextRange(absolutePositions, yText),
   };
 
-  const insertDelta = yText.toDelta() as InsertDelta;
+  const insertDelta = yTextToInsertDelta(yText);
   insertDelta.forEach(({ insert }, i) => {
     if (insert instanceof Y.XmlText) {
       Object.assign(
@@ -297,7 +297,7 @@ export function restoreStoredPositionsWithDeltaAbsolute(
         sharedRoot,
         insert,
         absolutePositions,
-        insert.toDelta(),
+        yTextToInsertDelta(insert),
         0,
         0,
         path ? `${path}.${i}` : i.toString()

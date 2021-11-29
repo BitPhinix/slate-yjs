@@ -1,7 +1,11 @@
 import { MergeNodeOperation, Node, Path, Text } from 'slate';
 import * as Y from 'yjs';
-import { Delta, InsertDelta } from '../../model/types';
+import { Delta } from '../../model/types';
 import { cloneInsertDeltaDeep } from '../../utils/clone';
+import {
+  invalidateDeltaCacheForYText,
+  yTextToInsertDelta,
+} from '../../utils/delta';
 import { getYTarget } from '../../utils/location';
 import {
   getStoredPositionsInDeltaAbsolute,
@@ -33,18 +37,17 @@ export function mergeNode(
       throw new Error('Path points to a y text but not a slate node');
     }
 
-    return parent.format(
+    parent.format(
       textRange.start,
       textRange.start - textRange.end,
       getProperties(previousSibling)
     );
+    return invalidateDeltaCacheForYText(parent);
   }
 
   const deltaApplyYOffset = prev.yTarget.length;
-  const targetDelta = target.yTarget.toDelta();
-  const clonedDelta = cloneInsertDeltaDeep(
-    target.yTarget.toDelta() as InsertDelta
-  );
+  const targetDelta = yTextToInsertDelta(target.yTarget);
+  const clonedDelta = cloneInsertDeltaDeep(targetDelta);
 
   const storedPositions = getStoredPositionsInDeltaAbsolute(
     sharedRoot,
@@ -63,6 +66,9 @@ export function mergeNode(
     target.textRange.start,
     target.textRange.end - target.textRange.start
   );
+
+  invalidateDeltaCacheForYText(prev.yTarget);
+  invalidateDeltaCacheForYText(target.yParent);
 
   restoreStoredPositionsWithDeltaAbsolute(
     sharedRoot,

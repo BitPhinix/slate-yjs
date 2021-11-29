@@ -1,4 +1,22 @@
+import * as Y from 'yjs';
 import { DeltaInsert, InsertDelta } from '../model/types';
+
+const INSERT_DELTA_CACHE: WeakMap<Y.XmlText, InsertDelta> = new WeakMap();
+
+export function invalidateDeltaCacheForYText(yText: Y.XmlText) {
+  INSERT_DELTA_CACHE.delete(yText);
+}
+
+export function yTextToInsertDelta(yText: Y.XmlText): InsertDelta {
+  const cached = INSERT_DELTA_CACHE.get(yText);
+  if (cached) {
+    return cached;
+  }
+
+  const delta = yText.toDelta() as InsertDelta;
+  INSERT_DELTA_CACHE.set(yText, delta);
+  return delta;
+}
 
 export function getInsertLength({ insert }: DeltaInsert): number {
   return typeof insert === 'string' ? insert.length : 1;

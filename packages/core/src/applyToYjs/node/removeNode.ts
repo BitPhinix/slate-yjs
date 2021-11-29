@@ -1,5 +1,6 @@
 import { Node, RemoveNodeOperation } from 'slate';
 import * as Y from 'yjs';
+import { invalidateDeltaCacheForYText } from '../../utils/delta';
 import { getYTarget } from '../../utils/location';
 
 export function removeNode(
@@ -13,4 +14,5 @@ export function removeNode(
     op.path
   );
   parent.delete(textRange.start, textRange.end - textRange.start);
+  invalidateDeltaCacheForYText(parent);
 }

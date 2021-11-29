@@ -86,9 +86,7 @@ export function withYHistory<T extends YjsEditor>(
       stackItem: HistoryStackItem;
       type: 'redo' | 'undo';
     }) => {
-      // Sadly we don't have access to the meta of the stack item that 'caused'
-      // the push on 'stack-item-added', so we have to manually update the
-      // selection meta here.
+      // TODO: Change once https://github.com/yjs/yjs/issues/353 is resolved
       const inverseStack =
         type === 'undo' ? undoManager.redoStack : undoManager.undoStack;
       const inverseItem = inverseStack[inverseStack.length - 1];

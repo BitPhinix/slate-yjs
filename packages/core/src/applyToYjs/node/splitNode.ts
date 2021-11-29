@@ -1,8 +1,11 @@
 import { Node, SplitNodeOperation, Text } from 'slate';
 import * as Y from 'yjs';
-import { InsertDelta } from '../../model/types';
 import { cloneInsertDeltaDeep } from '../../utils/clone';
-import { sliceInsertDelta } from '../../utils/delta';
+import {
+  invalidateDeltaCacheForYText,
+  sliceInsertDelta,
+  yTextToInsertDelta,
+} from '../../utils/delta';
 import { getSlateNodeYLength, getYTarget } from '../../utils/location';
 import {
   getStoredPositionsInDeltaAbsolute,
@@ -33,11 +36,13 @@ export function splitNode(
       }
     });
 
-    return target.yParent.format(
+    target.yParent.format(
       target.textRange.start,
       target.textRange.end - target.textRange.start,
       { ...unset, ...op.properties }
     );
+
+    return invalidateDeltaCacheForYText(target.yParent);
   }
 
   if (Text.isText(target.slateTarget)) {
@@ -58,7 +63,7 @@ export function splitNode(
   );
 
   const splitDelta = sliceInsertDelta(
-    target.yTarget.toDelta() as InsertDelta,
+    yTextToInsertDelta(target.yTarget),
     ySplitOffset,
     length - ySplitOffset
   );
@@ -86,6 +91,9 @@ export function splitNode(
   );
 
   target.yParent.insertEmbed(target.textRange.end, toInsert);
+
+  invalidateDeltaCacheForYText(target.yTarget);
+  invalidateDeltaCacheForYText(target.yParent);
 
   restoreStoredPositionsWithDeltaAbsolute(
     sharedRoot,

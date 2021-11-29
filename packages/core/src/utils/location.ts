@@ -1,7 +1,7 @@
 import { Element, Node, Path, Point, Text } from 'slate';
 import * as Y from 'yjs';
-import { InsertDelta, YTarget } from '../model/types';
-import { sliceInsertDelta } from './delta';
+import { YTarget } from '../model/types';
+import { sliceInsertDelta, yTextToInsertDelta } from './delta';
 
 export function getSlateNodeYLength(node: Node | undefined): number {
   if (!node) {
@@ -35,8 +35,7 @@ export function getYTarget(
   const yOffset = slatePathOffsetToYOffset(slateRoot, pathOffset);
   const targetNode = slateRoot.children[pathOffset];
 
-  // TODO: Perf, we don't need the entire delta here.
-  const delta = yRoot.toDelta() as InsertDelta;
+  const delta = yTextToInsertDelta(yRoot);
   const targetLength = getSlateNodeYLength(targetNode);
 
   const targetDelta = sliceInsertDelta(delta, yOffset, targetLength);
@@ -138,7 +137,7 @@ export function getSlatePath(
     }
 
     let yOffset = 0;
-    const currentDelta = yParent.toDelta() as InsertDelta;
+    const currentDelta = yTextToInsertDelta(yParent);
     for (const element of currentDelta) {
       if (element.insert === yChild) {
         break;

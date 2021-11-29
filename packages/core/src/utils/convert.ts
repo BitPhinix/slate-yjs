@@ -1,10 +1,11 @@
 import { Element, Node, Text } from 'slate';
 import * as Y from 'yjs';
 import { DeltaInsert, InsertDelta } from '../model/types';
+import { yTextToInsertDelta } from './delta';
 import { getProperties } from './slate';
 
 export function yTextToSlateElement(yText: Y.XmlText): Element {
-  const delta = yText.toDelta() as InsertDelta;
+  const delta = yTextToInsertDelta(yText);
 
   const children =
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
