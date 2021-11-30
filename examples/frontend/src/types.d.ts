@@ -1,4 +1,4 @@
-import { YHistoryEditor, YjsEditor } from '@slate-yjs/core';
+import { YHistoryEditor, YjsEditor } from '@slate-yjs/core/dist';
 import { Descendant } from 'slate';
 import { ReactEditor } from 'slate-react';
 

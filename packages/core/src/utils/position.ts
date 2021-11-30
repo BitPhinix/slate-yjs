@@ -1,4 +1,4 @@
-import { Node, Point, Range, Text } from 'slate';
+import { BasePoint, BaseRange, Node, Text } from 'slate';
 import * as Y from 'yjs';
 import { InsertDelta, RelativeRange, TextRange } from '../model/types';
 import { getInsertDeltaLength, yTextToInsertDelta } from './delta';
@@ -10,7 +10,7 @@ export const STORED_POSITION_PREFIX = '__slateYjsStoredPosition_';
 export function slatePointToRelativePosition(
   sharedRoot: Y.XmlText,
   slateRoot: Node,
-  point: Point
+  point: BasePoint
 ) {
   const { yTarget, yParent, textRange } = getYTarget(
     sharedRoot,
@@ -35,7 +35,7 @@ export function absolutePositionToSlatePoint(
   sharedRoot: Y.XmlText,
   slateRoot: Node,
   { type, index, assoc }: Y.AbsolutePosition
-): Point {
+): BasePoint | null {
   if (!(type instanceof Y.XmlText)) {
     throw new Error('Absolute position points to a non-XMLText');
   }
@@ -52,6 +52,12 @@ export function absolutePositionToSlatePoint(
   const [pathOffset, textOffset] = yOffsetToSlateOffsets(parent, index, {
     assoc,
   });
+
+  const target = parent.children[pathOffset];
+  if (!Text.isText(target)) {
+    return null;
+  }
+
   return { path: [...parentPath, pathOffset], offset: textOffset };
 }
 
@@ -70,62 +76,6 @@ export function relativePositionToSlatePoint(
   );
 
   return absPos && absolutePositionToSlatePoint(sharedRoot, slateRoot, absPos);
-}
-
-export function relativeRangeToSlateRange(
-  sharedRoot: Y.XmlText,
-  slateRoot: Node,
-  relativeRange: RelativeRange
-) {
-  const {
-    anchor: relativeAnchor,
-    focus: relativeFocus,
-    ...data
-  } = relativeRange;
-
-  const anchor = relativePositionToSlatePoint(
-    sharedRoot,
-    slateRoot,
-    relativeAnchor
-  );
-
-  if (!anchor) {
-    return null;
-  }
-
-  const focus = relativePositionToSlatePoint(
-    sharedRoot,
-    slateRoot,
-    relativeFocus
-  );
-
-  if (!focus) {
-    return null;
-  }
-
-  return { anchor, focus, ...data };
-}
-
-export function slateRangeToRelativeRange(
-  sharedRoot: Y.XmlText,
-  slateRoot: Node,
-  range: Range
-): RelativeRange {
-  const { anchor, focus, ...data } = range;
-
-  const relativeAnchor = slatePointToRelativePosition(
-    sharedRoot,
-    slateRoot,
-    anchor
-  );
-
-  const relativeFocus = slatePointToRelativePosition(
-    sharedRoot,
-    slateRoot,
-    focus
-  );
-
-  return { anchor: relativeAnchor, focus: relativeFocus, ...data };
 }
 
 export function getStoredPosition(
@@ -153,7 +103,7 @@ export function getStoredPositions(
   );
 }
 
-export function getStoredPositionsAbsolute(sharedRoot: Y.XmlText) {
+function getStoredPositionsAbsolute(sharedRoot: Y.XmlText) {
   assertDocumentAttachment(sharedRoot);
 
   return Object.fromEntries(
@@ -174,7 +124,6 @@ export function getStoredPositionsAbsolute(sharedRoot: Y.XmlText) {
 }
 
 export function removeStoredPosition(sharedRoot: Y.XmlText, key: string) {
-  assertDocumentAttachment(sharedRoot);
   sharedRoot.removeAttribute(STORED_POSITION_PREFIX + key);
 }
 
@@ -183,8 +132,6 @@ export function setStoredPosition(
   key: string,
   position: Y.RelativePosition
 ) {
-  assertDocumentAttachment(sharedRoot);
-
   sharedRoot.setAttribute(
     STORED_POSITION_PREFIX + key,
     Y.encodeRelativePosition(position)
@@ -304,4 +251,43 @@ export function restoreStoredPositionsWithDeltaAbsolute(
       );
     }
   });
+}
+
+export function slateRangeToRelativeRange(
+  sharedRoot: Y.XmlText,
+  slateRoot: Node,
+  range: BaseRange
+): RelativeRange {
+  return {
+    anchor: slatePointToRelativePosition(sharedRoot, slateRoot, range.anchor),
+    focus: slatePointToRelativePosition(sharedRoot, slateRoot, range.focus),
+  };
+}
+
+export function relativeRangeToSlateRange(
+  sharedRoot: Y.XmlText,
+  slateRoot: Node,
+  range: RelativeRange
+): BaseRange | null {
+  const anchor = relativePositionToSlatePoint(
+    sharedRoot,
+    slateRoot,
+    range.anchor
+  );
+
+  if (!anchor) {
+    return null;
+  }
+
+  const focus = relativePositionToSlatePoint(
+    sharedRoot,
+    slateRoot,
+    range.focus
+  );
+
+  if (!focus) {
+    return null;
+  }
+
+  return { anchor, focus };
 }

@@ -2156,6 +2156,7 @@ __metadata:
   dependencies:
     microbundle: ^0.14.1
     slate: ~0.70.0
+    y-protocols: ^1.0.5
     yjs: ^13.5.20
   peerDependencies:
     slate: ^0.67.1

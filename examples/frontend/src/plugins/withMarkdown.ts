@@ -1,3 +1,8 @@
+/**
+ * Very crude markdown shortcuts plugin - you can totally ignore this file, it has
+ * nothing to do with slate-yjs itself
+ */
+
 import { Editor, Element, Point, Range, Text, Transforms } from 'slate';
 
 function escapeRegExp(s: string) {
@@ -127,6 +132,7 @@ export function withMarkdown(editor: Editor) {
       Editor.withoutNormalizing(editor, () => {
         const matchStart = Editor.before(editor, anchor, {
           distance: text.length,
+          unit: 'character',
         });
 
         if (!matchStart) {
@@ -140,6 +146,7 @@ export function withMarkdown(editor: Editor) {
         if (endText) {
           const end = Editor.before(editor, anchor, {
             distance: endText.length,
+            unit: 'character',
           });
 
           if (!end) {
@@ -159,6 +166,7 @@ export function withMarkdown(editor: Editor) {
         if (startText) {
           const end = Editor.after(editor, matchStart, {
             distance: startText.length,
+            unit: 'character',
           });
 
           if (!end) {

@@ -1,4 +1,4 @@
-import { withYjs, withYHistory, YjsEditor } from '@slate-yjs/core';
+import { withYjs, withYHistory, YjsEditor } from '@slate-yjs/core/dist';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { createEditor, Descendant } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react';

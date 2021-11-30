@@ -19,11 +19,6 @@ export type Delta = Array<
 
 export type TextRange = { start: number; end: number };
 
-export type RelativeRange = {
-  anchor: Y.RelativePosition;
-  focus: Y.RelativePosition;
-} & Record<string, unknown>;
-
 export type HistoryStackItem = {
   meta: Map<string, unknown>;
 };
@@ -47,4 +42,9 @@ export type YTarget = {
 
   // InsertDelta representing the slateTarget
   targetDelta: InsertDelta;
+};
+
+export type RelativeRange = {
+  anchor: Y.RelativePosition;
+  focus: Y.RelativePosition;
 };

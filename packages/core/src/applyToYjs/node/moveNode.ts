@@ -5,12 +5,12 @@ import { cloneInsertDeltaDeep } from '../../utils/clone';
 import {
   getInsertDeltaLength,
   invalidateDeltaCacheForYText,
-  yTextToInsertDelta
+  yTextToInsertDelta,
 } from '../../utils/delta';
 import { getYTarget } from '../../utils/location';
 import {
   getStoredPositionsInDeltaAbsolute,
-  restoreStoredPositionsWithDeltaAbsolute
+  restoreStoredPositionsWithDeltaAbsolute,
 } from '../../utils/position';
 
 export function moveNode(

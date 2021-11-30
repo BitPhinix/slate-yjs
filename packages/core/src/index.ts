@@ -1,4 +1,7 @@
 import {
+  CursorEditor,
+  withCursors,
+  WithCursorsOptions,
   withYHistory,
   WithYHistoryOptions,
   withYjs,
@@ -7,6 +10,12 @@ import {
   YjsEditor,
 } from './plugins';
 import { slateNodesToInsertDelta, yTextToSlateElement } from './utils/convert';
+import {
+  relativePositionToSlatePoint,
+  relativeRangeToSlateRange,
+  slatePointToRelativePosition,
+  slateRangeToRelativeRange,
+} from './utils/position';
 
 export {
   withYjs,
@@ -16,7 +25,15 @@ export {
   withYHistory,
   WithYHistoryOptions,
   YHistoryEditor,
-  // Utility functions
+  // Base cursor plugin
+  CursorEditor,
+  WithCursorsOptions,
+  withCursors,
+  // TODO: Make the exported versions delta cache independent
   yTextToSlateElement,
   slateNodesToInsertDelta,
+  slateRangeToRelativeRange,
+  relativeRangeToSlateRange,
+  slatePointToRelativePosition,
+  relativePositionToSlatePoint,
 };

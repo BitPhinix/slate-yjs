@@ -1,4 +1,4 @@
-import { Element, Node, Path, Point, Text } from 'slate';
+import { Element, Node, Path, Text } from 'slate';
 import * as Y from 'yjs';
 import { YTarget } from '../model/types';
 import { sliceInsertDelta, yTextToInsertDelta } from './delta';
@@ -154,28 +154,4 @@ export function getSlatePath(
     slateParent = slateParent.children[pathOffset];
     return path.concat(pathOffset);
   }, []);
-}
-
-export function slatePointToRelativePosition(
-  sharedRoot: Y.XmlText,
-  slateRoot: Node,
-  point: Point
-) {
-  const {
-    yTarget: target,
-    yParent: parent,
-    textRange,
-  } = getYTarget(sharedRoot, slateRoot, point.path);
-
-  if (target) {
-    throw new Error(
-      'Slate point points to a non-text element inside sharedRoot'
-    );
-  }
-
-  return Y.createRelativePositionFromTypeIndex(
-    parent,
-    textRange.start + point.offset,
-    point.offset === textRange.end ? -1 : 0
-  );
 }
