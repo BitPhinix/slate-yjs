@@ -2,11 +2,7 @@ import { MoveNodeOperation, Node, Path, Text } from 'slate';
 import * as Y from 'yjs';
 import { Delta } from '../../model/types';
 import { cloneInsertDeltaDeep } from '../../utils/clone';
-import {
-  getInsertDeltaLength,
-  invalidateDeltaCacheForYText,
-  yTextToInsertDelta,
-} from '../../utils/delta';
+import { getInsertDeltaLength, yTextToInsertDelta } from '../../utils/delta';
 import { getYTarget } from '../../utils/location';
 import {
   getStoredPositionsInDeltaAbsolute,
@@ -44,15 +40,11 @@ export function moveNode(
     origin.textRange.end - origin.textRange.start
   );
 
-  invalidateDeltaCacheForYText(target.yParent);
-
   const targetLength = getInsertDeltaLength(yTextToInsertDelta(target.yParent));
   const deltaApplyYOffset = Math.min(target.textRange.start, targetLength);
   const applyDelta: Delta = [{ retain: deltaApplyYOffset }, ...insertDelta];
 
   target.yParent.applyDelta(applyDelta, { sanitize: false });
-
-  invalidateDeltaCacheForYText(origin.yParent);
 
   restoreStoredPositionsWithDeltaAbsolute(
     sharedRoot,

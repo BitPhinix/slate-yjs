@@ -60,7 +60,7 @@ export function RemoteSelection<TCursorData extends Record<string, unknown>>({
   ]);
 
   return (
-    <>
+    <React.Fragment>
       {selectionRects.map((selectionRect, i) => (
         <SelectionRectComponent
           // Always give the caret the same key in order to be able to animate it
@@ -70,6 +70,6 @@ export function RemoteSelection<TCursorData extends Record<string, unknown>>({
           {...selectionRect}
         />
       ))}
-    </>
+    </React.Fragment>
   );
 }

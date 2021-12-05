@@ -1,6 +1,5 @@
 import { Node, SetNodeOperation } from 'slate';
 import * as Y from 'yjs';
-import { invalidateDeltaCacheForYText } from '../../utils/delta';
 import { getYTarget } from '../../utils/location';
 
 export function setNode(
@@ -40,6 +39,4 @@ export function setNode(
     textRange.end - textRange.start,
     newProperties
   );
-
-  invalidateDeltaCacheForYText(yParent);
 }

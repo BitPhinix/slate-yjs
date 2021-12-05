@@ -12,7 +12,13 @@ import {
   YHistoryEditor,
   YjsEditor,
 } from './plugins';
-import { slateNodesToInsertDelta } from './utils/convert';
+import { slateNodesToInsertDelta, yTextToSlateElement } from './utils/convert';
+import {
+  relativePositionToSlatePoint,
+  relativeRangeToSlateRange,
+  slatePointToRelativePosition,
+  slateRangeToRelativeRange,
+} from './utils/position';
 
 export {
   withYjs,
@@ -29,11 +35,11 @@ export {
   CursorState,
   RemoteCursorChangeEventListener,
   CursorStateChangeEvent,
-  // TODO: Export, make the exported versions delta cache independent
-  // yTextToSlateElement,
+  // Utils
+  yTextToSlateElement,
   slateNodesToInsertDelta,
-  // slateRangeToRelativeRange,
-  // relativeRangeToSlateRange,
-  // slatePointToRelativePosition,
-  // relativePositionToSlatePoint,
+  slateRangeToRelativeRange,
+  relativeRangeToSlateRange,
+  slatePointToRelativePosition,
+  relativePositionToSlatePoint,
 };

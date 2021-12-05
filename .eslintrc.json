@@ -59,7 +59,8 @@
     "import/prefer-default-export": "off",
     "import/no-default-export": "error",
     "consistent-return": "off",
-    "no-prototype-builtins": "off"
+    "no-prototype-builtins": "off",
+    "react/jsx-fragments": ["error", "element"]
   },
   "settings": {
     "import/resolver": {

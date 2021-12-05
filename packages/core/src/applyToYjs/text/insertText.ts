@@ -1,6 +1,5 @@
 import { InsertTextOperation, Node, Text } from 'slate';
 import type Y from 'yjs';
-import { invalidateDeltaCacheForYText } from '../../utils/delta';
 import { getYTarget } from '../../utils/location';
 import { getProperties } from '../../utils/slate';
 
@@ -25,6 +24,4 @@ export function insertText(
     op.text,
     getProperties(targetNode)
   );
-
-  invalidateDeltaCacheForYText(target);
 }

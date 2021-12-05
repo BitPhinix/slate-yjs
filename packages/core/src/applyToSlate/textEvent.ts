@@ -2,7 +2,6 @@ import { Editor, Element, Node, Operation, Path, Text } from 'slate';
 import * as Y from 'yjs';
 import { Delta } from '../model/types';
 import { deltaInsertToSlateNode } from '../utils/convert';
-import { invalidateDeltaCacheForYText } from '../utils/delta';
 import {
   getSlateNodeYLength,
   getSlatePath,
@@ -213,9 +212,6 @@ export function translateYTextEvent(
   if (!(target instanceof Y.XmlText)) {
     throw new Error('Unexpected target node type');
   }
-
-  // Invalidate delta cache entry on change
-  invalidateDeltaCacheForYText(target);
 
   const ops: Operation[] = [];
   const slatePath = getSlatePath(sharedRoot, editor, target);
