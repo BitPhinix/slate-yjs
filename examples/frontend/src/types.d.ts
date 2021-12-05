@@ -1,6 +1,11 @@
-import { YHistoryEditor, YjsEditor } from '@slate-yjs/core/dist';
+import { CursorEditor, YHistoryEditor, YjsEditor } from '@slate-yjs/core';
 import { Descendant } from 'slate';
 import { ReactEditor } from 'slate-react';
+
+export type CursorData = {
+  name: string;
+  color: string;
+};
 
 export type CustomText = {
   bold?: boolean;
@@ -42,7 +47,10 @@ export type CustomElement =
   | HeadingTwo
   | BlockQuote;
 
-export type CustomEditor = ReactEditor & YjsEditor & YHistoryEditor;
+export type CustomEditor = ReactEditor &
+  YjsEditor &
+  YHistoryEditor &
+  CursorEditor<CursorData>;
 
 declare module 'slate' {
   interface CustomTypes {

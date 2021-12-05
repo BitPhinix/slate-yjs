@@ -2,6 +2,8 @@
   "files": [],
   "references": [
     { "path": "./packages/core" },
-    { "path": "./examples/frontend" }
+    { "path": "./packages/react" },
+    { "path": "./examples/frontend" },
+    { "path": "./examples/backend" }
   ]
 }

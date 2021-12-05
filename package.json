@@ -5,13 +5,14 @@
     "examples/*"
   ],
   "scripts": {
-    "build": "yarn workspaces foreach -iptv run build",
+    "build": "yarn workspaces foreach -ipv --topological-dev run build",
     "dev": "yarn workspaces foreach -ipv run dev",
     "lint": "yarn lint:typescript && yarn lint:eslint && yarn lint:prettier",
     "lint:eslint": "eslint \"./packages/**/*.{js,jsx,ts,tsx}\"",
     "lint:prettier": "prettier --check \"**/*.{css,md,js,jsx,json,ts,tsx}\"",
     "lint:typescript": "tsc --build ./ --force",
-    "test": "yarn run jest ./packages/*/test/**/*.{js,ts}"
+    "test": "yarn run jest ./packages/*/test/**/*.{js,ts}",
+    "clean": "git clean -dfX"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.0",

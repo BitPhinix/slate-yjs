@@ -1,0 +1,10 @@
+{
+  "extends": "../../config/typescript/tsconfig.json",
+  "include": ["src/**/*"],
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "composite": true
+  },
+  "references": [{ "path": "../core" }]
+}

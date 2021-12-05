@@ -2155,7 +2155,7 @@ __metadata:
   resolution: "@slate-yjs/core@workspace:packages/core"
   dependencies:
     microbundle: ^0.14.1
-    slate: ~0.70.0
+    slate: ">=0.70.0"
     y-protocols: ^1.0.5
     yjs: ^13.5.20
   peerDependencies:
@@ -2183,12 +2183,17 @@ __metadata:
   dependencies:
     "@hocuspocus/provider": ^1.0.0-alpha.21
     "@slate-yjs/core": "workspace:^"
+    "@slate-yjs/react": "workspace:^"
+    "@types/faker": ^5.5.9
+    "@types/randomcolor": ^0
     "@types/react": ^17.0.34
     "@types/react-dom": ^17.0.11
     "@vitejs/plugin-react": ^1.0.7
     autoprefixer: ^10.4.0
     clsx: ^1.1.1
+    faker: ^5.5.3
     postcss: ^8.3.11
+    randomcolor: ^0.6.2
     react: ^17.0.2
     react-dom: ^17.0.2
     react-router-dom: ^6.0.1
@@ -2196,6 +2201,26 @@ __metadata:
     slate-react: ^0.70.0
     tailwindcss: ^2.2.19
     vite: ^2.6.13
+    yjs: ^13.5.20
+  languageName: unknown
+  linkType: soft
+
+"@slate-yjs/react@workspace:^, @slate-yjs/react@workspace:packages/react":
+  version: 0.0.0-use.local
+  resolution: "@slate-yjs/react@workspace:packages/react"
+  dependencies:
+    "@slate-yjs/core": "workspace:^"
+    "@types/react": ^17.0.34
+    microbundle: ^0.14.1
+    react: ^17.0.2
+    slate: ~0.70.0
+    y-protocols: ^1.0.5
+    yjs: ^13.5.20
+  peerDependencies:
+    "@slate-yjs/core": "workspace:^"
+    react: ">=16.8.0"
+    slate: ">=0.70.0"
+    slate-react: ">=0.70.0"
     yjs: ^13.5.20
   languageName: unknown
   linkType: soft
@@ -2325,6 +2350,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/faker@npm:^5.5.9":
+  version: 5.5.9
+  resolution: "@types/faker@npm:5.5.9"
+  checksum: c2cbd082abe29047c89cf29b86257e582d2a177a9d1ed3abf99aa1cc025d5e8a3d201dfaddf8441bfcc57ed43e4da80e666951e1c23a5b759ac441a5855b5c36
+  languageName: node
+  linkType: hard
+
 "@types/graceful-fs@npm:^4.1.2":
   version: 4.1.5
   resolution: "@types/graceful-fs@npm:4.1.5"
@@ -2431,6 +2463,13 @@ __metadata:
   version: 15.7.4
   resolution: "@types/prop-types@npm:15.7.4"
   checksum: ef6e1899e59b876c273811b1bd845022fc66d5a3d11cb38a25b6c566b30514ae38fe20a40f67622f362a4f4f7f9224e22d8da101cff3d6e97e11d7b4c307cfc1
+  languageName: node
+  linkType: hard
+
+"@types/randomcolor@npm:^0":
+  version: 0.5.6
+  resolution: "@types/randomcolor@npm:0.5.6"
+  checksum: b82fec1fc4d74fa9d777ea694cbe9f2b9d275135a6e97905d18d7b8624c92b41e45aec1b17ede43e37db103a1d63c8b0cb24d8762e768c776c3aefbf4ed6cf8d
   languageName: node
   linkType: hard
 
@@ -5046,6 +5085,13 @@ __metadata:
     jest-message-util: ^27.3.1
     jest-regex-util: ^27.0.6
   checksum: e7681ecc7ab1006a9311c66729ba7cef598671e89f48e832f319feb9bb0c79a231d30da039c09ad437e5e18d69aced2a66c102ef63eb58a2e4f39a591bba2f60
+  languageName: node
+  linkType: hard
+
+"faker@npm:^5.5.3":
+  version: 5.5.3
+  resolution: "faker@npm:5.5.3"
+  checksum: 684fd64c8d3897e54248f95b4f6319f75d97691b8500cd13adf4af2c28f9204f766c1d1aaa6b41338f0beaaa87256c3132f8708a1a8f189d122b92f6b98081c3
   languageName: node
   linkType: hard
 
@@ -8680,6 +8726,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"randomcolor@npm:^0.6.2":
+  version: 0.6.2
+  resolution: "randomcolor@npm:0.6.2"
+  checksum: 539345c0289f7c52ffd8486e61231e19ccc40b1c4ab9c15594f20a2773b71a9317e0cc8b756160fc8a678ace9ed1e96a8ac90346b2c34c64dfd5acad91f9a73d
+  languageName: node
+  linkType: hard
+
 "rc@npm:^1.2.8":
   version: 1.2.8
   resolution: "rc@npm:1.2.8"
@@ -9385,6 +9438,17 @@ __metadata:
     typescript: ^4.4.4
   languageName: unknown
   linkType: soft
+
+"slate@npm:>=0.70.0":
+  version: 0.71.0
+  resolution: "slate@npm:0.71.0"
+  dependencies:
+    immer: ^9.0.6
+    is-plain-object: ^5.0.0
+    tiny-warning: ^1.0.3
+  checksum: 9c3d3b8464acf8e67eb49c8242aa6435f7e7f4fca36ba794c671a9979b9180635cc392caf569404a5fb269f8ec3797a3cf8e32d9d1f150198c170cbf9fa2ac1d
+  languageName: node
+  linkType: hard
 
 "slate@npm:^0.70.0, slate@npm:~0.70.0":
   version: 0.70.0

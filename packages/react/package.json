@@ -1,12 +1,13 @@
 {
-  "name": "@slate-yjs/core",
+  "name": "@slate-yjs/react",
   "sideEffects": false,
   "version": "0.0.1",
-  "description": "Yjs binding for Slate.",
+  "description": "React specific plugins/helpers for slate-yjs.",
   "keywords": [
     "slate",
     "yjs",
-    "collaborative"
+    "collaborative",
+    "react"
   ],
   "type": "module",
   "source": "src/index.ts",
@@ -19,8 +20,8 @@
   "unpkg": "dist/index.umd.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "yarn run microbundle",
-    "dev": "yarn run microbundle watch"
+    "build": "yarn run microbundle --jsx React.createElement",
+    "dev": "yarn run microbundle watch --jsx React.createElement"
   },
   "repository": {
     "type": "git",
@@ -28,12 +29,18 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@slate-yjs/core": "workspace:^",
+    "@types/react": "^17.0.34",
     "microbundle": "^0.14.1",
-    "slate": ">=0.70.0",
+    "react": "^17.0.2",
+    "slate": "~0.70.0",
     "yjs": "^13.5.20"
   },
   "peerDependencies": {
-    "slate": "^0.67.1",
+    "@slate-yjs/core": "workspace:^",
+    "react": ">=16.8.0",
+    "slate": ">=0.70.0",
+    "slate-react": ">=0.70.0",
     "yjs": "^13.5.20"
   },
   "bugs": {

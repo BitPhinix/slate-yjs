@@ -34,7 +34,10 @@ export function Navigator() {
           )}
         >
           <ul className="py-1">
-            <DropdownElement to="/">Simple</DropdownElement>
+            <DropdownElement to="/simple">Simple</DropdownElement>
+            <DropdownElement to="/remote-cursors-overlay">
+              Remote cursors (overlay)
+            </DropdownElement>
           </ul>
         </nav>
       </div>

@@ -1,5 +1,8 @@
 import {
   CursorEditor,
+  CursorState,
+  CursorStateChangeEvent,
+  RemoteCursorChangeEventListener,
   withCursors,
   WithCursorsOptions,
   withYHistory,
@@ -7,15 +10,9 @@ import {
   withYjs,
   WithYjsOptions,
   YHistoryEditor,
-  YjsEditor,
+  YjsEditor
 } from './plugins';
-import { slateNodesToInsertDelta, yTextToSlateElement } from './utils/convert';
-import {
-  relativePositionToSlatePoint,
-  relativeRangeToSlateRange,
-  slatePointToRelativePosition,
-  slateRangeToRelativeRange,
-} from './utils/position';
+import { slateNodesToInsertDelta } from './utils/convert';
 
 export {
   withYjs,
@@ -29,11 +26,14 @@ export {
   CursorEditor,
   WithCursorsOptions,
   withCursors,
-  // TODO: Make the exported versions delta cache independent
-  yTextToSlateElement,
+  CursorState,
+  RemoteCursorChangeEventListener,
+  CursorStateChangeEvent,
+  // TODO: Export, make the exported versions delta cache independent
+  // yTextToSlateElement,
   slateNodesToInsertDelta,
-  slateRangeToRelativeRange,
-  relativeRangeToSlateRange,
-  slatePointToRelativePosition,
-  relativePositionToSlatePoint,
+  // slateRangeToRelativeRange,
+  // relativeRangeToSlateRange,
+  // slatePointToRelativePosition,
+  // relativePositionToSlatePoint,
 };

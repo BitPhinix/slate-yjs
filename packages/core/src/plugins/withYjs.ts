@@ -20,6 +20,7 @@ const DEFAULT_POSITION_STORAGE_ORIGIN = Symbol('slate-yjs-position-storage');
 
 const ORIGIN: WeakMap<Editor, unknown> = new WeakMap();
 const LOCAL_CHANGES: WeakMap<Editor, LocalChange[]> = new WeakMap();
+const CONNECTED: WeakSet<Editor> = new WeakSet();
 
 export type YjsEditor = BaseEditor & {
   sharedRoot: Y.XmlText;
@@ -68,6 +69,10 @@ export const YjsEditor = {
 
   flushLocalOperations(editor: YjsEditor): void {
     editor.flushLocalOperations();
+  },
+
+  connected(editor: YjsEditor): boolean {
+    return CONNECTED.has(editor);
   },
 
   connect(editor: YjsEditor): void {
@@ -186,6 +191,7 @@ export function withYjs<T extends Editor>(
     sharedRoot.observeDeep(handleYEvents);
     const content = yTextToSlateElement(e.sharedRoot);
     e.children = content.children;
+    CONNECTED.add(e);
     e.onChange();
   };
 
@@ -195,6 +201,7 @@ export function withYjs<T extends Editor>(
     }
 
     sharedRoot.unobserveDeep(handleYEvents);
+    CONNECTED.delete(e);
   };
 
   e.storeLocalOperation = (op) => {
