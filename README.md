@@ -30,7 +30,7 @@ Slate-yjs aims to be the goto collaboration solution for slate. Get started in s
 
 <p align="center">
 <a href="https://codecov.io/gh/BitPhinix/slate-yjs" alt="Codecov">
-        <img src="https://codecov.io/gh/BitPhinix/slate-yjs/branch/master/graph/badge.svg?token=ZHUA26IWP0" /></a>
+        <img src="https://codecov.io/gh/BitPhinix/slate-yjs/branch/main/graph/badge.svg?token=ZHUA26IWP0" /></a>
 <a href="https://github.com/BitPhinix/slate-yjs/graphs/commit-activity" alt="Maintenance">
         <img src="https://img.shields.io/badge/Maintained%3F-yes-brightgreen.svg" /></a>
 <a href="http://commitizen.github.io/cz-cli/" alt="Commitizen friendly">
@@ -47,7 +47,7 @@ Slate-yjs aims to be the goto collaboration solution for slate. Get started in s
 <br/>
 
 <blockquote align="center">
-<b>:warning: This is the active development branch for v4. Don't use any code in here in production. Things will break and the api will change. :warning:</b>
+<b>:warning: This is the active development branch for the new version of slate-yjs. Don't use any code in here in production. Things will break and the api will change. :warning:</b>
 </blockquote>
 
 <br/>
@@ -96,7 +96,7 @@ https://www.hocuspocus.dev/examples/slate/
 
 ## Documentation
 
-Coming soon
+Coming soon. In the meantime take a look a the examples folder or dig into the source code yourself.
 
 <br/>
 <br/>
@@ -107,8 +107,8 @@ Slate-yjs's codebase is monorepo managed with [yarn workspaces](https://yarnpkg.
 
 | **Package**                          |                                                                                                            **Version** |                                                                                                                                                   **Size** | **Description**         |
 | :----------------------------------- | ---------------------------------------------------------------------------------------------------------------------: | ---------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------- |
-| [`@slate-yjs/core`](./packages/core) | [![](https://img.shields.io/npm/v/@slate-yjs/core.svg?maxAge=3600&label=&colorB=007ec6)](./packages/core/package.json) | [![](http://img.badgesize.io/https://unpkg.com/@slate-yjs/core/dist/core.cjs?compression=gzip&label=%20)](https://unpkg.com/@slate-yjs/core/dist/core.cjs) | Core slate-yjs binding. |
-
+| [`@slate-yjs/core`](./packages/core) | [![](https://img.shields.io/npm/v/@slate-yjs/core?maxAge=3600&label=&colorB=007ec6)](./packages/core/package.json) | [![](http://img.badgesize.io/https://unpkg.com/@slate-yjs/core/dist/index.cjs?compression=gzip&label=%20)](https://unpkg.com/@slate-yjs/core/dist/index.cjs) | Core slate-yjs binding. |
+| [`@slate-yjs/react`](./packages/react) | [![](https://img.shields.io/npm/v/@slate-yjs/react?maxAge=3600&label=&colorB=007ec6)](./packages/react/package.json) | [![](http://img.badgesize.io/https://unpkg.com/@slate-yjs/react/dist/index.cjs?compression=gzip&label=%20)](https://unpkg.com/@slate-yjs/react/dist/index.cjs) | React specific components/utils for slate-yjs. |
 <br/>
 <br/>
 
@@ -125,4 +125,4 @@ Any questions about slate-yjs? Thead over to the #slate-yjs channel inside the [
 
 All contributions are super welcome! Check out the Contributing instructions for more info!
 
-Slate-yjs is [MIT-licensed](https://github.com/Bitphinix/slate-yjs/blob/master/LICENSE.md).
+Slate-yjs is [MIT-licensed](https://github.com/Bitphinix/slate-yjs/blob/main/LICENSE.md).

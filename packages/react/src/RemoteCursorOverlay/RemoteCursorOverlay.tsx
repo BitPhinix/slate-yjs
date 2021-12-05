@@ -28,6 +28,7 @@ export function RemoteCursorOverlay<
   TCursorData extends Record<string, unknown> = Record<string, unknown>
 >({
   children,
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   SelectionRectComponent,
   className,
   style,
@@ -71,6 +72,8 @@ export function RemoteCursorOverlay<
     return () => CursorEditor.off(editor, 'change', updateCursors);
   }, [editor]);
 
+  const containerRef = useRef<HTMLDivElement>(null);
+
   // The only real reason we store the bounding rect to force a re-render when
   // resizing the container
   const [containerBoundingRect, setContainerBoundingRect] =
@@ -87,10 +90,9 @@ export function RemoteCursorOverlay<
 
   const resizeObserver = useMemo(
     () => new ResizeObserver(updateContainerRect),
-    []
+    [updateContainerRect]
   );
 
-  const containerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const { current: container } = containerRef;
 
@@ -103,7 +105,7 @@ export function RemoteCursorOverlay<
       resizeObserver.unobserve(container);
       updateContainerRect.cancel();
     };
-  }, []);
+  }, [resizeObserver, updateContainerRect]);
 
   return (
     <div
@@ -118,7 +120,7 @@ export function RemoteCursorOverlay<
         }
 
         const parsedClientId = parseInt(clientId, 10);
-        if (isNaN(parsedClientId)) {
+        if (Number.isNaN(parsedClientId)) {
           throw new Error('Encountered non-numeric client id');
         }
 

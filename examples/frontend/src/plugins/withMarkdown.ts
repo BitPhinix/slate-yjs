@@ -256,6 +256,8 @@ export function withMarkdown(editor: Editor) {
     }
   };
 
-  editor.isInline = (n) => n.type === 'inline-code' || isInline(n);
+  editor.isInline = (n) =>
+    (Element.isElement(n) && n.type === 'inline-code') || isInline(n);
+
   return editor;
 }

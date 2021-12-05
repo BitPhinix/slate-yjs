@@ -3,6 +3,9 @@ import { yTextToSlateElement } from '../src/utils/convert';
 import { TestEditor, TransformFunc } from './testEditor';
 import { createNode, createTestEditor, createValue, wait } from './utils';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+jest.mock('y-protocols/awareness', () => {});
+
 const tests = [
   [
     'Insert text into a paragraph node',

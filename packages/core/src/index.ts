@@ -10,7 +10,7 @@ import {
   withYjs,
   WithYjsOptions,
   YHistoryEditor,
-  YjsEditor
+  YjsEditor,
 } from './plugins';
 import { slateNodesToInsertDelta } from './utils/convert';
 

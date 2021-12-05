@@ -1,5 +1,5 @@
 import { CursorEditor } from '@slate-yjs/core';
-import React, { Fragment, useLayoutEffect, useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import { BaseRange } from 'slate';
 import { ReactEditor, useSlate } from 'slate-react';
 import { getSelectionRects, SelectionRect } from '../utils/selection';
@@ -18,6 +18,7 @@ export type RemoteSelectionProps<TCursorData extends Record<string, unknown>> =
   };
 
 export function RemoteSelection<TCursorData extends Record<string, unknown>>({
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   SelectionRectComponent,
   clientId,
   containerRef,
@@ -49,10 +50,17 @@ export function RemoteSelection<TCursorData extends Record<string, unknown>>({
         container.getBoundingClientRect()
       )
     );
-  }, [editor.children, selection, containerBoundingRect]);
+  }, [
+    editor.children,
+    selection,
+    containerBoundingRect,
+    clientId,
+    containerRef,
+    editor,
+  ]);
 
   return (
-    <Fragment>
+    <>
       {selectionRects.map((selectionRect, i) => (
         <SelectionRectComponent
           // Always give the caret the same key in order to be able to animate it
@@ -62,6 +70,6 @@ export function RemoteSelection<TCursorData extends Record<string, unknown>>({
           {...selectionRect}
         />
       ))}
-    </Fragment>
+    </>
   );
 }

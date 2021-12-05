@@ -2,7 +2,7 @@ import { Logger } from '@hocuspocus/extension-logger';
 import { Server } from '@hocuspocus/server';
 import { slateNodesToInsertDelta } from '@slate-yjs/core';
 import * as Y from 'yjs';
-import initialValue from '../data/initialValue.json';
+import initialValue from './data/initialValue.json';
 
 // Minimal hocuspocus server setup with logging. For more in-depth examples
 // take a look at: https://github.com/ueberdosis/hocuspocus/tree/main/demos/backend

@@ -2,7 +2,7 @@
   "name": "@slate-yjs/react",
   "sideEffects": false,
   "version": "0.0.1",
-  "description": "React specific plugins/helpers for slate-yjs.",
+  "description": "React specific components/utils for slate-yjs.",
   "keywords": [
     "slate",
     "yjs",

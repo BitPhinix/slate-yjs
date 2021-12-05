@@ -9,6 +9,7 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.15",
+    "slate": "~0.70.0",
     "ts-node": "^10.4.0"
   },
   "dependencies": {
