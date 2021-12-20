@@ -60,7 +60,8 @@
     "import/no-default-export": "error",
     "consistent-return": "off",
     "no-prototype-builtins": "off",
-    "react/jsx-fragments": ["error", "element"]
+    "react/jsx-fragments": ["error", "element"],
+    "react/require-default-props": "off"
   },
   "settings": {
     "import/resolver": {

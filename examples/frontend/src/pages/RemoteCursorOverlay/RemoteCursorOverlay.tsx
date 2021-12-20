@@ -1,15 +1,19 @@
 import { HocuspocusProvider } from '@hocuspocus/provider';
-import { withYHistory, withYjs, YjsEditor } from '@slate-yjs/core';
+import { withCursors, withYHistory, withYjs, YjsEditor } from '@slate-yjs/core';
+import { name } from 'faker';
+import randomColor from 'randomcolor';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { createEditor, Descendant } from 'slate';
 import { Editable, Slate, withReact } from 'slate-react';
 import * as Y from 'yjs';
-import { ConnectionToggle } from '../components/ConnectionToggle/ConnectionToggle';
-import { Element } from '../components/Element/Element';
-import { Leaf } from '../components/Leaf';
-import { withMarkdown } from '../plugins/withMarkdown';
+import { RemoteCursorOverlay } from './Overlay';
+import { ConnectionToggle } from '../../components/ConnectionToggle/ConnectionToggle';
+import { Element } from '../../components/Element/Element';
+import { Leaf } from '../../components/Leaf';
+import { withMarkdown } from '../../plugins/withMarkdown';
+import { CursorData } from '../../types';
 
-export function Simple() {
+export function RemoteCursorsOverlay() {
   const [value, setValue] = useState<Descendant[]>([]);
   const [connected, setConnected] = useState(false);
 
@@ -33,28 +37,43 @@ export function Simple() {
   }, [provider, connected]);
 
   const editor = useMemo(() => {
+    const cursorData: CursorData = {
+      color: randomColor({
+        luminosity: 'dark',
+        alpha: 1,
+        format: 'hex',
+      }),
+      name: `${name.firstName()} ${name.lastName()}`,
+    };
+
     const sharedType = provider.document.get('content', Y.XmlText) as Y.XmlText;
 
     return withMarkdown(
-      withReact(withYHistory(withYjs(createEditor(), sharedType)))
+      withReact(
+        withYHistory(
+          withCursors(withYjs(createEditor(), sharedType), provider.awareness, {
+            data: cursorData,
+          })
+        )
+      )
     );
-  }, [provider.document]);
+  }, [provider.awareness, provider.document]);
 
   // Disconnect YjsEditor on unmount in order to free up resources
   useEffect(() => () => YjsEditor.disconnect(editor), [editor]);
   useEffect(() => () => provider.disconnect(), [provider]);
 
   return (
-    <div className="flex justify-center">
-      <Slate value={value} onChange={setValue} editor={editor}>
+    <Slate value={value} onChange={setValue} editor={editor}>
+      <RemoteCursorOverlay className="flex justify-center">
         <Editable
           className="py-32 max-w-4xl w-full mx-10 flex-col"
           renderElement={Element}
           renderLeaf={Leaf}
           placeholder="Write something ..."
         />
-      </Slate>
+      </RemoteCursorOverlay>
       <ConnectionToggle connected={connected} onClick={toggleConnection} />
-    </div>
+    </Slate>
   );
 }

@@ -1,16 +1,15 @@
 import {
-  RemoteCursorOverlay,
-  RemoteCursorOverlayProps,
-} from './RemoteCursorOverlay/RemoteCursorOverlay';
-import {
-  SelectionRectComponent,
-  SelectionRectComponentProps,
-} from './RemoteCursorOverlay/types';
+  useRemoteCursorOverlayPositions,
+  UseRemoteCursorOverlayPositionsOptions,
+  CursorOverlayState,
+} from './hooks/useRemoteCursorOverlayPositions';
+import { CaretPosition, SelectionRect } from './utils/selection';
 
 export {
   // Remote cursor overlay
-  RemoteCursorOverlay,
-  RemoteCursorOverlayProps,
-  SelectionRectComponent,
-  SelectionRectComponentProps,
+  useRemoteCursorOverlayPositions,
+  UseRemoteCursorOverlayPositionsOptions,
+  CursorOverlayState,
+  CaretPosition,
+  SelectionRect,
 };

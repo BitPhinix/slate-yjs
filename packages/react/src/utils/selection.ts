@@ -2,25 +2,25 @@ import { BaseRange, Editor, Path, Range, Text } from 'slate';
 import { ReactEditor } from 'slate-react';
 
 export type SelectionRect = {
-  position: {
-    width: number;
-    height: number;
-    top: number;
-    left: number;
-  };
-  isCaret: boolean;
-  isForward: boolean;
-  isCollapsed: boolean;
+  width: number;
+  height: number;
+  top: number;
+  left: number;
+};
+
+export type CaretPosition = {
+  height: number;
+  top: number;
+  left: number;
 };
 
 export function getSelectionRects(
   editor: ReactEditor,
   range: BaseRange,
-  containerRect: DOMRect
+  xOffset: number,
+  yOffset: number
 ): SelectionRect[] {
   const [start, end] = Range.edges(range);
-  const isForward = Range.isForward(range);
-  const isCollapsed = Range.isCollapsed(range);
   const domRange = ReactEditor.toDOMRange(editor, range);
 
   const selectionRects: SelectionRect[] = [];
@@ -56,20 +56,32 @@ export function getSelectionRects(
       }
 
       selectionRects.push({
-        position: {
-          width: clientRect.width,
-          height: clientRect.height,
-          top: clientRect.top - containerRect.top,
-          left: clientRect.left - containerRect.left,
-        },
-        isCaret: isForward
-          ? isEndNode && i === clientRects.length - 1
-          : isStartNode && i === 0,
-        isForward,
-        isCollapsed,
+        width: clientRect.width,
+        height: clientRect.height,
+        top: clientRect.top - yOffset,
+        left: clientRect.left - xOffset,
       });
     }
   }
 
   return selectionRects;
+}
+
+export function getCaretPosition(
+  selectionRects: SelectionRect[],
+  range: BaseRange
+): CaretPosition | null {
+  const isCollapsed = range && Range.isCollapsed(range);
+  const isForward = range && Range.isForward(range);
+  const anchorRect = selectionRects[isForward ? 0 : selectionRects.length - 1];
+
+  if (!anchorRect) {
+    return null;
+  }
+
+  return {
+    height: anchorRect.height,
+    top: anchorRect.top,
+    left: anchorRect.left + (isForward || isCollapsed ? 0 : anchorRect.width),
+  };
 }

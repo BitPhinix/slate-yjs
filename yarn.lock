@@ -1783,40 +1783,50 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hocuspocus/extension-logger@npm:^1.0.0-alpha.51":
-  version: 1.0.0-alpha.51
-  resolution: "@hocuspocus/extension-logger@npm:1.0.0-alpha.51"
-  dependencies:
-    "@hocuspocus/server": ^1.0.0-alpha.77
-  checksum: 33afd001147c413c6627063d3ac9dc536e0d310e7ce4800e8f4a5155a6aa6e64529ddf54a54042b0ccf86691ee78179455dddf287710502d72cc0e62470a1a73
+"@hocuspocus/common@npm:^1.0.0-alpha.4":
+  version: 1.0.0-alpha.4
+  resolution: "@hocuspocus/common@npm:1.0.0-alpha.4"
+  checksum: ca4d29feb0e629b266a411ee6c4db7e5bc9a745f96679fd23811990199f44dc6c506d1b82c2686eb4752f10ff64cd1421a0d14741e48993d52ea91eb2a4c9a3c
   languageName: node
   linkType: hard
 
-"@hocuspocus/provider@npm:^1.0.0-alpha.21":
-  version: 1.0.0-alpha.21
-  resolution: "@hocuspocus/provider@npm:1.0.0-alpha.21"
+"@hocuspocus/extension-logger@npm:^1.0.0-alpha.64":
+  version: 1.0.0-alpha.64
+  resolution: "@hocuspocus/extension-logger@npm:1.0.0-alpha.64"
   dependencies:
-    "@lifeomic/attempt": ^3.0.0
-    lib0: ^0.2.42
+    "@hocuspocus/server": ^1.0.0-alpha.90
+  checksum: 02bd85984eca0a455067f1ac3ae0bb75c1814b9f8b7cc02207fd08bf439a6a1b2afab4483c2ddad2c2654fd217e0e2c652c832597897b592808ac3c8be8fa4a6
+  languageName: node
+  linkType: hard
+
+"@hocuspocus/provider@npm:^1.0.0-alpha.29":
+  version: 1.0.0-alpha.29
+  resolution: "@hocuspocus/provider@npm:1.0.0-alpha.29"
+  dependencies:
+    "@hocuspocus/common": ^1.0.0-alpha.4
+    "@lifeomic/attempt": ^3.0.1
+    lib0: ^0.2.43
     y-protocols: ^1.0.5
-    yjs: ^13.5.0
-  checksum: e780a785b7160198130886f05d40c190558283a3a1cdc957add62a1dfda370a921828165f257451a05708b7eda4ca168a0892dc03b4babb6394e6433de70f6e7
+    yjs: ^13.5.22
+  checksum: b9213f3516a2c4b662cbf242232fb28ff30189d9bb9c1c111fceb8b87bd5fc1ab51a12f53cef98d507ec422b758d82939394e313525125f0faa9367db372be7e
   languageName: node
   linkType: hard
 
-"@hocuspocus/server@npm:^1.0.0-alpha.77":
-  version: 1.0.0-alpha.77
-  resolution: "@hocuspocus/server@npm:1.0.0-alpha.77"
+"@hocuspocus/server@npm:^1.0.0-alpha.90":
+  version: 1.0.0-alpha.90
+  resolution: "@hocuspocus/server@npm:1.0.0-alpha.90"
   dependencies:
-    "@types/async-lock": ^1.1.2
-    "@types/uuid": ^8.3.0
-    "@types/ws": ^8.2.0
-    async-lock: ^1.2.8
-    lib0: ^0.2.41
+    "@hocuspocus/common": ^1.0.0-alpha.4
+    "@types/async-lock": ^1.1.3
+    "@types/uuid": ^8.3.3
+    "@types/ws": ^8.2.1
+    async-lock: ^1.3.0
+    kleur: ^4.1.4
+    lib0: ^0.2.43
     uuid: ^8.3.2
-    ws: ^8.2.3
-    yjs: ^13.5.0
-  checksum: 8e8bd48546fc6e19c5bcea82e2affc010e3425f4e4441c7fac2c79165a7cd1cf03f8cf2a550b63e56037895172b28624b41756dcac2b97d640db873f5b73569e
+    ws: ^8.3.0
+    yjs: ^13.5.22
+  checksum: e812199cb668971a1f2971a79308e78c786cb0b2cc7a5d8422a36456d003279454da51a073c3a0d31769a15342bdc7c52ee3e64a3de2b4d6069604cd6e7ef135
   languageName: node
   linkType: hard
 
@@ -2059,7 +2069,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lifeomic/attempt@npm:^3.0.0":
+"@lifeomic/attempt@npm:^3.0.1":
   version: 3.0.1
   resolution: "@lifeomic/attempt@npm:3.0.1"
   checksum: c4a7f08711160875388767168eb7940b1dd29362bba349771b9007f1db46eb421286d94208725bfaa4c59c6fb27319c045765238a4d33cd251f755def02c3d9d
@@ -2272,11 +2282,12 @@ __metadata:
   dependencies:
     microbundle: ^0.14.1
     slate: ">=0.70.0"
+    slate-hyperscript: ^0.67.0
     y-protocols: ^1.0.5
-    yjs: ^13.5.20
+    yjs: ^13.5.23
   peerDependencies:
     slate: ^0.67.1
-    yjs: ^13.5.20
+    yjs: ^13.5.23
   languageName: unknown
   linkType: soft
 
@@ -2284,13 +2295,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@slate-yjs/example-backend@workspace:examples/backend"
   dependencies:
-    "@hocuspocus/extension-logger": ^1.0.0-alpha.51
-    "@hocuspocus/server": ^1.0.0-alpha.77
+    "@hocuspocus/extension-logger": ^1.0.0-alpha.64
+    "@hocuspocus/server": ^1.0.0-alpha.90
     "@slate-yjs/core": "workspace:^"
     nodemon: ^2.0.15
     slate: ~0.70.0
     ts-node: ^10.4.0
-    yjs: ^13.5.20
+    yjs: ^13.5.23
   languageName: unknown
   linkType: soft
 
@@ -2298,7 +2309,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@slate-yjs/example@workspace:examples/frontend"
   dependencies:
-    "@hocuspocus/provider": ^1.0.0-alpha.21
+    "@hocuspocus/provider": ^1.0.0-alpha.29
     "@slate-yjs/core": "workspace:^"
     "@slate-yjs/react": "workspace:^"
     "@types/faker": ^5.5.9
@@ -2318,7 +2329,7 @@ __metadata:
     slate-react: ^0.70.0
     tailwindcss: ^2.2.19
     vite: ^2.6.13
-    yjs: ^13.5.20
+    yjs: ^13.5.23
   languageName: unknown
   linkType: soft
 
@@ -2332,13 +2343,13 @@ __metadata:
     react: ^17.0.2
     slate: ~0.70.0
     y-protocols: ^1.0.5
-    yjs: ^13.5.20
+    yjs: ^13.5.23
   peerDependencies:
     "@slate-yjs/core": "workspace:^"
     react: ">=16.8.0"
     slate: ">=0.70.0"
     slate-react: ">=0.70.0"
-    yjs: ^13.5.20
+    yjs: ^13.5.23
   languageName: unknown
   linkType: soft
 
@@ -2405,7 +2416,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/async-lock@npm:^1.1.2":
+"@types/async-lock@npm:^1.1.3":
   version: 1.1.3
   resolution: "@types/async-lock@npm:1.1.3"
   checksum: 90692ad8ce6a3fe83cdd5d2e534deb322bb77d0cc9b825bd6df27214fe44468a16676c626907d81f3c2659298f8ca8c24f848d5c9b462e65fa0dec78e8288cd4
@@ -2670,19 +2681,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/uuid@npm:^8.3.0":
-  version: 8.3.1
-  resolution: "@types/uuid@npm:8.3.1"
-  checksum: b41bdc5e86c6f0f1899306be10455636da0f2168c9489b869edd6837ddeb7c0e501b1ff7d857402462986bada2a379125743dd895fa801d03437cd632116a373
+"@types/uuid@npm:^8.3.3":
+  version: 8.3.3
+  resolution: "@types/uuid@npm:8.3.3"
+  checksum: 3f340155bb1161f9ffa7163926d6222fea8f3505c23619b72bcc230883354926672c08a06510c7a543f73553c792a84444cc1744cff631b4ba988763e4bd7a8f
   languageName: node
   linkType: hard
 
-"@types/ws@npm:^8.2.0":
-  version: 8.2.0
-  resolution: "@types/ws@npm:8.2.0"
+"@types/ws@npm:^8.2.1":
+  version: 8.2.2
+  resolution: "@types/ws@npm:8.2.2"
   dependencies:
     "@types/node": "*"
-  checksum: fb2f1cc1bc294607cf737a998a04d4eaca78b0a183905b879849c0e009f47ff4adaa6cbc7d9ac2d2ecc61652c8367e0f8bb02aab0af67a82e8c922746e96434b
+  checksum: 308957864b9a5a0378ac82f1b084fa31b1bbe85106fb0d84ed2b392e4829404f21ab6ab2c1eb782d556e59cd33d57c75ad2d0cedc4b9b9d0ca3b2311bc915578
   languageName: node
   linkType: hard
 
@@ -3153,7 +3164,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"async-lock@npm:^1.2.8":
+"async-lock@npm:^1.3.0":
   version: 1.3.0
   resolution: "async-lock@npm:1.3.0"
   checksum: 9c654054d6f736942f68f8ef55b063cc9267308795b7cd6a32c7aebe9218fefeed3c39327c0bf4e3fc9db8949474b231b9cfd480460210173b1b307acd58541b
@@ -7453,7 +7464,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"kleur@npm:^4.1.3":
+"kleur@npm:^4.1.3, kleur@npm:^4.1.4":
   version: 4.1.4
   resolution: "kleur@npm:4.1.4"
   checksum: 7f6db36e378045dec14acd3cbf0b1e59130c09e984ee8b8ce56dd2d2257cfff90389c1e8f8b19bd09dd5d241080566a814b4ccd99fdcef91f59ef93ec33c8a44
@@ -7512,12 +7523,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lib0@npm:^0.2.41, lib0@npm:^0.2.42":
+"lib0@npm:^0.2.42":
   version: 0.2.42
   resolution: "lib0@npm:0.2.42"
   dependencies:
     isomorphic.js: ^0.2.4
   checksum: 35df110c3e4c0df5e04c12d242312144169612ab489cd9fc11cdd142e892f5c52933c957411f13a2b149547e6918c71f54903742cf6f87c7cc42fbb92b9467b0
+  languageName: node
+  linkType: hard
+
+"lib0@npm:^0.2.43":
+  version: 0.2.43
+  resolution: "lib0@npm:0.2.43"
+  dependencies:
+    isomorphic.js: ^0.2.4
+  checksum: 9ed42ab4f44e77e41767093ea95302433aab9d965cb50f03bb836d373281cf8507a0eef2a76de4ac0b1c58ccf52990d6902ca90e61aeb54575ec6613a4967b1f
   languageName: node
   linkType: hard
 
@@ -10112,6 +10132,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"slate-hyperscript@npm:^0.67.0":
+  version: 0.67.0
+  resolution: "slate-hyperscript@npm:0.67.0"
+  dependencies:
+    is-plain-object: ^5.0.0
+  peerDependencies:
+    slate: ">=0.65.3"
+  checksum: 17ca7a30be4fd025ec46d960fade60743f68f11c6c4e7865b1b45972eaf7b26e1949d8246f4768de83a5a577ab119f1af3eac8db168eef98589cb09ef7148d90
+  languageName: node
+  linkType: hard
+
 "slate-react@npm:^0.70.0":
   version: 0.70.0
   resolution: "slate-react@npm:0.70.0"
@@ -11498,9 +11529,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:^8.2.3":
-  version: 8.2.3
-  resolution: "ws@npm:8.2.3"
+"ws@npm:^8.3.0":
+  version: 8.3.0
+  resolution: "ws@npm:8.3.0"
   peerDependencies:
     bufferutil: ^4.0.1
     utf-8-validate: ^5.0.2
@@ -11509,7 +11540,7 @@ __metadata:
       optional: true
     utf-8-validate:
       optional: true
-  checksum: c869296ccb45f218ac6d32f8f614cd85b50a21fd434caf11646008eef92173be53490810c5c23aea31bc527902261fbfd7b062197eea341b26128d4be56a85e4
+  checksum: 71f6919e3cb2c60ae53e00b13d7782bb77005750641855153a1716c23b7011259fe3a29a432522a3044dc7c579a7e2f5a495bb79ba9f823ce6c2e763300ef99b
   languageName: node
   linkType: hard
 
@@ -11636,12 +11667,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yjs@npm:^13.5.0, yjs@npm:^13.5.20":
-  version: 13.5.20
-  resolution: "yjs@npm:13.5.20"
+"yjs@npm:^13.5.22, yjs@npm:^13.5.23":
+  version: 13.5.23
+  resolution: "yjs@npm:13.5.23"
   dependencies:
-    lib0: ^0.2.42
-  checksum: aa9c57a4703fc8e3697550c8a684ad63e8bf9436bd018b392366d4457bb9ea2111ecd209759294795de49e6ab24a6bd0523e88fff7771e1ac9824c3143ae76f8
+    lib0: ^0.2.43
+  checksum: 174647ae992abdee7fdff49cdce95508f88b7b58eae52a218ea8f0900f0cd55e078b983f2c2619ec88faf87f46322e3c38a7aea08c5e6778aabf2cf11c165446
   languageName: node
   linkType: hard
 

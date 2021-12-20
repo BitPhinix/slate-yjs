@@ -17,7 +17,6 @@
   },
   "main": "dist/index.cjs",
   "module": "dist/index.module.js",
-  "unpkg": "dist/index.umd.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "yarn run microbundle --jsx React.createElement",
@@ -34,14 +33,14 @@
     "microbundle": "^0.14.1",
     "react": "^17.0.2",
     "slate": "~0.70.0",
-    "yjs": "^13.5.20"
+    "yjs": "^13.5.23"
   },
   "peerDependencies": {
     "@slate-yjs/core": "workspace:^",
     "react": ">=16.8.0",
     "slate": ">=0.70.0",
     "slate-react": ">=0.70.0",
-    "yjs": "^13.5.20"
+    "yjs": "^13.5.23"
   },
   "bugs": {
     "url": "https://github.com/BitPhinix/slate-yjs/issues"

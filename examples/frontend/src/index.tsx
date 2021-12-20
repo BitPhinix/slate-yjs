@@ -4,7 +4,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import '../index.css';
 import { Navigator } from './components/Navigator/Navigator';
 import { NotFound } from './pages/NotFound';
-import { RemoteCursorsOverlay } from './pages/RemoteCursorsOverlay';
+import { RemoteCursorsOverlay } from './pages/RemoteCursorOverlay/RemoteCursorOverlay';
 import { Simple } from './pages/Simple';
 
 ReactDOM.render(

@@ -1,3 +1,4 @@
+import { RelativeRange } from './model/types';
 import {
   CursorEditor,
   CursorState,
@@ -36,6 +37,7 @@ export {
   RemoteCursorChangeEventListener,
   CursorStateChangeEvent,
   // Utils
+  RelativeRange,
   yTextToSlateElement,
   slateNodesToInsertDelta,
   slateRangeToRelativeRange,

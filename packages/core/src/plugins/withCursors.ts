@@ -1,10 +1,8 @@
-import { BaseRange, Editor, Range } from 'slate';
+import { Editor, Range } from 'slate';
 import { Awareness } from 'y-protocols/awareness';
 import * as Y from 'yjs';
-import {
-  relativeRangeToSlateRange,
-  slateRangeToRelativeRange,
-} from '../utils/position';
+import { RelativeRange } from '../model/types';
+import { slateRangeToRelativeRange } from '../utils/position';
 import { YjsEditor } from './withYjs';
 
 export type CursorStateChangeEvent = {
@@ -25,8 +23,9 @@ const CURSOR_CHANGE_EVENT_LISTENERS: WeakMap<
 export type CursorState<
   TCursorData extends Record<string, unknown> = Record<string, unknown>
 > = {
-  selection: BaseRange | null;
+  relativeSelection: RelativeRange | null;
   data: TCursorData;
+  clientId: number;
 };
 
 export type CursorEditor<
@@ -43,7 +42,6 @@ export type CursorEditor<
 
 export const CursorEditor = {
   isCursorEditor(v: unknown): v is CursorEditor {
-    return true;
     return (
       YjsEditor.isYjsEditor(v) &&
       (v as CursorEditor).awareness instanceof Awareness &&
@@ -68,8 +66,8 @@ export const CursorEditor = {
     editor.sendCursorData(data);
   },
 
-  on(
-    editor: CursorEditor,
+  on<TCursorData extends Record<string, unknown>>(
+    editor: CursorEditor<TCursorData>,
     event: 'change',
     listener: RemoteCursorChangeEventListener
   ) {
@@ -82,8 +80,8 @@ export const CursorEditor = {
     CURSOR_CHANGE_EVENT_LISTENERS.set(editor, listeners);
   },
 
-  off(
-    editor: CursorEditor,
+  off<TCursorData extends Record<string, unknown>>(
+    editor: CursorEditor<TCursorData>,
     event: 'change',
     listener: RemoteCursorChangeEventListener
   ) {
@@ -97,8 +95,8 @@ export const CursorEditor = {
     }
   },
 
-  remoteCursor<TCursorData extends Record<string, unknown>>(
-    editor: CursorEditor,
+  cursorState<TCursorData extends Record<string, unknown>>(
+    editor: CursorEditor<TCursorData>,
     clientId: number
   ): CursorState<TCursorData> | null {
     if (
@@ -113,16 +111,15 @@ export const CursorEditor = {
       return null;
     }
 
-    const relativeSelection = state[editor.cursorStateField];
-    const selection = relativeSelection
-      ? relativeRangeToSlateRange(editor.sharedRoot, editor, relativeSelection)
-      : null;
-
-    return { selection, data: state[editor.cursorDataField] };
+    return {
+      relativeSelection: state[editor.cursorStateField],
+      data: state[editor.cursorDataField],
+      clientId,
+    };
   },
 
-  remoteCursors<TCursorData extends Record<string, unknown>>(
-    editor: CursorEditor
+  cursorStates<TCursorData extends Record<string, unknown>>(
+    editor: CursorEditor<TCursorData>
   ): Record<string, CursorState<TCursorData>> {
     if (!YjsEditor.connected(editor)) {
       return {};
@@ -131,20 +128,17 @@ export const CursorEditor = {
     return Object.fromEntries(
       Array.from(editor.awareness.getStates().entries(), ([id, state]) => {
         // Ignore own state
-        if (id === editor.awareness.clientID) {
+        if (id === editor.awareness.clientID || !state) {
           return null;
         }
 
-        const relativeSelection = state[editor.cursorStateField];
-        const selection = relativeSelection
-          ? relativeRangeToSlateRange(
-              editor.sharedRoot,
-              editor,
-              relativeSelection
-            )
-          : null;
-
-        return [id, { selection, data: state[editor.cursorDataField] }];
+        return [
+          id,
+          {
+            relativeSelection: state[editor.cursorStateField],
+            data: state[editor.cursorDataField],
+          },
+        ];
       }).filter(Array.isArray)
     );
   },

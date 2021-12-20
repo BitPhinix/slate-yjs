@@ -9,7 +9,7 @@
     "serve": "vite preview"
   },
   "dependencies": {
-    "@hocuspocus/provider": "^1.0.0-alpha.21",
+    "@hocuspocus/provider": "^1.0.0-alpha.29",
     "@slate-yjs/core": "workspace:^",
     "@slate-yjs/react": "workspace:^",
     "clsx": "^1.1.1",
@@ -20,7 +20,7 @@
     "react-router-dom": "^6.0.1",
     "slate": "^0.70.0",
     "slate-react": "^0.70.0",
-    "yjs": "^13.5.20"
+    "yjs": "^13.5.23"
   },
   "devDependencies": {
     "@types/faker": "^5.5.9",
