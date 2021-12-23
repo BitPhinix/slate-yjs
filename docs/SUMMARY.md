@@ -23,7 +23,8 @@
 
 ## 🌎 External resources
 
-* [Yjs documentation](https://docs.yjs.dev)
+* [Yjs Docs](https://docs.yjs.dev)
 * [Yjs Community](https://discuss.yjs.dev)
 * [Slate slack](https://slate-slack.herokuapp.com)
-* [Slate documentation](https://docs.slatejs.org)
+* [Slate Docs](https://docs.slatejs.org)
+* [Hocuspocus Docs](http://hocuspocus.dev/)

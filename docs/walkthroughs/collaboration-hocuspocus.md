@@ -1,6 +1,6 @@
 # Collaboration (Hocuspocus)
 
-> Slate-yjs is connection provider agnostic, so even tough other transport providers aren't covered in this guide, they might be better suited for your specific needs. You can find a full list of connection providers here: [https://docs.yjs.dev/ecosystem/connection-provider](https://docs.yjs.dev/ecosystem/connection-provider)
+> Slate-yjs is connection provider agnostic, so even though other transport providers aren't covered in this guide, they might be better suited for your specific needs. You can find a full list of connection providers here: [https://docs.yjs.dev/ecosystem/connection-provider](https://docs.yjs.dev/ecosystem/connection-provider)
 
 ## Server-side setup
 

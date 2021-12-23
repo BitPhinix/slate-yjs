@@ -24,11 +24,11 @@ Data attached to the current client. Useful for storing user ids, cursor colors,
 
 **`autoSend?: boolean`**
 
-Whether to automatically cursor data and selection information on change. Defaults to `true`.
+Whether to automatically send cursor data and selection information on change. Defaults to `true`.
 
 <br/>
 
-`withCursors` should be applied directly after `withYjs/withYHistory`. For example:
+`withCursors` should be applied directly after `withYjs`/`withYHistory`. For example:
 
 ```javascript
 const editor = useMemo(() => withCursors(withYjs(createEditor(), sharedType)), [])
@@ -52,19 +52,19 @@ Send cursor data to other clients.
 
 **`on(editor: CursorEditor, event: 'change', handler: RemoteCursorChangeEventListener): void`**
 
-Add an event listener for remote cursor state/data changes. Will only be called while the editor is connected. Will be called with all current cursors on editor connect/disconnect.
+Add an event listener for remote selection state/data changes. Will only be called while the editor is connected. Will be called with all current cursors on editor connect/disconnect.
 
 **`off(editor: CursorEditor, event: 'change', handler: RemoteCursorChangeEventListener): void`**
 
-Remove an event listener for remote cursor state/data changes.
+Remove an event listener for remote selection state/data changes.
 
 **`cursorState(editor: CursorEditor, clientId: number): CursorState | null`**
 
-Get the cursor state (selection + data) a client. Returns null if the editor is disconnected or no awareness state exists for the client.
+Get the cursor state (selection + data) of a client. Returns null if the editor is disconnected or no awareness state exists for the client.
 
 **`cursorStates(editor: CursorEditor): Record<string, CursorState>`**
 
-Get cursor states of all remote clients. Returns an object mapping from client id to the corresponding state. Returns {} if the editor is disconnected.
+Get cursor states of all remote clients. Returns an object mapping from client id to the corresponding state. Returns `{}` if the editor is disconnected.
 
 ### Instance methods
 
@@ -72,7 +72,7 @@ Replace these methods to modify the original behavior of the YCursorEditor when 
 
 **`sendCursorPosition(range: Range | null): void`**
 
-Send current specific range as selection state to other clients.
+Send specific range as selection state to other clients.
 
 **`sendCursorData(data: TCursorData): void`**
 
@@ -91,4 +91,3 @@ Local state field used for storing data attached to the current client.
 **`selectionStateField: string`**
 
 Local state field used for storing the current selection state.
-

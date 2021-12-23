@@ -8,7 +8,7 @@ For the following example, you will only need the core binding `@slate-yjs/core`
 npm install @slate-yjs/core
 ```
 
-You also need to be sure to install Slate's peer dependencies:
+You also need to be sure to install slate-yjs's peer dependencies:
 
 ```
 npm install yjs y-protocols
@@ -24,11 +24,11 @@ Once you've installed slate-yjs, you'll need to import it.
 // Import the core binding
 import { withYjs, slateNodesToInsertDelta, YjsEditor } from '@slate-yjs/core'
 
-// Importing yjs
+// Import yjs
 import * as Y from 'yjs'
 ```
 
-> This guide assumes that you already have a basic slate editor set up. If you aren't sure how, make yourself familiar with slate first: [https://docs.slatejs.org/walkthroughs/01-installing-slate](https://docs.slatejs.org/walkthroughs/01-installing-slate)
+> This guide assumes that you already have set up a basic slate editor. If you aren't sure how, make yourself familiar with slate first: [https://docs.slatejs.org/walkthroughs/01-installing-slate](https://docs.slatejs.org/walkthroughs/01-installing-slate)
 
 Your existing editor component should look something like this:
 

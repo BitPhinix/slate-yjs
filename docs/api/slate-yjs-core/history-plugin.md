@@ -2,7 +2,7 @@
 
 ## withYHistory
 
-`withYHistory` facilitates a drop-in replacement for slates default history plugin which only keeps track of local changes and handles transformations of local changes, backed by Yjs's [UndoManger](https://docs.yjs.dev/api/undo-manager).&#x20;
+`withYHistory` facilitates a drop-in replacement for slates default history plugin which only keeps track of local changes and handles transformations, backed by Yjs's [UndoManger](https://docs.yjs.dev/api/undo-manager).
 
 <br/>
 
@@ -10,7 +10,7 @@
 
 **`captureTimeout?: number`**
 
-Time gap after which a change will create a new history entry. Changes with a delay <= captureTimeout will be merged into a single entry. Defaults to 500ms.
+Time gap in ms after which a change will create a new history entry. Changes with a time gap <= captureTimeout will be merged into a single entry. Defaults to `500`.
 
 **`deleteFilter?: (item: Y.Item) => boolean`**
 

@@ -58,7 +58,7 @@ Check if the editor is currently being synced with the shared root.
 
 #### `connect(editor: YjsEditor): void`
 
-Connect the editor to the shared type by overwriting the current editor value with the in the shared root contained document and registering the appropriate event listeners.
+Connect the editor to the shared type by overwriting the current editor value with the in the shared root contained state and registering the appropriate event listeners.
 
 #### `disconnect(editor: YjsEditor): void`
 
@@ -66,7 +66,7 @@ Disconnect the editor from the shared type by detaching the appropriate event ha
 
 **`remoteOrigin(editor: YjsEditor): unknown | undefined`**
 
-Get the Yjs origin of the change that caused the operation we are currently applying. `undefined` if the operation origin is caused by a local change.
+Get the Yjs origin of the change that caused the operation we are currently applying. `undefined` if the operation is caused by a local change.
 
 **`asRemote(editor: YjsEditor, origin: unknown, fn: () => void): void`**
 
@@ -82,7 +82,7 @@ Retrieve a [stored position](../../concepts/stored-positions.md) by key. `undefi
 
 #### `storedPositionsRelative(editor: YjsEditor): Record<string, Y.RelativePosition>`
 
-Retrieve all [stored positions](../../concepts/stored-positions.md) as a Record of storage key to relative position.
+Retrieve all [stored positions](../../concepts/stored-positions.md) as a object mapping from storage key to relative position.
 
 ### Instance methods
 
@@ -112,7 +112,7 @@ Disconnect the editor from the shared type by detaching the appropriate event ha
 
 **`sharedRoot: Y.XmlText`**
 
-Shared type the binding is bound to.&#x20;
+Shared type the binding is bound to.
 
 **`localOrigin: unknown`**
 
