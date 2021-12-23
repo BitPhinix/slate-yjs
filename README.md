@@ -19,8 +19,8 @@ Slate-yjs aims to be the goto collaboration solution for slate. Get started in s
 <p align="center">
   <a href="#sponsors-"><strong>Sponsors</strong></a> ·
   <a href="#why-yjs"><strong>Why Yjs?</strong></a> ·
-  <a href=""><strong>Live demo</strong></a> ·
-  <a href=""><strong>Documentation</strong></a> ·
+  <a href="https://slate-yjs.dev"><strong>Live demo</strong></a> ·
+  <a href="https://docs.slate-yjs.dev"><strong>Documentation</strong></a> ·
   <a href="#packages"><strong>Packages</strong></a> ·
   <a href="#questions"><strong>Questions</strong></a> ·
   <a href="#contributing"><strong>Contributing!</strong></a>
@@ -89,14 +89,14 @@ You can read more about this [here](https://josephg.com/blog/crdts-are-the-futur
 
 ## Live demo
 
-https://www.hocuspocus.dev/examples/slate/
+https://slate-yjs.dev
 
 <br/>
 <br/>
 
 ## Documentation
 
-Coming soon. In the meantime take a look a the examples folder or dig into the source code yourself.
+https://docs.slate-yjs.dev
 
 <br/>
 <br/>
