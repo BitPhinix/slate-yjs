@@ -30,7 +30,7 @@ export type YjsEditor = BaseEditor & {
 
   applyRemoteEvents: (events: Y.YEvent[], origin: unknown) => void;
   storeLocalOperation: (op: Operation) => void;
-  flushLocalOperations: () => void;
+  flushLocalChanges: () => void;
 
   connect: () => void;
   disconnect: () => void;
@@ -45,7 +45,7 @@ export const YjsEditor = {
       (value as YjsEditor).positionStorageOrigin !== undefined &&
       typeof (value as YjsEditor).applyRemoteEvents === 'function' &&
       typeof (value as YjsEditor).storeLocalOperation === 'function' &&
-      typeof (value as YjsEditor).flushLocalOperations === 'function' &&
+      typeof (value as YjsEditor).flushLocalChanges === 'function' &&
       typeof (value as YjsEditor).connect === 'function' &&
       typeof (value as YjsEditor).disconnect === 'function'
     );
@@ -55,7 +55,7 @@ export const YjsEditor = {
     return LOCAL_CHANGES.get(editor) ?? [];
   },
 
-  applyRemoveEvents(
+  applyRemoteEvents(
     editor: YjsEditor,
     events: Y.YEvent[],
     origin: unknown
@@ -67,8 +67,8 @@ export const YjsEditor = {
     editor.storeLocalOperation(op);
   },
 
-  flushLocalOperations(editor: YjsEditor): void {
-    editor.flushLocalOperations();
+  flushLocalChanges(editor: YjsEditor): void {
+    editor.flushLocalChanges();
   },
 
   connected(editor: YjsEditor): boolean {
@@ -120,16 +120,16 @@ export const YjsEditor = {
     }, locationStorageOrigin);
   },
 
-  position(editor: YjsEditor, key: string): Point | null {
+  position(editor: YjsEditor, key: string): Point | null | undefined {
     const position = getStoredPosition(editor.sharedRoot, key);
     if (!position) {
-      return null;
+      return undefined;
     }
 
     return relativePositionToSlatePoint(editor.sharedRoot, editor, position);
   },
 
-  storedRelativePositions(
+  storedPositionsRelative(
     editor: YjsEditor
   ): Record<string, Y.RelativePosition> {
     return getStoredPositions(editor.sharedRoot);
@@ -176,7 +176,7 @@ export function withYjs<T extends Editor>(
       return;
     }
 
-    YjsEditor.applyRemoveEvents(e, events, transaction.origin);
+    YjsEditor.applyRemoteEvents(e, events, transaction.origin);
   };
 
   let autoConnectTimeoutId: ReturnType<typeof setTimeout> | null = null;
@@ -200,6 +200,7 @@ export function withYjs<T extends Editor>(
       clearTimeout(autoConnectTimeoutId);
     }
 
+    YjsEditor.flushLocalChanges(e);
     sharedRoot.unobserveDeep(handleYEvents);
     CONNECTED.delete(e);
   };
@@ -211,7 +212,7 @@ export function withYjs<T extends Editor>(
     ]);
   };
 
-  e.flushLocalOperations = () => {
+  e.flushLocalChanges = () => {
     const localOperations = YjsEditor.localChanges(e);
     LOCAL_CHANGES.delete(e);
 
@@ -225,7 +226,7 @@ export function withYjs<T extends Editor>(
 
   const { apply, onChange } = e;
   e.apply = (op) => {
-    if (YjsEditor.remoteOrigin(e) === undefined) {
+    if (YjsEditor.connected(e) && YjsEditor.remoteOrigin(e) === undefined) {
       YjsEditor.storeLocalOperation(e, op);
     }
 
@@ -233,7 +234,10 @@ export function withYjs<T extends Editor>(
   };
 
   e.onChange = () => {
-    YjsEditor.flushLocalOperations(e);
+    if (YjsEditor.connected(e)) {
+      YjsEditor.flushLocalChanges(e);
+    }
+
     onChange();
   };
 

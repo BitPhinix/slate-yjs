@@ -34,21 +34,21 @@ export type CursorEditor<
   awareness: Awareness;
 
   cursorDataField: string;
-  cursorStateField: string;
+  selectionStateField: string;
 
   sendCursorPosition: (range: Range | null) => void;
   sendCursorData: (data: TCursorData) => void;
 };
 
 export const CursorEditor = {
-  isCursorEditor(v: unknown): v is CursorEditor {
+  isCursorEditor(value: unknown): value is CursorEditor {
     return (
-      YjsEditor.isYjsEditor(v) &&
-      (v as CursorEditor).awareness instanceof Awareness &&
-      typeof (v as CursorEditor).cursorDataField === 'string' &&
-      typeof (v as CursorEditor).cursorStateField === 'string' &&
-      typeof (v as CursorEditor).sendCursorPosition === 'function' &&
-      typeof (v as CursorEditor).sendCursorData === 'function'
+      YjsEditor.isYjsEditor(value) &&
+      (value as CursorEditor).awareness instanceof Awareness &&
+      typeof (value as CursorEditor).cursorDataField === 'string' &&
+      typeof (value as CursorEditor).selectionStateField === 'string' &&
+      typeof (value as CursorEditor).sendCursorPosition === 'function' &&
+      typeof (value as CursorEditor).sendCursorData === 'function'
     );
   },
 
@@ -69,14 +69,14 @@ export const CursorEditor = {
   on<TCursorData extends Record<string, unknown>>(
     editor: CursorEditor<TCursorData>,
     event: 'change',
-    listener: RemoteCursorChangeEventListener
+    handler: RemoteCursorChangeEventListener
   ) {
     if (event !== 'change') {
       return;
     }
 
     const listeners = CURSOR_CHANGE_EVENT_LISTENERS.get(editor) ?? new Set();
-    listeners.add(listener);
+    listeners.add(handler);
     CURSOR_CHANGE_EVENT_LISTENERS.set(editor, listeners);
   },
 
@@ -112,7 +112,7 @@ export const CursorEditor = {
     }
 
     return {
-      relativeSelection: state[editor.cursorStateField],
+      relativeSelection: state[editor.selectionStateField],
       data: state[editor.cursorDataField],
       clientId,
     };
@@ -135,7 +135,7 @@ export const CursorEditor = {
         return [
           id,
           {
-            relativeSelection: state[editor.cursorStateField],
+            relativeSelection: state[editor.selectionStateField],
             data: state[editor.cursorDataField],
           },
         ];
@@ -164,7 +164,7 @@ export function withCursors<
   editor: TEditor,
   awareness: Awareness,
   {
-    cursorStateField = 'selection',
+    cursorStateField: selectionStateField = 'selection',
     cursorDataField = 'data',
     autoSend = true,
     data,
@@ -174,7 +174,7 @@ export function withCursors<
 
   e.awareness = awareness;
   e.cursorDataField = cursorDataField;
-  e.cursorStateField = cursorStateField;
+  e.selectionStateField = selectionStateField;
 
   e.sendCursorData = (cursorData: TCursorData) => {
     e.awareness.setLocalStateField(e.cursorDataField, cursorData);
@@ -182,11 +182,11 @@ export function withCursors<
 
   e.sendCursorPosition = (range) => {
     const localState = awareness.getLocalState();
-    const currentRange = localState?.[cursorStateField];
+    const currentRange = localState?.[selectionStateField];
 
     if (!range) {
       if (currentRange) {
-        awareness.setLocalStateField(e.cursorStateField, null);
+        awareness.setLocalStateField(e.selectionStateField, null);
       }
 
       return;
@@ -199,7 +199,7 @@ export function withCursors<
       !Y.compareRelativePositions(anchor, currentRange) ||
       !Y.compareRelativePositions(focus, currentRange)
     ) {
-      awareness.setLocalStateField(e.cursorStateField, { anchor, focus });
+      awareness.setLocalStateField(e.selectionStateField, { anchor, focus });
     }
   };
 

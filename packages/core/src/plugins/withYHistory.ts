@@ -17,12 +17,12 @@ export type YHistoryEditor = YjsEditor & {
 };
 
 export const YHistoryEditor = {
-  isYHistoryEditor(v: unknown): v is YHistoryEditor {
+  isYHistoryEditor(value: unknown): value is YHistoryEditor {
     return (
-      YjsEditor.isYjsEditor(v) &&
-      (v as YHistoryEditor).undoManager instanceof Y.UndoManager &&
-      typeof (v as YHistoryEditor).undo === 'function' &&
-      typeof (v as YHistoryEditor).redo === 'function'
+      YjsEditor.isYjsEditor(value) &&
+      (value as YHistoryEditor).undoManager instanceof Y.UndoManager &&
+      typeof (value as YHistoryEditor).undo === 'function' &&
+      typeof (value as YHistoryEditor).redo === 'function'
     );
   },
 
@@ -126,12 +126,12 @@ export function withYHistory<T extends YjsEditor>(
   e.undoManager = undoManager;
 
   e.undo = () => {
-    YjsEditor.flushLocalOperations(e);
+    YjsEditor.flushLocalChanges(e);
     e.undoManager.undo();
   };
 
   e.redo = () => {
-    YjsEditor.flushLocalOperations(e);
+    YjsEditor.flushLocalChanges(e);
     e.undoManager.redo();
   };
 

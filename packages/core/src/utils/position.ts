@@ -1,4 +1,4 @@
-import { BasePoint, BaseRange, Node, Text } from 'slate';
+import { BasePoint, BaseRange, Node, Point, Text } from 'slate';
 import * as Y from 'yjs';
 import { InsertDelta, RelativeRange, TextRange } from '../model/types';
 import { getInsertDeltaLength, yTextToInsertDelta } from './delta';
@@ -11,7 +11,7 @@ export function slatePointToRelativePosition(
   sharedRoot: Y.XmlText,
   slateRoot: Node,
   point: BasePoint
-) {
+): Y.RelativePosition {
   const { yTarget, yParent, textRange } = getYTarget(
     sharedRoot,
     slateRoot,
@@ -65,7 +65,7 @@ export function relativePositionToSlatePoint(
   sharedRoot: Y.XmlText,
   slateRoot: Node,
   pos: Y.RelativePosition
-) {
+): BasePoint | null {
   if (!sharedRoot.doc) {
     throw new Error("sharedRoot isn't attach to a yDoc");
   }
