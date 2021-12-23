@@ -2,7 +2,7 @@
 
 `@slate-yjs/core` provides several helpers for converting from and to slate nodes, and for working with locations. They are used for initializing documents and act as a baseline for other by slate-yjs provided packages.
 
-
+<br/>
 
 **`yTextToSlateElement(yText: Y.XmlText): Element`**
 

@@ -4,7 +4,7 @@
 
 `withYHistory` facilitates a drop-in replacement for slates default history plugin which only keeps track of local changes and handles transformations of local changes, backed by Yjs's [UndoManger](https://docs.yjs.dev/api/undo-manager).&#x20;
 
-
+<br/>
 
 `withYHistory` takes an optional second argument with the following options:
 
@@ -20,7 +20,7 @@ Filter to specify which items undos/redos can delete. If the filter returns `fal
 
 Origins to include inside the history. Defaults to `yjsEditor.localOrigin`. For more details take a look [here](https://docs.yjs.dev/api/undo-manager#example-specify-tracked-origins).
 
-
+<br/>
 
 `withYHistory` should be applied directly after `withYjs/withCursors`. For example:
 

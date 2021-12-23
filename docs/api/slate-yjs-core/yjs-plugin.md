@@ -4,7 +4,7 @@
 
 The Yjs plugin facilitates the code yjs binding is acts as the baseline of all other by slate-yjs provided plugins and packages.
 
-
+<br/>
 
 `withYjs` expects a `Y.XmlText` acting as the root of the binding as the 2nd parameter. It also takes an optional third argument with the following options:
 
@@ -20,7 +20,7 @@ Yjs origin used when applying local operations. Defaults to the unexported `DEFA
 
 Yjs origin used when creating stored positions. Defaults to the unexported `DEFAULT_POSITION_STORAGE_ORIGIN` symbol.
 
-
+<br/>
 
 When used with `withReact`, `withYjs` should be applied inside. For example:
 

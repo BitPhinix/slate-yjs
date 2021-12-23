@@ -6,7 +6,7 @@
 
 > Not all yjs transports support awareness yet. Depending on which transport you use, this feature might not be available to you.
 
-
+<br/>
 
 `withCursors` expects a [y-protocols Awareness](https://github.com/yjs/y-protocols#awarenessprotocolawareness-class) used to send and retrieve cursor data as the 2nd argument. It also takes an optional third argument with the following options:
 
@@ -26,7 +26,7 @@ Data attached to the current client. Useful for storing user ids, cursor colors,
 
 Whether to automatically cursor data and selection information on change. Defaults to `true`.
 
-
+<br/>
 
 `withCursors` should be applied directly after `withYjs/withYHistory`. For example:
 

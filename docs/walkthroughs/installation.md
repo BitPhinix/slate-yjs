@@ -14,7 +14,7 @@ You also need to be sure to install Slate's peer dependencies:
 npm install yjs y-protocols
 ```
 
-
+<br/>
 
 ## Setting up the core binding
 
