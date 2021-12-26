@@ -14,13 +14,13 @@ Cons:
 
 <br/>
 
-*`useRemoteCursorOverlayPositions`* takes an optional options parameter with the following options:
+**`useRemoteCursorOverlayPositions`** takes an optional options parameter with the following options:
 
-*`containerRef`*
+**`containerRef`**
 
 If set, all returned positions will be relative to the containers position.
 
-*`refreshOnResize`*
+**`refreshOnResize`**
 
 Set whether the cursors overlay positions should be automatically refreshed on container (provided via containerRef) resize. Defaults to `true`.
 
@@ -28,11 +28,11 @@ Set whether the cursors overlay positions should be automatically refreshed on c
 
 and returns and object containing:
 
-*`refresh(sync?: boolean): void`*
+**`refresh(sync?: boolean): void`**
 
 Used to refresh the cursor overlay positions. If sync != true, calls to refresh will be batched into one until the next animation frame.
 
-*`cursors: CursorOverlayState<TCursorData>[]`*
+**`cursors: CursorOverlayState<TCursorData>[]`**
 
 The cursor overlay states that need to be painted.
 
