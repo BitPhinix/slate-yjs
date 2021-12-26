@@ -19,12 +19,13 @@
   * [History Plugin](api/slate-yjs-core/history-plugin.md)
   * [Cursor Plugin](api/slate-yjs-core/cursor-plugin.md)
   * [Utils](api/slate-yjs-core/utils.md)
-* [@slate-yjs/react](api/slate-yjs-react.md)
+* [@slate-yjs/react](api/slate-yjs-react/README.md)
+  * [Cursor Overlay](api/slate-yjs-react/cursor-overlay.md)
 
 ## 🌎 External resources
 
 * [Yjs Docs](https://docs.yjs.dev)
 * [Yjs Community](https://discuss.yjs.dev)
-* [Slate slack](https://slate-slack.herokuapp.com)
+* [Slate Slack](https://slate-slack.herokuapp.com)
 * [Slate Docs](https://docs.slatejs.org)
 * [Hocuspocus Docs](http://hocuspocus.dev/)
