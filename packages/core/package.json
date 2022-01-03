@@ -31,11 +31,11 @@
     "microbundle": "^0.14.1",
     "slate": ">=0.70.0",
     "slate-hyperscript": "^0.67.0",
-    "yjs": "^13.5.23"
+    "yjs": "^13.5.22"
   },
   "peerDependencies": {
-    "slate": "^0.67.1",
-    "yjs": "^13.5.23"
+    "slate": "^0.70.0",
+    "yjs": "^13.5.22"
   },
   "bugs": {
     "url": "https://github.com/BitPhinix/slate-yjs/issues"

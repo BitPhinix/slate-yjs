@@ -40,6 +40,10 @@ function RemoteSelection({
   selectionRects,
   caretPosition,
 }: CursorOverlayState<CursorData>) {
+  if (!data) {
+    return null;
+  }
+
   const selectionStyle: CSSProperties = {
     // Add a opacity to the background color
     backgroundColor: `${data.color}66`,

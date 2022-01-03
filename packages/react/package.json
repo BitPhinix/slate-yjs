@@ -33,14 +33,14 @@
     "microbundle": "^0.14.1",
     "react": "^17.0.2",
     "slate": "~0.70.0",
-    "yjs": "^13.5.23"
+    "yjs": "^13.5.22"
   },
   "peerDependencies": {
     "@slate-yjs/core": "workspace:^",
     "react": ">=16.8.0",
     "slate": ">=0.70.0",
     "slate-react": ">=0.70.0",
-    "yjs": "^13.5.23"
+    "yjs": "^13.5.22"
   },
   "bugs": {
     "url": "https://github.com/BitPhinix/slate-yjs/issues"

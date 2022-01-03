@@ -12,6 +12,7 @@ import { Element } from '../../components/Element/Element';
 import { Leaf } from '../../components/Leaf';
 import { withMarkdown } from '../../plugins/withMarkdown';
 import { CursorData } from '../../types';
+import { HOCUSPOCUS_ENDPOINT_URL, HOCUSPOCUS_WRITE_KEY } from '../../config';
 
 export function RemoteCursorsOverlay() {
   const [value, setValue] = useState<Descendant[]>([]);
@@ -20,7 +21,8 @@ export function RemoteCursorsOverlay() {
   const provider = useMemo(
     () =>
       new HocuspocusProvider({
-        url: 'ws://127.0.0.1:1234',
+        url: HOCUSPOCUS_ENDPOINT_URL,
+        parameters: { key: HOCUSPOCUS_WRITE_KEY },
         name: 'slate-yjs-demo',
         onConnect: () => setConnected(true),
         onDisconnect: () => setConnected(false),
@@ -65,9 +67,9 @@ export function RemoteCursorsOverlay() {
 
   return (
     <Slate value={value} onChange={setValue} editor={editor}>
-      <RemoteCursorOverlay className="flex justify-center">
+      <RemoteCursorOverlay className="flex justify-center my-32 mx-10">
         <Editable
-          className="py-32 max-w-4xl w-full mx-10 flex-col"
+          className="max-w-4xl w-full flex-col break-words"
           renderElement={Element}
           renderLeaf={Leaf}
           placeholder="Write something ..."

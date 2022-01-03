@@ -24,7 +24,7 @@ export type CursorState<
   TCursorData extends Record<string, unknown> = Record<string, unknown>
 > = {
   relativeSelection: RelativeRange | null;
-  data: TCursorData;
+  data?: TCursorData;
   clientId: number;
 };
 
@@ -112,7 +112,7 @@ export const CursorEditor = {
     }
 
     return {
-      relativeSelection: state[editor.selectionStateField],
+      relativeSelection: state[editor.selectionStateField] ?? null,
       data: state[editor.cursorDataField],
       clientId,
     };

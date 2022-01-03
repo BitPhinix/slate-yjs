@@ -5,4 +5,7 @@ import react from '@vitejs/plugin-react';
 // eslint-disable-next-line import/no-default-export
 export default defineConfig({
   plugins: [react({ fastRefresh: false })],
+  resolve: {
+    dedupe: ['slate', 'slate-react', 'yjs', 'y-protocols'],
+  },
 });

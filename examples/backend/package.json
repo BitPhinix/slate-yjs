@@ -16,6 +16,6 @@
     "@hocuspocus/extension-logger": "^1.0.0-alpha.64",
     "@hocuspocus/server": "^1.0.0-alpha.90",
     "@slate-yjs/core": "workspace:^",
-    "yjs": "^13.5.23"
+    "yjs": "^13.5.22"
   }
 }

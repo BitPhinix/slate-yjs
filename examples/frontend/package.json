@@ -5,8 +5,9 @@
   "scripts": {
     "start": "vite",
     "dev": "yarn start",
-    "build": "vite build",
-    "serve": "vite preview"
+    "build": "APP_ENV=production vite build",
+    "serve": "vite preview",
+    "deploy": "yarn netlify deploy --prod --dir ./dist"
   },
   "dependencies": {
     "@hocuspocus/provider": "^1.0.0-alpha.29",
@@ -20,7 +21,7 @@
     "react-router-dom": "^6.0.1",
     "slate": "^0.70.0",
     "slate-react": "^0.70.0",
-    "yjs": "^13.5.23"
+    "yjs": "^13.5.22"
   },
   "devDependencies": {
     "@types/faker": "^5.5.9",
@@ -29,6 +30,7 @@
     "@types/react-dom": "^17.0.11",
     "@vitejs/plugin-react": "^1.0.7",
     "autoprefixer": "^10.4.0",
+    "netlify-cli": "^8.6.0",
     "postcss": "^8.3.11",
     "tailwindcss": "^2.2.19",
     "vite": "^2.6.13"

@@ -1,5 +1,10 @@
 import { HocuspocusProvider } from '@hocuspocus/provider';
-import { withYHistory, withYjs, YjsEditor } from '@slate-yjs/core';
+import {
+  slateNodesToInsertDelta,
+  withYHistory,
+  withYjs,
+  YjsEditor,
+} from '@slate-yjs/core';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { createEditor, Descendant } from 'slate';
 import { Editable, Slate, withReact } from 'slate-react';
@@ -7,6 +12,7 @@ import * as Y from 'yjs';
 import { ConnectionToggle } from '../components/ConnectionToggle/ConnectionToggle';
 import { Element } from '../components/Element/Element';
 import { Leaf } from '../components/Leaf';
+import { HOCUSPOCUS_ENDPOINT_URL, HOCUSPOCUS_WRITE_KEY } from '../config';
 import { withMarkdown } from '../plugins/withMarkdown';
 
 export function Simple() {
@@ -16,7 +22,8 @@ export function Simple() {
   const provider = useMemo(
     () =>
       new HocuspocusProvider({
-        url: 'ws://127.0.0.1:1234',
+        url: HOCUSPOCUS_ENDPOINT_URL,
+        parameters: { key: HOCUSPOCUS_WRITE_KEY },
         name: 'slate-yjs-demo',
         onConnect: () => setConnected(true),
         onDisconnect: () => setConnected(false),
@@ -45,10 +52,10 @@ export function Simple() {
   useEffect(() => () => provider.disconnect(), [provider]);
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center my-32 mx-10">
       <Slate value={value} onChange={setValue} editor={editor}>
         <Editable
-          className="py-32 max-w-4xl w-full mx-10 flex-col"
+          className="max-w-4xl w-full flex-col"
           renderElement={Element}
           renderLeaf={Leaf}
           placeholder="Write something ..."
