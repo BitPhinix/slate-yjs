@@ -25,7 +25,7 @@ You can read more about this [here](https://josephg.com/blog/crdts-are-the-futur
 
 ### Live demo
 
-[https://slate-yjs.dev](https://www.hocuspocus.dev/examples/slate/)
+[https://slate-yjs.dev](https://slate-yjs.dev)
 
 ### Packages
 

@@ -47,10 +47,6 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
         let childPath = [...slatePath, pathOffset];
 
         const newProperties = change.attributes;
-        const properties = pick(
-          node,
-          ...(Object.keys(change.attributes) as Array<keyof Element>)
-        );
 
         if (
           Text.isText(child) &&
@@ -60,12 +56,13 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
           let end =
             pathOffset === endPathOffset ? endTextOffset : child.text.length;
 
+          const properties = getProperties(child);
           if (start !== 0) {
             ops.push({
               type: 'split_node',
               path: childPath,
               position: start,
-              properties: newProperties,
+              properties: { ...properties, ...newProperties },
             });
 
             childPath = Path.next(childPath);
@@ -77,11 +74,15 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
               type: 'split_node',
               path: childPath,
               position: end,
-              properties,
+              properties: { ...properties, ...newProperties },
             });
           }
         }
 
+        const properties = pick(
+          node,
+          ...(Object.keys(change.attributes) as Array<keyof Element>)
+        );
         ops.push({
           type: 'set_node',
           newProperties,
@@ -174,7 +175,7 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
           });
         }
 
-        if (textOffset < delta.length) {
+        if (textOffset < child.text.length) {
           ops.push({
             type: 'split_node',
             path: childPath,
@@ -238,7 +239,7 @@ export function translateYTextEvent(
   }
 
   if (delta.length > 0) {
-    if (Text.isText(target)) {
+    if (Text.isText(targetElement)) {
       throw new Error('Cannot apply delta to slate text');
     }
 

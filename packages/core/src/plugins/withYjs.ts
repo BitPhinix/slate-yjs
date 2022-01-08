@@ -213,13 +213,13 @@ export function withYjs<T extends Editor>(
   };
 
   e.flushLocalChanges = () => {
-    const localOperations = YjsEditor.localChanges(e);
+    assertDocumentAttachment(e.sharedRoot);
+    const localChanges = YjsEditor.localChanges(e);
     LOCAL_CHANGES.delete(e);
 
-    assertDocumentAttachment(e.sharedRoot);
     e.sharedRoot.doc.transact(() => {
-      localOperations.forEach((op) => {
-        applySlateOp(e.sharedRoot, { children: op.doc }, op.op);
+      localChanges.forEach((change) => {
+        applySlateOp(e.sharedRoot, { children: change.doc }, change.op);
       });
     }, e.localOrigin);
   };

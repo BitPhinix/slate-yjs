@@ -6,7 +6,7 @@
 import { Editor, Element, Point, Range, Text, Transforms } from 'slate';
 
 function escapeRegExp(s: string) {
-  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 function inlineRegex(trigger: string) {
@@ -104,6 +104,28 @@ const SHORTCUTS = [
   { trigger: inlineRegex('~~'), apply: createSetMarkApply('strikethrough') },
 ];
 
+function before(
+  editor: Editor,
+  at: Point,
+  stringOffset: number
+): Point | undefined {
+  if (at.offset >= stringOffset) {
+    return { offset: at.offset - stringOffset, path: at.path };
+  }
+
+  const entry = Editor.previous(editor, { at: at.path, match: Text.isText });
+  if (!entry) {
+    return undefined;
+  }
+
+  const [node, path] = entry;
+  return before(
+    editor,
+    { offset: node.text.length, path },
+    stringOffset - at.offset
+  );
+}
+
 export function withMarkdown(editor: Editor) {
   const { deleteBackward, insertText, isInline } = editor;
 
@@ -130,60 +152,34 @@ export function withMarkdown(editor: Editor) {
 
       const [text, startText, endText] = match;
       Editor.withoutNormalizing(editor, () => {
-        const matchStart = Editor.before(editor, anchor, {
-          distance: text.length,
-          unit: 'character',
+        const matchEnd = anchor;
+        const endMatchStart =
+          endText && before(editor, matchEnd, endText.length);
+        const startMatchEnd =
+          startText && before(editor, matchEnd, text.length - startText.length);
+        const matchStart = before(editor, matchEnd, text.length);
+
+        if (!matchEnd || !matchStart) {
+          return;
+        }
+
+        const matchRangeRef = Editor.rangeRef(editor, {
+          anchor: matchStart,
+          focus: matchEnd,
         });
 
-        if (!matchStart) {
-          throw new Error(
-            'Unable to apply markdown shortcut, cannot find match start'
-          );
-        }
-
-        const rangeRef = Editor.rangeRef(editor, { anchor, focus: matchStart });
-
-        if (endText) {
-          const end = Editor.before(editor, anchor, {
-            distance: endText.length,
-            unit: 'character',
-          });
-
-          if (!end) {
-            throw new Error(
-              'Unable to apply markdown shortcut, cannot delete end match'
-            );
-          }
-
+        if (endMatchStart) {
           Transforms.delete(editor, {
-            at: {
-              anchor,
-              focus: end,
-            },
+            at: { anchor: endMatchStart, focus: matchEnd },
           });
         }
-
-        if (startText) {
-          const end = Editor.after(editor, matchStart, {
-            distance: startText.length,
-            unit: 'character',
-          });
-
-          if (!end) {
-            throw new Error(
-              'Unable to apply markdown shortcut, cannot delete start match'
-            );
-          }
-
+        if (startMatchEnd) {
           Transforms.delete(editor, {
-            at: {
-              anchor: matchStart,
-              focus: end,
-            },
+            at: { anchor: matchStart, focus: startMatchEnd },
           });
         }
 
-        const applyRange = rangeRef.unref();
+        const applyRange = matchRangeRef.unref();
         if (applyRange) {
           apply(editor, applyRange);
         }

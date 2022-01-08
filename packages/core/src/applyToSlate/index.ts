@@ -36,9 +36,9 @@ export function applyYjsEvents(
 ) {
   Editor.withoutNormalizing(editor, () => {
     events.forEach((event) => {
-      translateYjsEvent(sharedRoot, editor, event).forEach((op) =>
-        editor.apply(op)
-      );
+      translateYjsEvent(sharedRoot, editor, event).forEach((op) => {
+        editor.apply(op);
+      });
     });
   });
 }

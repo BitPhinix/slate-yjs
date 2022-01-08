@@ -14,6 +14,7 @@ export function splitNode(
   op: SplitNodeOperation
 ): void {
   const target = getYTarget(sharedRoot, slateRoot, op.path);
+
   if (!target.slateTarget) {
     throw new Error('Y target without corresponding slate node');
   }
