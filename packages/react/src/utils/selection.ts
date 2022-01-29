@@ -73,7 +73,7 @@ export function getCaretPosition(
 ): CaretPosition | null {
   const isCollapsed = range && Range.isCollapsed(range);
   const isForward = range && Range.isForward(range);
-  const anchorRect = selectionRects[isForward ? 0 : selectionRects.length - 1];
+  const anchorRect = selectionRects[isForward ? selectionRects.length - 1 : 0];
 
   if (!anchorRect) {
     return null;
@@ -82,6 +82,6 @@ export function getCaretPosition(
   return {
     height: anchorRect.height,
     top: anchorRect.top,
-    left: anchorRect.left + (isForward || isCollapsed ? 0 : anchorRect.width),
+    left: anchorRect.left + (!isForward || isCollapsed ? 0 : anchorRect.width),
   };
 }
