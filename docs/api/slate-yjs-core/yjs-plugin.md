@@ -25,52 +25,60 @@ Yjs origin used when creating stored positions. Defaults to the unexported `DEFA
 When used with `withReact`, `withYjs` should be applied inside. For example:
 
 ```javascript
-const editor = useMemo(() => withReact(withYjs(createEditor(), sharedType)), [])
+const editor = useMemo(
+  () => withReact(withYjs(createEditor(), sharedType)),
+  []
+);
 ```
 
 ## YjsEditor
 
 ### Static methods
 
-#### `isYjsEditor(value: unknown): value is YjsEditor`
+**`isYjsEditor(value: unknown): value is YjsEditor`**
 
 Check if a value is a `YjsEditor`
 
-#### `localChanges(editor: YjsEditor): LocalChange[]`
+**`localChanges(editor: YjsEditor): LocalChange[]`**
 
 Get the local changes (slate operation + editor state) that haven't been flushed yet.
 
-#### `storeLocalOperation(editor: YjsEditor, op: Operation): void`
+**`storeLocalOperation(editor: YjsEditor, op: Operation): void`**
 
 Store slate operation as local change.
 
-#### `flushLocalChanges(editor: YjsEditor): void`
+**`flushLocalChanges(editor: YjsEditor): void`**
 
 Flush local changes by applying them to the shared root.
 
-#### `applyRemoteEvents(editor: YjsEditor, events: Y.YEvent[], origin: unknown): void`
+**`applyRemoteEvents(editor: YjsEditor, events: Y.YEvent[], origin: unknown): void`**
 
 Apply Yjs events to the editor with origin.
 
-#### `connected(editor: YjsEditor): boolean`
+**`connected(editor: YjsEditor): boolean`**
 
 Check if the editor is currently being synced with the shared root.
 
-#### `connect(editor: YjsEditor): void`
+**`connect(editor: YjsEditor): void`**
 
 Connect the editor to the shared type by overwriting the current editor value with the in the shared root contained state and registering the appropriate event listeners.
 
-#### `disconnect(editor: YjsEditor): void`
+**`disconnect(editor: YjsEditor): void`**
 
 Disconnect the editor from the shared type by detaching the appropriate event handlers and flushing the local changes.
 
-**`remoteOrigin(editor: YjsEditor): unknown | undefined`**
+**`origin(editor: YjsEditor): unknown`**
 
-Get the Yjs origin of the change that caused the operation we are currently applying. `undefined` if the operation is caused by a local change.
+Get the Yjs origin in which context we are currently operating. I.e. the origin that caused the slate operation we are currently
+applying or the origin the current operation should be applied with. Defaults to `yjsEditor.localOrigin`.
 
-**`asRemote(editor: YjsEditor, origin: unknown, fn: () => void): void`**
+**`withOrigin(editor: YjsEditor, origin: unknown, fn: () => void): void`**
 
-Perform fn as remote with the given origin.
+Apply a series of changes inside a synchronous `fn` inside the context of the specified origin.
+
+**`isLocal(editor: YjsEditor): void`**
+
+Check whether the current origin context is local.
 
 **`storePosition(editor: YjsEditor, key: string, point: Point): void`**
 
@@ -80,7 +88,7 @@ Create a [stored position](../../concepts/stored-positions.md) for a point under
 
 Retrieve a [stored position](../../concepts/stored-positions.md) by key. `undefined` if the stored position doesn't exist, `null` if it isn't part of the document anymore.
 
-#### `storedPositionsRelative(editor: YjsEditor): Record<string, Y.RelativePosition>`
+**`storedPositionsRelative(editor: YjsEditor): Record<string, Y.RelativePosition>`**
 
 Retrieve all [stored positions](../../concepts/stored-positions.md) as a object mapping from storage key to relative position.
 
@@ -107,6 +115,10 @@ Connect the editor to the shared type by overwriting the current editor value wi
 **`disconnect: () => void`**
 
 Disconnect the editor from the shared type by detaching the appropriate event handlers and flushing the local changes.
+
+**`isLocalOrigin: (origin: unknown) => void`**
+
+Determine whether a origin is local. I.e. whether changes to the yjs document with this origin should be applied to the slate doc.
 
 ### Instance fields
 

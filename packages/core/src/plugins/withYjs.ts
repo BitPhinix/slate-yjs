@@ -13,7 +13,11 @@ import {
 } from '../utils/position';
 import { assertDocumentAttachment } from '../utils/yjs';
 
-type LocalChange = { op: Operation; doc: Descendant[] };
+type LocalChange = {
+  op: Operation;
+  doc: Descendant[];
+  origin: unknown;
+};
 
 const DEFAULT_LOCAL_ORIGIN = Symbol('slate-yjs-operation');
 const DEFAULT_POSITION_STORAGE_ORIGIN = Symbol('slate-yjs-position-storage');
@@ -29,8 +33,11 @@ export type YjsEditor = BaseEditor & {
   positionStorageOrigin: unknown;
 
   applyRemoteEvents: (events: Y.YEvent[], origin: unknown) => void;
-  storeLocalOperation: (op: Operation) => void;
+
+  storeLocalChange: (op: Operation) => void;
   flushLocalChanges: () => void;
+
+  isLocalOrigin: (origin: unknown) => boolean;
 
   connect: () => void;
   disconnect: () => void;
@@ -41,11 +48,12 @@ export const YjsEditor = {
     return (
       Editor.isEditor(value) &&
       (value as YjsEditor).sharedRoot instanceof Y.XmlText &&
-      (value as YjsEditor).localOrigin !== undefined &&
-      (value as YjsEditor).positionStorageOrigin !== undefined &&
+      'localOrigin' in value &&
+      'positionStorageOrigin' in value &&
       typeof (value as YjsEditor).applyRemoteEvents === 'function' &&
-      typeof (value as YjsEditor).storeLocalOperation === 'function' &&
+      typeof (value as YjsEditor).storeLocalChange === 'function' &&
       typeof (value as YjsEditor).flushLocalChanges === 'function' &&
+      typeof (value as YjsEditor).isLocalOrigin === 'function' &&
       typeof (value as YjsEditor).connect === 'function' &&
       typeof (value as YjsEditor).disconnect === 'function'
     );
@@ -63,8 +71,8 @@ export const YjsEditor = {
     editor.applyRemoteEvents(events, origin);
   },
 
-  storeLocalOperation(editor: YjsEditor, op: Operation): void {
-    editor.storeLocalOperation(op);
+  storeLocalChange(editor: YjsEditor, op: Operation): void {
+    editor.storeLocalChange(op);
   },
 
   flushLocalChanges(editor: YjsEditor): void {
@@ -83,21 +91,19 @@ export const YjsEditor = {
     editor.disconnect();
   },
 
-  remoteOrigin(editor: YjsEditor): unknown | undefined {
-    return ORIGIN.get(editor);
+  isLocal(editor: YjsEditor): boolean {
+    return editor.isLocalOrigin(YjsEditor.origin(editor));
   },
 
-  asRemote(editor: YjsEditor, origin: unknown, fn: () => void): void {
-    const prev = YjsEditor.remoteOrigin(editor);
+  origin(editor: YjsEditor): unknown {
+    return ORIGIN.get(editor) ?? editor.localOrigin;
+  },
+
+  withOrigin(editor: YjsEditor, origin: unknown, fn: () => void): void {
+    const prev = YjsEditor.origin(editor);
     ORIGIN.set(editor, origin);
-
     fn();
-
-    if (prev === undefined) {
-      ORIGIN.delete(editor);
-    } else {
-      ORIGIN.set(editor, prev);
-    }
+    ORIGIN.set(editor, prev);
   },
 
   storePosition(editor: YjsEditor, key: string, point: Point): void {
@@ -163,16 +169,20 @@ export function withYjs<T extends Editor>(
   e.positionStorageOrigin =
     positionStorageOrigin ?? DEFAULT_POSITION_STORAGE_ORIGIN;
 
-  e.applyRemoteEvents = (events, eventOrigin) => {
+  e.applyRemoteEvents = (events, origin) => {
+    YjsEditor.flushLocalChanges(e);
+
     Editor.withoutNormalizing(e, () => {
-      YjsEditor.asRemote(e, eventOrigin, () => {
+      YjsEditor.withOrigin(e, origin, () => {
         applyYjsEvents(e.sharedRoot, e, events);
       });
     });
   };
 
+  e.isLocalOrigin = (origin) => origin === e.localOrigin;
+
   const handleYEvents = (events: Y.YEvent[], transaction: Y.Transaction) => {
-    if (transaction.origin === e.localOrigin) {
+    if (e.isLocalOrigin(transaction.origin)) {
       return;
     }
 
@@ -205,10 +215,10 @@ export function withYjs<T extends Editor>(
     CONNECTED.delete(e);
   };
 
-  e.storeLocalOperation = (op) => {
+  e.storeLocalChange = (op) => {
     LOCAL_CHANGES.set(e, [
       ...YjsEditor.localChanges(e),
-      { op, doc: editor.children },
+      { op, doc: editor.children, origin: YjsEditor.origin(e) },
     ]);
   };
 
@@ -217,17 +227,33 @@ export function withYjs<T extends Editor>(
     const localChanges = YjsEditor.localChanges(e);
     LOCAL_CHANGES.delete(e);
 
-    e.sharedRoot.doc.transact(() => {
-      localChanges.forEach((change) => {
-        applySlateOp(e.sharedRoot, { children: change.doc }, change.op);
-      });
-    }, e.localOrigin);
+    // Group local changes by origin so we can apply them in the correct order
+    // with the correct origin with a minimal amount of transactions.
+    const txGroups: LocalChange[][] = [];
+    localChanges.forEach((change) => {
+      const currentGroup = txGroups[txGroups.length - 1];
+      if (currentGroup && currentGroup[0].origin === change.origin) {
+        return currentGroup.push(change);
+      }
+
+      txGroups.push([change]);
+    });
+
+    txGroups.forEach((txGroup) => {
+      assertDocumentAttachment(e.sharedRoot);
+      e.sharedRoot.doc.transact(() => {
+        txGroup.forEach((change) => {
+          assertDocumentAttachment(e.sharedRoot);
+          applySlateOp(e.sharedRoot, { children: change.doc }, change.op);
+        });
+      }, txGroup[0].origin);
+    });
   };
 
   const { apply, onChange } = e;
   e.apply = (op) => {
-    if (YjsEditor.connected(e) && YjsEditor.remoteOrigin(e) === undefined) {
-      YjsEditor.storeLocalOperation(e, op);
+    if (YjsEditor.connected(e) && YjsEditor.isLocal(e)) {
+      YjsEditor.storeLocalChange(e, op);
     }
 
     apply(op);

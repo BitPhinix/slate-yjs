@@ -8,9 +8,14 @@ import {
 import { YjsEditor } from './withYjs';
 
 const LAST_SELECTION: WeakMap<Editor, RelativeRange | null> = new WeakMap();
+const DEFAULT_WITHOUT_SAVING_ORIGIN = Symbol(
+  'slate-yjs-history-without-saving'
+);
 
 export type YHistoryEditor = YjsEditor & {
   undoManager: Y.UndoManager;
+
+  withoutSavingOrigin: unknown;
 
   undo: () => void;
   redo: () => void;
@@ -22,7 +27,8 @@ export const YHistoryEditor = {
       YjsEditor.isYjsEditor(value) &&
       (value as YHistoryEditor).undoManager instanceof Y.UndoManager &&
       typeof (value as YHistoryEditor).undo === 'function' &&
-      typeof (value as YHistoryEditor).redo === 'function'
+      typeof (value as YHistoryEditor).redo === 'function' &&
+      'withoutSavingOrigin' in value
     );
   },
 
@@ -33,15 +39,26 @@ export const YHistoryEditor = {
   canRedo(editor: YHistoryEditor) {
     return editor.undoManager.redoStack.length > 0;
   },
+
+  isSaving(editor: YHistoryEditor): boolean {
+    return editor.undoManager.trackedOrigins.has(YjsEditor.origin(editor));
+  },
+
+  withoutSaving(editor: YHistoryEditor, fn: () => void) {
+    YjsEditor.withOrigin(editor, editor.withoutSavingOrigin, fn);
+  },
 };
 
 export type WithYHistoryOptions = NonNullable<
   ConstructorParameters<typeof Y.UndoManager>[1]
->;
+> & {
+  withoutSavingOrigin?: unknown;
+};
 
 export function withYHistory<T extends YjsEditor>(
   editor: T,
   {
+    withoutSavingOrigin = DEFAULT_WITHOUT_SAVING_ORIGIN,
     trackedOrigins = new Set([editor.localOrigin]),
     ...options
   }: WithYHistoryOptions = {}
@@ -53,7 +70,10 @@ export function withYHistory<T extends YjsEditor>(
     ...options,
   });
 
-  const { onChange } = e;
+  e.undoManager = undoManager;
+  e.withoutSavingOrigin = withoutSavingOrigin;
+
+  const { onChange, isLocalOrigin } = e;
   e.onChange = () => {
     onChange();
 
@@ -62,6 +82,9 @@ export function withYHistory<T extends YjsEditor>(
       e.selection && slateRangeToRelativeRange(e.sharedRoot, e, e.selection)
     );
   };
+
+  e.isLocalOrigin = (origin) =>
+    origin === e.withoutSavingOrigin || isLocalOrigin(origin);
 
   undoManager.on(
     'stack-item-added',
@@ -122,8 +145,6 @@ export function withYHistory<T extends YjsEditor>(
       Transforms.select(e, selection);
     }
   );
-
-  e.undoManager = undoManager;
 
   e.undo = () => {
     YjsEditor.flushLocalChanges(e);

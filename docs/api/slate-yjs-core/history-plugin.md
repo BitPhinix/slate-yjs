@@ -20,12 +20,19 @@ Filter to specify which items undos/redos can delete. If the filter returns `fal
 
 Origins to include inside the history. Defaults to `yjsEditor.localOrigin`. For more details take a look [here](https://docs.yjs.dev/api/undo-manager#example-specify-tracked-origins).
 
+**`withoutSavingOrigin?: unknown`**
+
+Yjs origin used when applying operations in `withoutSaving`. Defaults to the unexported `DEFAULT_WITHOUT_SAVING_ORIGIN` symbol.
+
 <br/>
 
 `withYHistory` should be applied directly after `withYjs/withCursors`. For example:
 
 ```javascript
-const editor = useMemo(() => withYHistory(withYjs(createEditor(), sharedType)), [])
+const editor = useMemo(
+  () => withYHistory(withYjs(createEditor(), sharedType)),
+  []
+);
 ```
 
 ## YHistoryEditor
@@ -43,6 +50,14 @@ Check whether the undo stack is non-empty.
 **`canRedo(editor: YHistoryEditor): boolean`**
 
 Check whether the redo stack is non-empty.
+
+**`withoutSaving(editor: YHistoryEditor, fn: () => void): void`**
+
+Apply a series of changes inside a synchronous `fn`, without saving any of their changes into the history.
+
+**`isSaving(editor: YHistoryEditor): boolean`**
+
+Check whether changes inside the current origin context will be saved into the history.
 
 ### Instance methods
 
@@ -62,3 +77,6 @@ Redo a change.
 
 The Yjs UndoManager backing the YHistoryEditor instance.
 
+**`withoutSavingOrigin: unknown`**
+
+Origin used when applying changes `withoutSaving`.

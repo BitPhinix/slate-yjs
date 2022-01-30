@@ -1,4 +1,4 @@
-import { BasePoint, BaseRange, Node, Point, Text } from 'slate';
+import { BasePoint, BaseRange, Node, Text } from 'slate';
 import * as Y from 'yjs';
 import { InsertDelta, RelativeRange, TextRange } from '../model/types';
 import { getInsertDeltaLength, yTextToInsertDelta } from './delta';
