@@ -3,16 +3,17 @@ import { withCursors, withYHistory, withYjs, YjsEditor } from '@slate-yjs/core';
 import { name } from 'faker';
 import randomColor from 'randomcolor';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { createEditor, Descendant } from 'slate';
+import type { Descendant } from 'slate';
+import { createEditor } from 'slate';
 import { Editable, Slate, withReact } from 'slate-react';
 import * as Y from 'yjs';
-import { RemoteCursorOverlay } from './Overlay';
 import { ConnectionToggle } from '../../components/ConnectionToggle/ConnectionToggle';
 import { Element } from '../../components/Element/Element';
 import { Leaf } from '../../components/Leaf';
-import { withMarkdown } from '../../plugins/withMarkdown';
-import { CursorData } from '../../types';
 import { HOCUSPOCUS_ENDPOINT_URL, HOCUSPOCUS_WRITE_KEY } from '../../config';
+import { withMarkdown } from '../../plugins/withMarkdown';
+import type { CursorData } from '../../types';
+import { RemoteCursorOverlay } from './Overlay';
 
 export function RemoteCursorsOverlay() {
   const [value, setValue] = useState<Descendant[]>([]);

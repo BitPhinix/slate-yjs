@@ -4,16 +4,17 @@ export function useRequestReRender() {
   const [, setUpdateCounter] = useState(0);
   const animationFrameRef = useRef<number | null>(null);
 
-  const requestReRender = useCallback((immediately = false) => {
-    if (animationFrameRef.current && !immediately) {
+  const requestReRender = useCallback((immediate = false) => {
+    if (animationFrameRef.current && !immediate) {
       return;
     }
 
-    if (immediately) {
+    if (!immediate) {
       animationFrameRef.current = requestAnimationFrame(() => {
         setUpdateCounter((state) => state + 1);
         animationFrameRef.current = null;
       });
+      return;
     }
 
     if (animationFrameRef.current) {
