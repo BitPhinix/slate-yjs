@@ -7,7 +7,7 @@ import {
   getSlatePath,
   yOffsetToSlateOffsets,
 } from '../utils/location';
-import { deepEquals, pick } from '../utils/object';
+import { deepEquals, omitNullEntries, pick } from '../utils/object';
 import { getProperties } from '../utils/slate';
 
 function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
@@ -34,55 +34,56 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
       );
       const [endPathOffset, endTextOffset] = yOffsetToSlateOffsets(
         node,
-        yOffset
+        yOffset,
+        { assoc: -1 }
       );
 
       for (
-        let pathOffset =
-          endTextOffset === 0 ? endPathOffset - 1 : endPathOffset;
+        let pathOffset = endPathOffset;
         pathOffset >= startPathOffset;
         pathOffset--
       ) {
         const child = node.children[pathOffset];
-        let childPath = [...slatePath, pathOffset];
+        const childPath = [...slatePath, pathOffset];
 
         const newProperties = change.attributes;
+        const properties = pick(
+          node,
+          ...(Object.keys(change.attributes) as Array<keyof Element>)
+        );
 
         if (
           Text.isText(child) &&
           (pathOffset === startPathOffset || pathOffset === endPathOffset)
         ) {
           const start = pathOffset === startPathOffset ? startTextOffset : 0;
-          let end =
+          const end =
             pathOffset === endPathOffset ? endTextOffset : child.text.length;
-
-          const properties = getProperties(child);
-          if (start !== 0) {
-            ops.push({
-              type: 'split_node',
-              path: childPath,
-              position: start,
-              properties: { ...properties, ...newProperties },
-            });
-
-            childPath = Path.next(childPath);
-            end -= start;
-          }
 
           if (end !== child.text.length) {
             ops.push({
               type: 'split_node',
               path: childPath,
               position: end,
-              properties: { ...properties, ...newProperties },
+              properties: getProperties(child),
             });
+          }
+
+          if (start !== 0) {
+            ops.push({
+              type: 'split_node',
+              path: childPath,
+              position: start,
+              properties: omitNullEntries({
+                ...getProperties(child),
+                ...newProperties,
+              }),
+            });
+
+            continue;
           }
         }
 
-        const properties = pick(
-          node,
-          ...(Object.keys(change.attributes) as Array<keyof Element>)
-        );
         ops.push({
           type: 'set_node',
           newProperties,

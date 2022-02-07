@@ -96,7 +96,8 @@ export const YjsEditor = {
   },
 
   origin(editor: YjsEditor): unknown {
-    return ORIGIN.get(editor) ?? editor.localOrigin;
+    const origin = ORIGIN.get(editor);
+    return origin !== undefined ? origin : editor.localOrigin;
   },
 
   withOrigin(editor: YjsEditor, origin: unknown, fn: () => void): void {
@@ -241,6 +242,7 @@ export function withYjs<T extends Editor>(
 
     txGroups.forEach((txGroup) => {
       assertDocumentAttachment(e.sharedRoot);
+
       e.sharedRoot.doc.transact(() => {
         txGroup.forEach((change) => {
           assertDocumentAttachment(e.sharedRoot);

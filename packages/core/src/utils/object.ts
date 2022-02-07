@@ -27,8 +27,7 @@ export function deepEquals(
   });
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export function pick<TObj extends {}, TKeys extends keyof TObj>(
+export function pick<TObj, TKeys extends keyof TObj>(
   obj: TObj,
   ...keys: TKeys[]
 ): Pick<TObj, TKeys> {
@@ -37,12 +36,19 @@ export function pick<TObj extends {}, TKeys extends keyof TObj>(
   ) as Pick<TObj, TKeys>;
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export function omit<TObj extends {}, TKeys extends keyof TObj>(
+export function omit<TObj, TKeys extends keyof TObj>(
   obj: TObj,
   ...keys: TKeys[]
 ): Omit<TObj, TKeys> {
   return Object.fromEntries(
     Object.entries(obj).filter(([key]) => !keys.includes(key as TKeys))
   ) as Omit<TObj, TKeys>;
+}
+
+export function omitNullEntries<TObj>(obj: TObj): {
+  [K in keyof TObj]: TObj[K] extends null ? never : K;
+} {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([, value]) => value !== null)
+  ) as { [K in keyof TObj]: TObj[K] extends null ? never : K };
 }

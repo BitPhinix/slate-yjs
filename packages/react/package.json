@@ -1,7 +1,7 @@
 {
   "name": "@slate-yjs/react",
   "sideEffects": false,
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "React specific components/utils for slate-yjs.",
   "keywords": [
     "slate",
@@ -32,15 +32,15 @@
     "@types/react": "^17.0.34",
     "microbundle": "^0.14.1",
     "react": "^17.0.2",
-    "slate": "~0.70.0",
-    "yjs": "^13.5.22"
+    "slate": "~0.72.8",
+    "yjs": "^13.5.27"
   },
   "peerDependencies": {
     "@slate-yjs/core": "workspace:^",
     "react": ">=16.8.0",
     "slate": ">=0.70.0",
     "slate-react": ">=0.70.0",
-    "yjs": "^13.5.22"
+    "yjs": "^13.5.27"
   },
   "bugs": {
     "url": "https://github.com/BitPhinix/slate-yjs/issues"

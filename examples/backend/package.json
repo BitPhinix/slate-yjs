@@ -9,13 +9,13 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.15",
-    "slate": "~0.70.0",
+    "slate": "~0.72.8",
     "ts-node": "^10.4.0"
   },
   "dependencies": {
     "@hocuspocus/extension-logger": "^1.0.0-alpha.64",
-    "@hocuspocus/server": "^1.0.0-alpha.90",
+    "@hocuspocus/server": "^1.0.0-alpha.91",
     "@slate-yjs/core": "workspace:^",
-    "yjs": "^13.5.22"
+    "yjs": "^13.5.27"
   }
 }

@@ -2915,6 +2915,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@hocuspocus/server@npm:^1.0.0-alpha.91":
+  version: 1.0.0-alpha.91
+  resolution: "@hocuspocus/server@npm:1.0.0-alpha.91"
+  dependencies:
+    "@hocuspocus/common": ^1.0.0-alpha.4
+    "@types/async-lock": ^1.1.3
+    "@types/uuid": ^8.3.3
+    "@types/ws": ^8.2.1
+    async-lock: ^1.3.0
+    kleur: ^4.1.4
+    lib0: ^0.2.43
+    uuid: ^8.3.2
+    ws: ^8.3.0
+    y-protocols: ^1.0.5
+    yjs: ^13.5.22
+  checksum: 6aa9d1c9fa6cea7c8d2b39d931bac8fd0d655cbf998cfb100a9ad4a1862bfaa1bead79817c329f6481718efee0ab67bbedde113990e0a9086d3a156f51213a8e
+  languageName: node
+  linkType: hard
+
 "@humanwhocodes/config-array@npm:^0.6.0":
   version: 0.6.0
   resolution: "@humanwhocodes/config-array@npm:0.6.0"
@@ -4139,13 +4158,13 @@ __metadata:
   resolution: "@slate-yjs/core@workspace:packages/core"
   dependencies:
     microbundle: ^0.14.1
-    slate: ">=0.70.0"
+    slate: 0.72.8
     slate-hyperscript: ^0.67.0
     y-protocols: ^1.0.5
-    yjs: ^13.5.22
+    yjs: ^13.5.27
   peerDependencies:
-    slate: ^0.70.0
-    yjs: ^13.5.22
+    slate: ">=0.70.0"
+    yjs: ^13.5.27
   languageName: unknown
   linkType: soft
 
@@ -4154,12 +4173,12 @@ __metadata:
   resolution: "@slate-yjs/example-backend@workspace:examples/backend"
   dependencies:
     "@hocuspocus/extension-logger": ^1.0.0-alpha.64
-    "@hocuspocus/server": ^1.0.0-alpha.90
+    "@hocuspocus/server": ^1.0.0-alpha.91
     "@slate-yjs/core": "workspace:^"
     nodemon: ^2.0.15
-    slate: ~0.70.0
+    slate: ~0.72.8
     ts-node: ^10.4.0
-    yjs: ^13.5.22
+    yjs: ^13.5.27
   languageName: unknown
   linkType: soft
 
@@ -4184,11 +4203,11 @@ __metadata:
     react: ^17.0.2
     react-dom: ^17.0.2
     react-router-dom: ^6.0.1
-    slate: ^0.70.0
+    slate: ^0.72.8
     slate-react: ^0.70.0
     tailwindcss: ^2.2.19
     vite: ^2.6.13
-    yjs: ^13.5.22
+    yjs: ^13.5.27
   languageName: unknown
   linkType: soft
 
@@ -4200,15 +4219,15 @@ __metadata:
     "@types/react": ^17.0.34
     microbundle: ^0.14.1
     react: ^17.0.2
-    slate: ~0.70.0
+    slate: ~0.72.8
     y-protocols: ^1.0.5
-    yjs: ^13.5.22
+    yjs: ^13.5.27
   peerDependencies:
     "@slate-yjs/core": "workspace:^"
     react: ">=16.8.0"
     slate: ">=0.70.0"
     slate-react: ">=0.70.0"
-    yjs: ^13.5.22
+    yjs: ^13.5.27
   languageName: unknown
   linkType: soft
 
@@ -16526,29 +16545,19 @@ __metadata:
     eslint-plugin-react-hooks: ^4.3.0
     jest: ^27.3.1
     prettier: ^2.4.1
+    slate-hyperscript: ^0.67.0
     typescript: ^4.4.4
   languageName: unknown
   linkType: soft
 
-"slate@npm:>=0.70.0":
-  version: 0.71.0
-  resolution: "slate@npm:0.71.0"
+"slate@npm:0.72.8, slate@npm:^0.72.8, slate@npm:~0.72.8":
+  version: 0.72.8
+  resolution: "slate@npm:0.72.8"
   dependencies:
     immer: ^9.0.6
     is-plain-object: ^5.0.0
     tiny-warning: ^1.0.3
-  checksum: 9c3d3b8464acf8e67eb49c8242aa6435f7e7f4fca36ba794c671a9979b9180635cc392caf569404a5fb269f8ec3797a3cf8e32d9d1f150198c170cbf9fa2ac1d
-  languageName: node
-  linkType: hard
-
-"slate@npm:^0.70.0, slate@npm:~0.70.0":
-  version: 0.70.0
-  resolution: "slate@npm:0.70.0"
-  dependencies:
-    immer: ^9.0.6
-    is-plain-object: ^5.0.0
-    tiny-warning: ^1.0.3
-  checksum: a7e3de23d122c643790f5e6772288089948536f0885a0525ead09266d0c625e8ada340915cd6d7265f6564db529fddcb887407947d03979cba336baf76eb4dc5
+  checksum: 42788ac153139b1166a66f48f8b095cfd3eea27d4580a4ebfb67ee9c2eaca17aa9187180d8c3abdc3367a05ee9ce1f25d11a9909464bd43db4dabc3535a842b7
   languageName: node
   linkType: hard
 
@@ -18841,6 +18850,15 @@ __metadata:
   dependencies:
     lib0: ^0.2.43
   checksum: 174647ae992abdee7fdff49cdce95508f88b7b58eae52a218ea8f0900f0cd55e078b983f2c2619ec88faf87f46322e3c38a7aea08c5e6778aabf2cf11c165446
+  languageName: node
+  linkType: hard
+
+"yjs@npm:^13.5.27":
+  version: 13.5.27
+  resolution: "yjs@npm:13.5.27"
+  dependencies:
+    lib0: ^0.2.43
+  checksum: aa3aed56dd3d243ddc57b3d222a11a0b2d89b73f8a564e3f6233744f2e604e9a7e3c70338c31c64e3eef9999120f9d47fbc962fa38d3e10989fdb0aa2a8b4b45
   languageName: node
   linkType: hard
 
