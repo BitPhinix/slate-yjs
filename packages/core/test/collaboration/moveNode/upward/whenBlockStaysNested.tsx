@@ -30,29 +30,6 @@ export const expected = (
   </editor>
 );
 
-export const expexctedOperations = [
-  'nodes',
-  [
-    0,
-    {
-      r: true,
-    },
-    'nodes',
-    0,
-    {
-      p: 0,
-    },
-  ],
-  [
-    1,
-    'nodes',
-    1,
-    {
-      d: 0,
-    },
-  ],
-];
-
 export function run(editor: Editor) {
   Transforms.moveNodes(editor, {
     at: [0, 0],
