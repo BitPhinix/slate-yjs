@@ -10,7 +10,7 @@ import { Server } from '@hocuspocus/server';
 import { slateNodesToInsertDelta } from '@slate-yjs/core';
 import * as Y from 'yjs';
 
-const initialValue = [{ type: "paragraph", children: [{ text: "" }]}]
+const initialValue = [{ type: 'paragraph', children: [{ text: '' }] }];
 
 // Setup the server
 const server = Server.configure({
@@ -77,4 +77,3 @@ export function Editor() {
 }
 
 ```
-

@@ -10,14 +10,14 @@ Let's say you have the following slate document:
 
 ```json
 [
-   {
-      "type": "paragraph",
-      "children": [
-         {
-            "text":"some text"
-         }
-      ]
-   },
+  {
+    "type": "paragraph",
+    "children": [
+      {
+        "text": "some text"
+      }
+    ]
+  }
 ]
 ```
 
@@ -27,22 +27,22 @@ Everything seems to work fine for basic edits like inserting and formatting text
 
 ```json
 [
-   {
-      "type": "paragraph",
-      "children": [
-         {
-            "text":"s"
-         }
-      ]
-   },
-   {
-      "type": "paragraph",
-      "children": [
-         {
-            "text":"ome text"
-         }
-      ]
-   }
+  {
+    "type": "paragraph",
+    "children": [
+      {
+        "text": "s"
+      }
+    ]
+  },
+  {
+    "type": "paragraph",
+    "children": [
+      {
+        "text": "ome text"
+      }
+    ]
+  }
 ]
 ```
 
@@ -62,7 +62,7 @@ If you now perform a specific `split_node` or `move_node` operation, the binding
 
 There are a few caveats to keep in mind when using stored positions:
 
-* When merging 2 updates that result in the duplication of a node, the stored position will only point to one of them (but always the same for both clients).
-* When undoing operations that occurred before the creation of a stored position, they will always be treated as inserts/deletes.
-* When a client applies a `move_node` / specific `split_node` operation before receiving an update containing the stored position the change will be treated as inserts/deletes.
-* In comparison to relative positions, stored positions add a minimal overhead when applying changes to the shared root. While this overhead is tiny, it might cause a noticeable delay if the document contains thousands of stored locations.
+- When merging 2 updates that result in the duplication of a node, the stored position will only point to one of them (but always the same for both clients).
+- When undoing operations that occurred before the creation of a stored position, they will always be treated as inserts/deletes.
+- When a client applies a `move_node` / specific `split_node` operation before receiving an update containing the stored position the change will be treated as inserts/deletes.
+- In comparison to relative positions, stored positions add a minimal overhead when applying changes to the shared root. While this overhead is tiny, it might cause a noticeable delay if the document contains thousands of stored locations.

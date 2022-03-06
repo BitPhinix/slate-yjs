@@ -6,11 +6,12 @@ import { Editable, Slate, withReact } from 'slate-react';
 import * as Y from 'yjs';
 import { ConnectionToggle } from '../components/ConnectionToggle/ConnectionToggle';
 import { Element } from '../components/Element/Element';
+import { FormatToolbar } from '../components/FormatToolbar/FormatToolbar';
 import { Leaf } from '../components/Leaf';
 import { HOCUSPOCUS_ENDPOINT_URL, HOCUSPOCUS_WRITE_KEY } from '../config';
 import { withMarkdown } from '../plugins/withMarkdown';
 
-export function Simple() {
+export function SimplePage() {
   const [value, setValue] = useState<Descendant[]>([]);
   const [connected, setConnected] = useState(false);
 
@@ -49,6 +50,7 @@ export function Simple() {
   return (
     <div className="flex justify-center my-32 mx-10">
       <Slate value={value} onChange={setValue} editor={editor}>
+        <FormatToolbar />
         <Editable
           className="max-w-4xl w-full flex-col"
           renderElement={Element}

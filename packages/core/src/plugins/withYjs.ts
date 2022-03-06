@@ -32,7 +32,7 @@ export type YjsEditor = BaseEditor & {
   localOrigin: unknown;
   positionStorageOrigin: unknown;
 
-  applyRemoteEvents: (events: Y.YEvent[], origin: unknown) => void;
+  applyRemoteEvents: (events: Y.YEvent<Y.XmlText>[], origin: unknown) => void;
 
   storeLocalChange: (op: Operation) => void;
   flushLocalChanges: () => void;
@@ -65,7 +65,7 @@ export const YjsEditor = {
 
   applyRemoteEvents(
     editor: YjsEditor,
-    events: Y.YEvent[],
+    events: Y.YEvent<Y.XmlText>[],
     origin: unknown
   ): void {
     editor.applyRemoteEvents(events, origin);
@@ -84,6 +84,10 @@ export const YjsEditor = {
   },
 
   connect(editor: YjsEditor): void {
+    if (YjsEditor.connected(editor)) {
+      throw new Error('already connected');
+    }
+
     editor.connect();
   },
 
@@ -182,7 +186,10 @@ export function withYjs<T extends Editor>(
 
   e.isLocalOrigin = (origin) => origin === e.localOrigin;
 
-  const handleYEvents = (events: Y.YEvent[], transaction: Y.Transaction) => {
+  const handleYEvents = (
+    events: Y.YEvent<Y.XmlText>[],
+    transaction: Y.Transaction
+  ) => {
     if (e.isLocalOrigin(transaction.origin)) {
       return;
     }

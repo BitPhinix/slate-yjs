@@ -1,10 +1,13 @@
 import * as Y from 'yjs';
 import { DeltaInsert, InsertDelta } from '../model/types';
+import { deepEquals } from './object';
 
 export function normalizeInsertDelta(delta: InsertDelta): InsertDelta {
-  return delta.reduce<InsertDelta>((normalized, element) => {
+  const normalized: InsertDelta = [];
+
+  for (const element of delta) {
     if (typeof element.insert === 'string' && element.insert.length === 0) {
-      return normalized;
+      continue;
     }
 
     const prev = normalized[normalized.length - 1];
@@ -14,24 +17,23 @@ export function normalizeInsertDelta(delta: InsertDelta): InsertDelta {
       typeof element.insert !== 'string'
     ) {
       normalized.push(element);
-      return normalized;
+      continue;
     }
 
-    const equalAttributes =
+    const merge =
       prev.attributes === element.attributes ||
       (!prev.attributes === !element.attributes &&
-        Object.entries(prev.attributes ?? {}).every(
-          ([key, value]) => element.attributes?.[key] === value
-        ));
+        deepEquals(prev.attributes ?? {}, element.attributes ?? {}));
 
-    if (equalAttributes) {
+    if (merge) {
       prev.insert += element.insert;
-      return normalized;
+      continue;
     }
 
     normalized.push(element);
-    return normalized;
-  }, []);
+  }
+
+  return normalized;
 }
 
 export function yTextToInsertDelta(yText: Y.XmlText): InsertDelta {

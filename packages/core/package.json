@@ -29,7 +29,7 @@
   "license": "MIT",
   "devDependencies": {
     "microbundle": "^0.14.1",
-    "slate": "0.72.8",
+    "slate": "0.73.1",
     "slate-hyperscript": "^0.67.0",
     "yjs": "^13.5.27"
   },

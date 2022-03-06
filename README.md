@@ -105,10 +105,11 @@ https://docs.slate-yjs.dev
 
 Slate-yjs's codebase is monorepo managed with [yarn workspaces](https://yarnpkg.com/features/workspaces). It consists of a handful of packages—although you won't always use all of them:
 
-| **Package**                          |                                                                                                            **Version** |                                                                                                                                                   **Size** | **Description**         |
-| :----------------------------------- | ---------------------------------------------------------------------------------------------------------------------: | ---------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------- |
-| [`@slate-yjs/core`](./packages/core) | [![](https://img.shields.io/npm/v/@slate-yjs/core?maxAge=3600&label=&colorB=007ec6)](./packages/core/package.json) | [![](http://img.badgesize.io/https://unpkg.com/@slate-yjs/core/dist/index.cjs?compression=gzip&label=%20)](https://unpkg.com/@slate-yjs/core/dist/index.cjs) | Core slate-yjs binding. |
+| **Package**                            |                                                                                                          **Version** |                                                                                                                                                       **Size** | **Description**                                |
+| :------------------------------------- | -------------------------------------------------------------------------------------------------------------------: | -------------------------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------- |
+| [`@slate-yjs/core`](./packages/core)   |   [![](https://img.shields.io/npm/v/@slate-yjs/core?maxAge=3600&label=&colorB=007ec6)](./packages/core/package.json) |   [![](http://img.badgesize.io/https://unpkg.com/@slate-yjs/core/dist/index.cjs?compression=gzip&label=%20)](https://unpkg.com/@slate-yjs/core/dist/index.cjs) | Core slate-yjs binding.                        |
 | [`@slate-yjs/react`](./packages/react) | [![](https://img.shields.io/npm/v/@slate-yjs/react?maxAge=3600&label=&colorB=007ec6)](./packages/react/package.json) | [![](http://img.badgesize.io/https://unpkg.com/@slate-yjs/react/dist/index.cjs?compression=gzip&label=%20)](https://unpkg.com/@slate-yjs/react/dist/index.cjs) | React specific components/utils for slate-yjs. |
+
 <br/>
 <br/>
 

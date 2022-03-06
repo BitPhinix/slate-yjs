@@ -47,4 +47,3 @@ Any questions about slate-yjs? Thread over to the #slate-yjs channel inside the 
 All contributions are super welcome! Check out the Contributing instructions for more info!
 
 Slate-yjs is [MIT-licensed](https://github.com/Bitphinix/slate-yjs/blob/main/LICENSE.md).
-

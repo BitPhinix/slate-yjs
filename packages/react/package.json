@@ -32,7 +32,7 @@
     "@types/react": "^17.0.34",
     "microbundle": "^0.14.1",
     "react": "^17.0.2",
-    "slate": "~0.72.8",
+    "slate": "~0.73.1",
     "yjs": "^13.5.27"
   },
   "peerDependencies": {

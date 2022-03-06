@@ -1,3 +1,4 @@
+/* eslint-disable react/void-dom-elements-no-children */
 /** @jsx jsx */
 import { Editor, Transforms } from 'slate';
 import { jsx } from '../../../../../support/jsx';

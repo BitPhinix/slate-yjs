@@ -27,4 +27,3 @@ Get a [relative position](https://docs.yjs.dev/api/relative-positions) for a sla
 **`relativePositionToSlatePoint( sharedRoot: Y.XmlText, slateRoot: Node, pos: Y.RelativePosition ): BasePoint | null`**
 
 Get a slate point for a relative position. Returns null if the relative position isn't part of the document anymore.
-

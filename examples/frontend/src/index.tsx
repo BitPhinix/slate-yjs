@@ -1,11 +1,11 @@
 import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import '../index.css';
+import './index.css';
 import { Navigator } from './components/Navigator/Navigator';
 import { NotFound } from './pages/NotFound';
-import { RemoteCursorsOverlay } from './pages/RemoteCursorOverlay/RemoteCursorOverlay';
-import { Simple } from './pages/Simple';
+import { RemoteCursorsOverlayPage } from './pages/RemoteCursorOverlay';
+import { SimplePage } from './pages/Simple';
 
 ReactDOM.render(
   <StrictMode>
@@ -13,9 +13,9 @@ ReactDOM.render(
       <Routes>
         <Route
           path="/remote-cursors-overlay"
-          element={<RemoteCursorsOverlay />}
+          element={<RemoteCursorsOverlayPage />}
         />
-        <Route path="/simple" element={<Simple />} />
+        <Route path="/simple" element={<SimplePage />} />
         <Route path="/" element={<Navigate to="/remote-cursors-overlay" />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

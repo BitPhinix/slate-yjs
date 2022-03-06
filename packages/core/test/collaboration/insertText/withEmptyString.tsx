@@ -11,7 +11,14 @@ export const input = (
   </editor>
 );
 
-export const expected = input;
+export const expected = (
+  <editor>
+    <unstyled>
+      Hello world!
+      <cursor />
+    </unstyled>
+  </editor>
+);
 
 export function run(editor: Editor) {
   editor.insertText('');

@@ -29,7 +29,7 @@ async function runCollaborationTest({ module }: FixtureModule) {
   const editor = await withTestingElements(input);
 
   // Keep the 'local' editor state before applying run.
-  const baseState = Y.encodeStateAsUpdate(editor.sharedRoot.doc);
+  const baseState = Y.encodeStateAsUpdateV2(editor.sharedRoot.doc);
 
   Editor.normalize(editor, { force: true });
 
@@ -37,14 +37,18 @@ async function runCollaborationTest({ module }: FixtureModule) {
   expect(await normalizedSlateDoc(editor.sharedRoot)).toEqual(editor.children);
 
   run(editor);
+  editor.onChange();
+
+  // Editor state after run should match shared root.
+  expect(await normalizedSlateDoc(editor.sharedRoot)).toEqual(editor.children);
 
   // Setup remote editor with input base state
   const remoteDoc = new Y.Doc();
-  Y.applyUpdate(remoteDoc, baseState);
+  Y.applyUpdateV2(remoteDoc, baseState);
   const remote = await withTestingElements(createEditor(), remoteDoc);
 
   // Apply changes from 'run'
-  Y.applyUpdate(remoteDoc, Y.encodeStateAsUpdate(editor.sharedRoot.doc));
+  Y.applyUpdateV2(remoteDoc, Y.encodeStateAsUpdateV2(editor.sharedRoot.doc));
 
   // Verify remote and editor state are equal
   expect(await normalizedSlateDoc(remote.sharedRoot)).toEqual(remote.children);

@@ -1,30 +1,69 @@
 type InspectableObject = Record<string | number | symbol, unknown>;
 
-export function isObject(v: unknown): v is InspectableObject {
-  return v !== null && typeof v === 'object';
+function isObject(o: unknown): o is InspectableObject {
+  return Object.prototype.toString.call(o) === '[object Object]';
 }
 
-export function deepEquals(
-  obj: InspectableObject,
-  other: InspectableObject
-): boolean {
-  const keys1 = Object.keys(obj);
-  const keys2 = Object.keys(other);
-
-  if (keys1.length !== keys2.length) {
+export function isPlainObject(o: unknown): o is InspectableObject {
+  if (!isObject(o)) {
     return false;
   }
 
-  return keys1.every((key) => {
-    const val1 = obj[key];
-    const val2 = other[key];
+  // If has modified constructor
+  const ctor = o.constructor;
+  if (ctor === undefined) {
+    return true;
+  }
 
-    if (!isObject(val1)) {
-      return val1 === val2;
+  // If has modified prototype
+  const prot = ctor.prototype;
+  if (isObject(prot) === false) {
+    return false;
+  }
+
+  // If constructor does not have an Object-specific method
+  if (prot.hasOwnProperty('isPrototypeOf') === false) {
+    return false;
+  }
+
+  // Most likely a plain Object
+  return true;
+}
+
+// Slates deep equality function: https://github.com/ianstormtaylor/slate/blob/68aff89e892fe15a16314398ff052ade6068900b/packages/slate/src/utils/deep-equal.ts#L13
+// We have to match slates deepEquals behavior to merge insert deltas in the same way slate does.
+export function deepEquals(
+  node: InspectableObject,
+  another: InspectableObject
+): boolean {
+  // eslint-disable-next-line guard-for-in
+  for (const key in node) {
+    const a = node[key];
+    const b = another[key];
+
+    if (isPlainObject(a) && isPlainObject(b)) {
+      if (!deepEquals(a, b)) {
+        return false;
+      }
+    } else if (Array.isArray(a) && Array.isArray(b)) {
+      if (a.length !== b.length) return false;
+      for (let i = 0; i < a.length; i++) {
+        if (a[i] !== b[i]) {
+          return false;
+        }
+      }
+    } else if (a !== b) {
+      return false;
     }
+  }
 
-    return isObject(val2) && deepEquals(val1, val2);
-  });
+  for (const key in another) {
+    if (node[key] === undefined && another[key] !== undefined) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 export function pick<TObj, TKeys extends keyof TObj>(

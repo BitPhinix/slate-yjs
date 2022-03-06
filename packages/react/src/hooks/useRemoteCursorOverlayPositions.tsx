@@ -17,7 +17,7 @@ import {
 } from 'react';
 import { BaseRange, Descendant } from 'slate';
 import { ReactEditor, useSlate } from 'slate-react';
-import { useRequestReRender } from '../utils/hooks';
+import { useRequestReRender } from './useRequestReRender';
 import {
   CaretPosition,
   getCaretPosition,

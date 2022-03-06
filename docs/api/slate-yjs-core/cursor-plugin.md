@@ -31,7 +31,10 @@ Whether to automatically send cursor data and selection information on change. D
 `withCursors` should be applied directly after `withYjs`/`withYHistory`. For example:
 
 ```javascript
-const editor = useMemo(() => withCursors(withYjs(createEditor(), sharedType)), [])
+const editor = useMemo(
+  () => withCursors(withYjs(createEditor(), sharedType)),
+  []
+);
 ```
 
 ## CursorEditor
