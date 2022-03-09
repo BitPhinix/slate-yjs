@@ -6,7 +6,7 @@ import {
 import React, { ReactNode, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { Editor, Range } from 'slate';
-import { ReactEditor, useSlate } from 'slate-react';
+import { ReactEditor, useFocused, useSlate } from 'slate-react';
 import { FormatButton } from './FormatButton';
 
 type PortalProps = { children?: ReactNode };
@@ -20,6 +20,7 @@ function Portal({ children }: PortalProps) {
 export function FormatToolbar() {
   const ref = useRef<HTMLDivElement>(null);
   const editor = useSlate();
+  const focused = useFocused();
 
   useEffect(() => {
     const el = ref.current;
@@ -31,7 +32,7 @@ export function FormatToolbar() {
 
     if (
       !selection ||
-      !ReactEditor.isFocused(editor) ||
+      !focused ||
       Range.isCollapsed(selection) ||
       Editor.string(editor, selection) === ''
     ) {
@@ -56,9 +57,11 @@ export function FormatToolbar() {
 
   return (
     <Portal>
+      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
       <div
         ref={ref}
         className="absolute opacity-0 flex flex-row rounded bg-black overflow-hidden"
+        onMouseDown={(e) => e.preventDefault()}
       >
         <FormatButton format="bold" icon={faBold} />
         <FormatButton format="italic" icon={faItalic} />

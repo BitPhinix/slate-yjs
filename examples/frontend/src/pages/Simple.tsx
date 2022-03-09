@@ -7,7 +7,8 @@ import * as Y from 'yjs';
 import { ConnectionToggle } from '../components/ConnectionToggle/ConnectionToggle';
 import { Element } from '../components/Element/Element';
 import { FormatToolbar } from '../components/FormatToolbar/FormatToolbar';
-import { Leaf } from '../components/Leaf';
+import { Leaf } from '../components/Leaf/Leaf';
+import { Spinner } from '../components/Spinner/Spinner';
 import { HOCUSPOCUS_ENDPOINT_URL, HOCUSPOCUS_WRITE_KEY } from '../config';
 import { withMarkdown } from '../plugins/withMarkdown';
 
@@ -46,6 +47,10 @@ export function SimplePage() {
   // Disconnect YjsEditor on unmount in order to free up resources
   useEffect(() => () => YjsEditor.disconnect(editor), [editor]);
   useEffect(() => () => provider.disconnect(), [provider]);
+
+  if (editor.children.length === 0) {
+    return <Spinner className="m-auto" />;
+  }
 
   return (
     <div className="flex justify-center my-32 mx-10">
