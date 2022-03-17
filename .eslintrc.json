@@ -65,7 +65,8 @@
     "consistent-return": "off",
     "no-prototype-builtins": "off",
     "react/jsx-fragments": ["error", "element"],
-    "react/require-default-props": "off"
+    "react/require-default-props": "off",
+    "react/no-unescaped-entities": "off"
   },
   "settings": {
     "import/resolver": {

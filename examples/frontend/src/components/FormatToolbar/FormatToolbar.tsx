@@ -6,7 +6,7 @@ import {
 import React, { ReactNode, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { Editor, Range } from 'slate';
-import { ReactEditor, useFocused, useSlate } from 'slate-react';
+import { useFocused, useSlate } from 'slate-react';
 import { FormatButton } from './FormatButton';
 
 type PortalProps = { children?: ReactNode };
