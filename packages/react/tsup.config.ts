@@ -14,7 +14,7 @@ export default defineConfig([
     sourcemap: true,
     dts: false,
     minify: false,
-    clean: true,
+    clean: false,
   },
   {
     entry: ['src'],
@@ -26,6 +26,6 @@ export default defineConfig([
     sourcemap: true,
     dts: true,
     minify: false,
-    clean: true,
+    clean: false,
   },
 ]);
