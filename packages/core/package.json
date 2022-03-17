@@ -9,18 +9,17 @@
     "collaborative"
   ],
   "type": "module",
-  "source": "src/index.ts",
   "exports": {
     "require": "./dist/index.cjs",
-    "default": "./dist/index.modern.js"
+    "default": "./dist/index.js"
   },
   "main": "dist/index.cjs",
-  "module": "dist/index.module.js",
-  "unpkg": "dist/index.umd.js",
+  "module": "dist/index.js",
+  "unpkg": "dist/index.global.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "yarn run microbundle",
-    "dev": "yarn run microbundle watch"
+    "build": "yarn run tsup",
+    "dev": "yarn run tsup --watch"
   },
   "repository": {
     "type": "git",
@@ -28,9 +27,9 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "microbundle": "^0.14.1",
     "slate": "0.73.1",
     "slate-hyperscript": "^0.67.0",
+    "tsup": "^5.12.1",
     "yjs": "^13.5.27"
   },
   "peerDependencies": {
