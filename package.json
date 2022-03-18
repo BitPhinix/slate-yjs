@@ -11,7 +11,7 @@
     "deploy:docs": "yarn workspace @slate-yjs/example deploy",
     "lint": "yarn lint:typescript && yarn lint:eslint && yarn lint:prettier",
     "lint:eslint": "eslint .",
-    "lint:prettier": "prettier --check \"**/*.{css,md,js,jsx,json,ts,tsx}\"",
+    "lint:prettier": "prettier --check .",
     "lint:typescript": "tsc --build ./ --force",
     "test": "yarn run jest ./packages/*/test/**/*.{js,ts}",
     "clean": "git clean -dfX",
