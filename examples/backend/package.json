@@ -4,12 +4,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node --loader ts-node/esm --experimental-specifier-resolution=node src/index.ts",
-    "dev": "nodemon -e ts --watch src --exec yarn start"
+    "start": "node dist/index.js",
+    "dev": "yarn run tsup --watch --onSuccess \"yarn run start\""
   },
   "devDependencies": {
-    "nodemon": "^2.0.15",
-    "slate": "~0.73.1"
+    "slate": "~0.73.1",
+    "tsup": "^5.12.1"
   },
   "dependencies": {
     "@hocuspocus/extension-logger": "^1.0.0-alpha.66",
