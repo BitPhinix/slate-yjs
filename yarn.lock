@@ -4275,6 +4275,7 @@ __metadata:
     slate: 0.73.1
     slate-hyperscript: ^0.67.0
     tsup: ^5.12.1
+    typescript: ^4.4.4
     y-protocols: ^1.0.5
     yjs: ^13.5.27
   peerDependencies:
@@ -4338,6 +4339,7 @@ __metadata:
     react: ^17.0.2
     slate: ~0.73.1
     tsup: ^5.12.1
+    typescript: ^4.4.4
     y-protocols: ^1.0.5
     yjs: ^13.5.27
   peerDependencies:
