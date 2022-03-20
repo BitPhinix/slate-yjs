@@ -31,7 +31,7 @@
     "@slate-yjs/core": "workspace:^",
     "@types/react": "^17.0.34",
     "react": "^17.0.2",
-    "slate": "~0.73.1",
+    "slate": "~0.75.0",
     "tsup": "^5.12.1",
     "typescript": "^4.4.4",
     "yjs": "^13.5.27"

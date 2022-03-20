@@ -8,7 +8,7 @@
     "dev": "yarn run tsup --watch --onSuccess \"yarn run start\""
   },
   "devDependencies": {
-    "slate": "~0.73.1",
+    "slate": "~0.75.0",
     "tsup": "^5.12.1"
   },
   "dependencies": {

@@ -4272,7 +4272,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@slate-yjs/core@workspace:packages/core"
   dependencies:
-    slate: 0.73.1
+    slate: 0.75.0
     slate-hyperscript: ^0.67.0
     tsup: ^5.12.1
     typescript: ^4.4.4
@@ -4291,7 +4291,7 @@ __metadata:
     "@hocuspocus/extension-logger": ^1.0.0-alpha.66
     "@hocuspocus/server": ^1.0.0-alpha.92
     "@slate-yjs/core": "workspace:^"
-    slate: ~0.73.1
+    slate: ~0.75.0
     tsup: ^5.12.1
     yjs: ^13.5.27
   languageName: unknown
@@ -4321,8 +4321,8 @@ __metadata:
     react: ^17.0.2
     react-dom: ^17.0.2
     react-router-dom: ^6.0.1
-    slate: ^0.73.1
-    slate-react: ^0.74.0
+    slate: ^0.75.0
+    slate-react: ^0.75.0
     vite: ^2.6.13
     vite-plugin-windicss: ^1.8.3
     windicss: ^3.5.1
@@ -4337,7 +4337,7 @@ __metadata:
     "@slate-yjs/core": "workspace:^"
     "@types/react": ^17.0.34
     react: ^17.0.2
-    slate: ~0.73.1
+    slate: ~0.75.0
     tsup: ^5.12.1
     typescript: ^4.4.4
     y-protocols: ^1.0.5
@@ -12057,12 +12057,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lib0@npm:0.2.43":
-  version: 0.2.43
-  resolution: "lib0@npm:0.2.43"
+"lib0@npm:^0.2.42, lib0@npm:^0.2.43":
+  version: 0.2.46
+  resolution: "lib0@npm:0.2.46"
   dependencies:
     isomorphic.js: ^0.2.4
-  checksum: 9ed42ab4f44e77e41767093ea95302433aab9d965cb50f03bb836d373281cf8507a0eef2a76de4ac0b1c58ccf52990d6902ca90e61aeb54575ec6613a4967b1f
+  checksum: 1455fd714c7535668b87369964304b53897ab82e17d3d1858db630706dfc007880a99af73bdfa8fe44461e87579dbd7fcdcc5e89d1699405b20fe936aee931cb
   languageName: node
   linkType: hard
 
@@ -15646,9 +15646,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"slate-react@npm:^0.74.0":
-  version: 0.74.0
-  resolution: "slate-react@npm:0.74.0"
+"slate-react@npm:^0.75.0":
+  version: 0.75.0
+  resolution: "slate-react@npm:0.75.0"
   dependencies:
     "@types/is-hotkey": ^0.1.1
     "@types/lodash": ^4.14.149
@@ -15662,7 +15662,7 @@ __metadata:
     react: ">=16.8.0"
     react-dom: ">=16.8.0"
     slate: ">=0.65.3"
-  checksum: b50731bbca9846bda66f32b8f9f7ffd024b86b479885043450f3d6f222eb3c6cdca46b612a654305268dc2f5e5f4eef943b42e6a0a26e8799617dbe36ab04921
+  checksum: b356c656b34b11deb2d457e013b25ac306588c945f2cd06ad2a45da8bbad4f86352ec99bd9633fab8dfcc326be92383e5bd1c08d30e98c685d571031e021f307
   languageName: node
   linkType: hard
 
@@ -15695,14 +15695,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"slate@npm:0.73.1, slate@npm:^0.73.1, slate@npm:~0.73.1":
-  version: 0.73.1
-  resolution: "slate@npm:0.73.1"
+"slate@npm:0.75.0, slate@npm:^0.75.0, slate@npm:~0.75.0":
+  version: 0.75.0
+  resolution: "slate@npm:0.75.0"
   dependencies:
     immer: ^9.0.6
     is-plain-object: ^5.0.0
     tiny-warning: ^1.0.3
-  checksum: b86580c87d16717fec52ee1e55abc5f679bfe5b3fcfa5dcedb17794afd6bc5a013f39220fee90d42e9f4ca1ce393bab4691d92fca8509ca91e4afc9db83427be
+  checksum: cdffed1b1a1a0743dd3008c14f513a48eb6ef26126d659bc768800e75f36af50beb526edc7c4a691e89dc38cb7d783ec8aed72a3671a316f585cd0c89beb5aa3
   languageName: node
   linkType: hard
 
@@ -17928,7 +17928,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yjs@npm:13.5.28":
+"yjs@npm:^13.5.24, yjs@npm:^13.5.27":
   version: 13.5.28
   resolution: "yjs@npm:13.5.28"
   dependencies:

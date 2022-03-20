@@ -40,9 +40,5 @@
     "prettier": "^2.4.1",
     "slate-hyperscript": "^0.67.0",
     "typescript": "^4.4.4"
-  },
-  "resolutions": {
-    "lib0": "0.2.43",
-    "yjs": "13.5.28"
   }
 }

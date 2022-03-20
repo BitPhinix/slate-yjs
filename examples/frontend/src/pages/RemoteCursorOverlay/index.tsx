@@ -5,13 +5,11 @@ import randomColor from 'randomcolor';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import type { Descendant } from 'slate';
 import { createEditor } from 'slate';
-import { Editable, Slate, withReact } from 'slate-react';
+import { Slate, withReact } from 'slate-react';
 import * as Y from 'yjs';
 import { ConnectionToggle } from '../../components/ConnectionToggle/ConnectionToggle';
-import { Element } from '../../components/Element/Element';
+import { CustomEditable } from '../../components/CustomEditable/CustomEditable';
 import { FormatToolbar } from '../../components/FormatToolbar/FormatToolbar';
-import { Leaf } from '../../components/Leaf/Leaf';
-import { Spinner } from '../../components/Spinner/Spinner';
 import { HOCUSPOCUS_ENDPOINT_URL, HOCUSPOCUS_WRITE_KEY } from '../../config';
 import { withMarkdown } from '../../plugins/withMarkdown';
 import type { CursorData } from '../../types';
@@ -68,21 +66,12 @@ export function RemoteCursorsOverlayPage() {
   useEffect(() => () => YjsEditor.disconnect(editor), [editor]);
   useEffect(() => () => provider.disconnect(), [provider]);
 
-  if (editor.children.length === 0) {
-    return <Spinner className="m-auto" />;
-  }
-
   return (
     <React.Fragment>
       <Slate value={value} onChange={setValue} editor={editor}>
         <RemoteCursorOverlay className="flex justify-center my-32 mx-10">
           <FormatToolbar />
-          <Editable
-            className="max-w-4xl w-full flex-col break-words"
-            renderElement={Element}
-            renderLeaf={Leaf}
-            placeholder="Write something ..."
-          />
+          <CustomEditable className="max-w-4xl w-full flex-col break-words" />
         </RemoteCursorOverlay>
         <ConnectionToggle connected={connected} onClick={toggleConnection} />
       </Slate>
