@@ -155,13 +155,17 @@ export function withYHistory<T extends YjsEditor>(
   };
 
   e.undo = () => {
-    YjsEditor.flushLocalChanges(e);
-    e.undoManager.undo();
+    if (YjsEditor.connected(e)) {
+      YjsEditor.flushLocalChanges(e);
+      e.undoManager.undo();
+    }
   };
 
   e.redo = () => {
-    YjsEditor.flushLocalChanges(e);
-    e.undoManager.redo();
+    if (YjsEditor.connected(e)) {
+      YjsEditor.flushLocalChanges(e);
+      e.undoManager.redo();
+    }
   };
 
   return e;
