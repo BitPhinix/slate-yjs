@@ -2,7 +2,7 @@ import { HocuspocusProvider } from '@hocuspocus/provider';
 import { withCursors, withYHistory, withYjs, YjsEditor } from '@slate-yjs/core';
 import { name } from 'faker';
 import randomColor from 'randomcolor';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import type { Descendant } from 'slate';
 import { createEditor } from 'slate';
 import { Slate, withReact } from 'slate-react';
@@ -27,6 +27,7 @@ export function RemoteCursorsOverlayPage() {
         name: 'slate-yjs-demo',
         onConnect: () => setConnected(true),
         onDisconnect: () => setConnected(false),
+        connect: false,
       }),
     []
   );
@@ -54,17 +55,28 @@ export function RemoteCursorsOverlayPage() {
     return withMarkdown(
       withReact(
         withYHistory(
-          withCursors(withYjs(createEditor(), sharedType), provider.awareness, {
-            data: cursorData,
-          })
+          withCursors(
+            withYjs(createEditor(), sharedType, { autoConnect: false }),
+            provider.awareness,
+            {
+              data: cursorData,
+            }
+          )
         )
       )
     );
   }, [provider.awareness, provider.document]);
 
-  // Disconnect YjsEditor on unmount in order to free up resources
-  useEffect(() => () => YjsEditor.disconnect(editor), [editor]);
-  useEffect(() => () => provider.disconnect(), [provider]);
+  // Connect editor and provider in useLayoutEffect to comply with concurrent mode
+  // requirements.
+  useLayoutEffect(() => {
+    provider.connect();
+    return () => provider.disconnect();
+  }, [provider]);
+  useLayoutEffect(() => {
+    YjsEditor.connect(editor);
+    return () => YjsEditor.disconnect(editor);
+  }, [editor]);
 
   return (
     <React.Fragment>
