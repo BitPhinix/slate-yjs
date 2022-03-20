@@ -9,7 +9,10 @@ function DropdownElement({ children, className, ...props }: LinkProps) {
     <li>
       <Link
         {...props}
-        className={clsx('block px-4 py-2 hover:bg-gray-100', className)}
+        className={clsx(
+          'block px-4 py-2 hover:bg-gray-100 text-black no-underline',
+          className
+        )}
       >
         {children}
       </Link>

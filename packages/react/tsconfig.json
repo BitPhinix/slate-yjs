@@ -4,7 +4,8 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist",
-    "composite": true
+    "composite": true,
+    "jsx": "react"
   },
   "references": [{ "path": "../core" }]
 }

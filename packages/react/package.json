@@ -10,17 +10,17 @@
     "react"
   ],
   "type": "module",
-  "source": "src/index.ts",
   "exports": {
     "require": "./dist/index.cjs",
-    "default": "./dist/index.modern.js"
+    "default": "./dist/index.js"
   },
   "main": "dist/index.cjs",
-  "module": "dist/index.module.js",
+  "module": "dist/index.js",
+  "unpkg": "dist/index.global.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "yarn run microbundle --jsx React.createElement",
-    "dev": "yarn run microbundle watch --jsx React.createElement"
+    "build": "yarn run tsup && tsc --emitDeclarationOnly",
+    "dev": "yarn run tsup --watch"
   },
   "repository": {
     "type": "git",
@@ -30,9 +30,10 @@
   "devDependencies": {
     "@slate-yjs/core": "workspace:^",
     "@types/react": "^17.0.34",
-    "microbundle": "^0.14.1",
     "react": "^17.0.2",
     "slate": "~0.73.1",
+    "tsup": "^5.12.1",
+    "typescript": "^4.4.4",
     "yjs": "^13.5.27"
   },
   "peerDependencies": {

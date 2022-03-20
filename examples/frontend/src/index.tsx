@@ -1,7 +1,8 @@
 import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import './index.css';
+import 'virtual:windi.css';
+import 'virtual:windi-devtools';
 import { Navigator } from './components/Navigator/Navigator';
 import { NotFound } from './pages/NotFound';
 import { RemoteCursorsOverlayPage } from './pages/RemoteCursorOverlay';

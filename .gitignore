@@ -24,6 +24,14 @@ junit.xml
 # Node modules
 node_modules/
 
+# yarn without Zero-Installs
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
 # Mac OS
 .DS_Store
 
