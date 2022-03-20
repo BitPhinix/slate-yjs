@@ -86,65 +86,73 @@ export function withYHistory<T extends YjsEditor>(
   e.isLocalOrigin = (origin) =>
     origin === e.withoutSavingOrigin || isLocalOrigin(origin);
 
-  undoManager.on(
-    'stack-item-added',
-    ({ stackItem }: { stackItem: HistoryStackItem; type: 'redo' | 'undo' }) => {
-      stackItem.meta.set(
-        'selection',
-        e.selection && slateRangeToRelativeRange(e.sharedRoot, e, e.selection)
-      );
+  const handleStackItemAdded = ({
+    stackItem,
+  }: {
+    stackItem: HistoryStackItem;
+    type: 'redo' | 'undo';
+  }) => {
+    stackItem.meta.set(
+      'selection',
+      e.selection && slateRangeToRelativeRange(e.sharedRoot, e, e.selection)
+    );
 
-      if (!stackItem.meta.has('selectionBefore')) {
-        stackItem.meta.set('selectionBefore', LAST_SELECTION.get(e));
-      }
+    if (!stackItem.meta.has('selectionBefore')) {
+      stackItem.meta.set('selectionBefore', LAST_SELECTION.get(e));
     }
-  );
+  };
 
-  undoManager.on(
-    'stack-item-popped',
-    ({
-      stackItem,
-      type,
-    }: {
-      stackItem: HistoryStackItem;
-      type: 'redo' | 'undo';
-    }) => {
-      // TODO: Change once https://github.com/yjs/yjs/issues/353 is resolved
-      const inverseStack =
-        type === 'undo' ? undoManager.redoStack : undoManager.undoStack;
-      const inverseItem = inverseStack[inverseStack.length - 1];
-      if (inverseItem) {
-        inverseItem.meta.set(
-          'selection',
-          stackItem.meta.get('selectionBefore')
-        );
-        inverseItem.meta.set(
-          'selectionBefore',
-          stackItem.meta.get('selection')
-        );
-      }
-
-      const relativeSelection = stackItem.meta.get(
-        'selectionBefore'
-      ) as RelativeRange | null;
-
-      if (!relativeSelection) {
-        return;
-      }
-
-      const selection = relativeRangeToSlateRange(
-        e.sharedRoot,
-        e,
-        relativeSelection
-      );
-
-      if (!selection) {
-        return;
-      }
-
-      Transforms.select(e, selection);
+  const handleStackItemPopped = ({
+    stackItem,
+    type,
+  }: {
+    stackItem: HistoryStackItem;
+    type: 'redo' | 'undo';
+  }) => {
+    // TODO: Change once https://github.com/yjs/yjs/issues/353 is resolved
+    const inverseStack =
+      type === 'undo' ? undoManager.redoStack : undoManager.undoStack;
+    const inverseItem = inverseStack[inverseStack.length - 1];
+    if (inverseItem) {
+      inverseItem.meta.set('selection', stackItem.meta.get('selectionBefore'));
+      inverseItem.meta.set('selectionBefore', stackItem.meta.get('selection'));
     }
-  );
+
+    const relativeSelection = stackItem.meta.get(
+      'selectionBefore'
+    ) as RelativeRange | null;
+
+    if (!relativeSelection) {
+      return;
+    }
+
+    const selection = relativeRangeToSlateRange(
+      e.sharedRoot,
+      e,
+      relativeSelection
+    );
+
+    if (!selection) {
+      return;
+    }
+
+    Transforms.select(e, selection);
+  };
+
+  const { connect, disconnect } = e;
+  e.connect = () => {
+    connect();
+
+    undoManager.on('stack-item-added', handleStackItemAdded);
+    undoManager.on('stack-item-popped', handleStackItemPopped);
+  };
+
+  e.disconnect = () => {
+    undoManager.off('stack-item-added', handleStackItemAdded);
+    undoManager.off('stack-item-popped', handleStackItemPopped);
+
+    disconnect();
+  };
 
   e.undo = () => {
     YjsEditor.flushLocalChanges(e);
