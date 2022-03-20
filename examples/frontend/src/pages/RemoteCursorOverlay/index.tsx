@@ -2,7 +2,7 @@ import { HocuspocusProvider } from '@hocuspocus/provider';
 import { withCursors, withYHistory, withYjs, YjsEditor } from '@slate-yjs/core';
 import { name } from 'faker';
 import randomColor from 'randomcolor';
-import React, { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import type { Descendant } from 'slate';
 import { createEditor } from 'slate';
 import { Slate, withReact } from 'slate-react';
@@ -67,13 +67,13 @@ export function RemoteCursorsOverlayPage() {
     );
   }, [provider.awareness, provider.document]);
 
-  // Connect editor and provider in useLayoutEffect to comply with concurrent mode
+  // Connect editor and provider in useEffect to comply with concurrent mode
   // requirements.
-  useLayoutEffect(() => {
+  useEffect(() => {
     provider.connect();
     return () => provider.disconnect();
   }, [provider]);
-  useLayoutEffect(() => {
+  useEffect(() => {
     YjsEditor.connect(editor);
     return () => YjsEditor.disconnect(editor);
   }, [editor]);

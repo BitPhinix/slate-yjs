@@ -1,6 +1,6 @@
 import { HocuspocusProvider } from '@hocuspocus/provider';
 import { withYHistory, withYjs, YjsEditor } from '@slate-yjs/core';
-import React, { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { createEditor, Descendant } from 'slate';
 import { Slate, withReact } from 'slate-react';
 import * as Y from 'yjs';
@@ -47,13 +47,13 @@ export function SimplePage() {
     );
   }, [provider.document]);
 
-  // Connect editor and provider in useLayoutEffect to comply with concurrent mode
+  // Connect editor and provider in useEffect to comply with concurrent mode
   // requirements.
-  useLayoutEffect(() => {
+  useEffect(() => {
     provider.connect();
     return () => provider.disconnect();
   }, [provider]);
-  useLayoutEffect(() => {
+  useEffect(() => {
     YjsEditor.connect(editor);
     return () => YjsEditor.disconnect(editor);
   }, [editor]);

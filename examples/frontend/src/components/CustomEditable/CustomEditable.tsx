@@ -1,6 +1,5 @@
-import { YjsEditor } from '@slate-yjs/core';
 import React, { ComponentProps } from 'react';
-import { Editable, useSlateSelector } from 'slate-react';
+import { Editable, useSlate } from 'slate-react';
 import { Element } from '../Element/Element';
 import { Leaf } from '../Leaf/Leaf';
 import { Spinner } from '../Spinner/Spinner';
@@ -11,9 +10,9 @@ type CustomEditableProps = Omit<
 >;
 
 export function CustomEditable(props: CustomEditableProps) {
-  const connected = useSlateSelector(YjsEditor.connected);
+  const editor = useSlate();
 
-  if (!connected) {
+  if (editor.sharedRoot.length === 0) {
     return <Spinner className="m-auto" />;
   }
 
