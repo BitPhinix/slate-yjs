@@ -96,10 +96,19 @@ export function withYHistory<T extends YjsEditor>(
       'selection',
       e.selection && slateRangeToRelativeRange(e.sharedRoot, e, e.selection)
     );
+    stackItem.meta.set('selectionBefore', LAST_SELECTION.get(e));
+  };
 
-    if (!stackItem.meta.has('selectionBefore')) {
-      stackItem.meta.set('selectionBefore', LAST_SELECTION.get(e));
-    }
+  const handleStackItemUpdated = ({
+    stackItem,
+  }: {
+    stackItem: HistoryStackItem;
+    type: 'redo' | 'undo';
+  }) => {
+    stackItem.meta.set(
+      'selection',
+      e.selection && slateRangeToRelativeRange(e.sharedRoot, e, e.selection)
+    );
   };
 
   const handleStackItemPopped = ({
@@ -145,11 +154,13 @@ export function withYHistory<T extends YjsEditor>(
 
     undoManager.on('stack-item-added', handleStackItemAdded);
     undoManager.on('stack-item-popped', handleStackItemPopped);
+    undoManager.on('stack-item-updated', handleStackItemUpdated);
   };
 
   e.disconnect = () => {
     undoManager.off('stack-item-added', handleStackItemAdded);
     undoManager.off('stack-item-popped', handleStackItemPopped);
+    undoManager.off('stack-item-updated', handleStackItemUpdated);
 
     disconnect();
   };

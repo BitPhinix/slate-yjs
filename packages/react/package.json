@@ -34,14 +34,14 @@
     "slate": "~0.75.0",
     "tsup": "^5.12.1",
     "typescript": "^4.4.4",
-    "yjs": "^13.5.27"
+    "yjs": "^13.5.29"
   },
   "peerDependencies": {
     "@slate-yjs/core": "workspace:^",
     "react": ">=16.8.0",
     "slate": ">=0.70.0",
     "slate-react": ">=0.70.0",
-    "yjs": "^13.5.27"
+    "yjs": "^13.5.29"
   },
   "bugs": {
     "url": "https://github.com/BitPhinix/slate-yjs/issues"

@@ -14,7 +14,10 @@ const server = Server.configure({
   async onLoadDocument(data) {
     if (data.document.isEmpty('content')) {
       const insertDelta = slateNodesToInsertDelta(initialValue);
-      const sharedRoot = data.document.get('content', Y.XmlText) as Y.XmlText;
+      const sharedRoot = data.document.get(
+        'content',
+        Y.XmlText
+      ) as unknown as Y.XmlText;
       sharedRoot.applyDelta(insertDelta);
     }
 

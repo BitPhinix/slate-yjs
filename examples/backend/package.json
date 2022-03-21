@@ -5,16 +5,17 @@
   "type": "module",
   "scripts": {
     "start": "node dist/index.js",
-    "dev": "yarn run tsup --watch --onSuccess \"yarn run start\""
+    "build": "yarn run tsup",
+    "dev": "yarn build --watch --onSuccess \"yarn run start\""
   },
   "devDependencies": {
     "slate": "~0.75.0",
     "tsup": "^5.12.1"
   },
   "dependencies": {
-    "@hocuspocus/extension-logger": "^1.0.0-alpha.66",
-    "@hocuspocus/server": "^1.0.0-alpha.92",
+    "@hocuspocus/extension-logger": "^1.0.0-alpha.73",
+    "@hocuspocus/server": "^1.0.0-alpha.99",
     "@slate-yjs/core": "workspace:^",
-    "yjs": "^13.5.27"
+    "yjs": "^13.5.29"
   }
 }
