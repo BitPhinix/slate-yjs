@@ -28,4 +28,5 @@ jobs:
         run: yarn run test --coverage
       - name: Codecov
         uses: codecov/codecov-action@v2
-        files: ./coverage/coverage-final.json
+        with:
+          files: ./coverage/coverage-final.json
