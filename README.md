@@ -46,13 +46,6 @@ Slate-yjs aims to be the goto collaboration solution for slate. Get started in s
 
 <br/>
 
-<blockquote align="center">
-<b>:warning: This is the active development branch for the new version of slate-yjs. Don't use any code in here in production. Things will break and the api will change. :warning:</b>
-</blockquote>
-
-<br/>
-<br/>
-
 ## Sponsors 💖
 
 I'm currently looking for sponsors to found further development of slate-yjs. These awesome sponsors already fund the development:

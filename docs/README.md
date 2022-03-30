@@ -2,8 +2,6 @@
 
 Slate-yjs aims to be the go-to collaboration solution for slate. Get started in seconds, scale to infinity, customize to your heart's content.
 
-> **⚠️ This is the active development branch for the new version of slate-yjs. Don't use any code in here in production. Things will break and the api will change. ⚠️**
-
 ### Sponsors 💖
 
 I'm currently looking for sponsors to fund the further development of slate-yjs. These awesome sponsors already fund the development:

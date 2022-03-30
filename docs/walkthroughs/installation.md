@@ -11,7 +11,7 @@ npm install @slate-yjs/core
 You also need to be sure to install slate-yjs's peer dependencies:
 
 ```
-npm install yjs y-protocols
+npm install yjs
 ```
 
 <br/>
