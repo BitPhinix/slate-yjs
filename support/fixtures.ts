@@ -3,6 +3,7 @@
 /* eslint-disable import/no-dynamic-require */
 import * as fs from 'fs';
 import { basename, extname, resolve } from 'path';
+import { describe, it } from 'vitest';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function fixtures<P extends any[]>(...args: P) {
@@ -43,7 +44,7 @@ export function fixtures<P extends any[]>(...args: P) {
 
         // This needs to be a non-arrow function to use `this.skip()`.
         it(`${name} `, async () => {
-          const module = require(p);
+          const module = await import(p);
 
           if (
             module.skip === true ||
