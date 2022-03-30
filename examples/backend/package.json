@@ -1,0 +1,21 @@
+{
+  "name": "@slate-yjs/example-backend",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node dist/index.js",
+    "build": "yarn run tsup",
+    "dev": "yarn build --watch --onSuccess \"yarn run start\""
+  },
+  "devDependencies": {
+    "slate": "~0.75.0",
+    "tsup": "^5.12.1"
+  },
+  "dependencies": {
+    "@hocuspocus/extension-logger": "^1.0.0-alpha.73",
+    "@hocuspocus/server": "^1.0.0-alpha.99",
+    "@slate-yjs/core": "workspace:^",
+    "yjs": "^13.5.29"
+  }
+}

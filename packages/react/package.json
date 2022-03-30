@@ -1,0 +1,53 @@
+{
+  "name": "@slate-yjs/react",
+  "sideEffects": false,
+  "version": "0.2.2",
+  "description": "React specific components/utils for slate-yjs.",
+  "keywords": [
+    "slate",
+    "yjs",
+    "collaborative",
+    "react"
+  ],
+  "type": "module",
+  "exports": {
+    "require": "./dist/index.cjs",
+    "default": "./dist/index.js"
+  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "unpkg": "dist/index.global.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "yarn run tsup && tsc --emitDeclarationOnly",
+    "dev": "yarn run tsup --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BitPhinix/slate-yjs.git"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@slate-yjs/core": "workspace:^",
+    "@types/react": "^17.0.34",
+    "react": "^17.0.2",
+    "slate": "~0.75.0",
+    "tsup": "^5.12.1",
+    "typescript": "^4.4.4",
+    "yjs": "^13.5.29"
+  },
+  "peerDependencies": {
+    "@slate-yjs/core": "workspace:^",
+    "react": ">=16.8.0",
+    "slate": ">=0.70.0",
+    "slate-react": ">=0.70.0",
+    "yjs": "^13.5.29"
+  },
+  "bugs": {
+    "url": "https://github.com/BitPhinix/slate-yjs/issues"
+  },
+  "homepage": "https://github.com/BitPhinix/slate-yjs#readme",
+  "dependencies": {
+    "y-protocols": "^1.0.5"
+  }
+}

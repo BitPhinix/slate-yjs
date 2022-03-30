@@ -1,0 +1,10 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@1.6.3/schema.json",
+  "changelog": "@changesets/cli/changelog",
+  "commit": false,
+  "linked": [["@slate-yjs/core", "@slate-yjs/react"]],
+  "access": "restricted",
+  "baseBranch": "master",
+  "updateInternalDependencies": "patch",
+  "ignore": []
+}
