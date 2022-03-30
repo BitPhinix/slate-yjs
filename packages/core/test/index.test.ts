@@ -1,11 +1,10 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { createEditor, Editor } from 'slate';
+import { describe, expect } from 'vitest';
 import * as Y from 'yjs';
 import { fixtures } from '../../../support/fixtures';
 import { yTextToSlateElement } from '../src';
 import { withTestingElements } from './withTestingElements';
-
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-jest.mock('y-protocols/awareness', () => {});
 
 export type FixtureModule = {
   module: {

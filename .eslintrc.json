@@ -50,7 +50,14 @@
     ],
     "import/no-extraneous-dependencies": [
       "error",
-      { "devDependencies": ["**/test/**", "**/*.config.js", "./support/**"] }
+      {
+        "devDependencies": [
+          "**/test/**",
+          "**/*.config.js",
+          "./support/**",
+          "**/*.test.ts"
+        ]
+      }
     ],
     "no-restricted-syntax": "off",
     "no-continue": "off",

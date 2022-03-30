@@ -25,6 +25,7 @@ junit.xml
 node_modules/
 
 # yarn without Zero-Installs
+.pnp.*
 .yarn/*
 !.yarn/patches
 !.yarn/plugins

@@ -1,4 +1,4 @@
-name: Deploy
+name: deploy
 
 on:
   push:
@@ -17,7 +17,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
-          node-version: 14
+          node-version-file: '.nvmrc'
           registry-url: https://registry.npmjs.org/
       - name: Create example frontend .env.production
         run: echo ${{ secrets.EXAMPLE_FRONTEND_PRODUCTION_ENV }} | base64 -d > ./examples/frontend/.env.production
