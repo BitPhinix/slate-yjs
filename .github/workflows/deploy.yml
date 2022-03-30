@@ -7,7 +7,7 @@ on:
 
 jobs:
   release:
-    name: Release
+    name: Deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -22,7 +22,7 @@ jobs:
       - name: Create example frontend .env.production
         run: echo ${{ secrets.EXAMPLE_FRONTEND_PRODUCTION_ENV }} | base64 -d > ./examples/frontend/.env.production
       - name: Install Dependencies
-        run: yarn
+        run: yarn --immutable
       - name: Prepare release
         run: yarn prerelease
       - name: Deploy

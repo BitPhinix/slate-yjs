@@ -23,6 +23,6 @@ jobs:
           node-version-file: '.nvmrc'
           registry-url: https://registry.npmjs.org/
       - name: Install Dependencies
-        run: yarn
+        run: yarn --immutable
       - name: Lint
         run: yarn lint

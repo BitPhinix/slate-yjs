@@ -23,8 +23,9 @@ jobs:
           node-version-file: '.nvmrc'
           registry-url: https://registry.npmjs.org/
       - name: Install Dependencies
-        run: yarn
+        run: yarn --immutable
       - name: Test
         run: yarn run test --coverage
       - name: Codecov
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v2
+        files: ./coverage/coverage-final.json
