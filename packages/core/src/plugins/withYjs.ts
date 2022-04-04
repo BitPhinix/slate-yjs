@@ -1,16 +1,13 @@
-import { BaseEditor, Descendant, Editor, Operation, Point } from 'slate';
+import { BaseEditor, Descendant, Editor, Operation } from 'slate';
 import * as Y from 'yjs';
 import { applyYjsEvents } from '../applyToSlate';
 import { applySlateOp } from '../applyToYjs';
 import { yTextToSlateElement } from '../utils/convert';
 import {
-  getStoredPosition,
-  getStoredPositions,
-  relativePositionToSlatePoint,
-  removeStoredPosition,
-  setStoredPosition,
-  slatePointToRelativePosition,
-} from '../utils/position';
+  disableDeltaCache,
+  enableDeltaCache,
+  invalidateDeltaCache,
+} from '../utils/delta';
 import { assertDocumentAttachment } from '../utils/yjs';
 
 type LocalChange = {
@@ -110,41 +107,6 @@ export const YjsEditor = {
     fn();
     ORIGIN.set(editor, prev);
   },
-
-  storePosition(editor: YjsEditor, key: string, point: Point): void {
-    const { sharedRoot, positionStorageOrigin: locationStorageOrigin } = editor;
-    assertDocumentAttachment(sharedRoot);
-
-    const position = slatePointToRelativePosition(sharedRoot, editor, point);
-
-    sharedRoot.doc.transact(() => {
-      setStoredPosition(sharedRoot, key, position);
-    }, locationStorageOrigin);
-  },
-
-  removeStoredPosition(editor: YjsEditor, key: string): void {
-    const { sharedRoot, positionStorageOrigin: locationStorageOrigin } = editor;
-    assertDocumentAttachment(sharedRoot);
-
-    sharedRoot.doc.transact(() => {
-      removeStoredPosition(sharedRoot, key);
-    }, locationStorageOrigin);
-  },
-
-  position(editor: YjsEditor, key: string): Point | null | undefined {
-    const position = getStoredPosition(editor.sharedRoot, key);
-    if (!position) {
-      return undefined;
-    }
-
-    return relativePositionToSlatePoint(editor.sharedRoot, editor, position);
-  },
-
-  storedPositionsRelative(
-    editor: YjsEditor
-  ): Record<string, Y.RelativePosition> {
-    return getStoredPositions(editor.sharedRoot);
-  },
 };
 
 export type WithYjsOptions = {
@@ -190,6 +152,10 @@ export function withYjs<T extends Editor>(
     events: Y.YEvent<Y.XmlText>[],
     transaction: Y.Transaction
   ) => {
+    events.forEach((event) => {
+      invalidateDeltaCache(sharedRoot, event.target);
+    });
+
     if (e.isLocalOrigin(transaction.origin)) {
       return;
     }
@@ -207,6 +173,8 @@ export function withYjs<T extends Editor>(
 
   e.connect = () => {
     sharedRoot.observeDeep(handleYEvents);
+
+    enableDeltaCache(sharedRoot);
     const content = yTextToSlateElement(e.sharedRoot);
     e.children = content.children;
     CONNECTED.add(e);
@@ -219,6 +187,11 @@ export function withYjs<T extends Editor>(
     }
 
     YjsEditor.flushLocalChanges(e);
+
+    // We can only ensure the delta cache is valid and up-to-date as long as our
+    // event listener is registered.
+    disableDeltaCache(e.sharedRoot);
+
     sharedRoot.unobserveDeep(handleYEvents);
     CONNECTED.delete(e);
   };

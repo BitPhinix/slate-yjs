@@ -2,12 +2,12 @@ import { MoveNodeOperation, Node, Path, Text } from 'slate';
 import * as Y from 'yjs';
 import { Delta } from '../../model/types';
 import { cloneInsertDeltaDeep } from '../../utils/clone';
-import { getInsertDeltaLength, yTextToInsertDelta } from '../../utils/delta';
-import { getYTarget } from '../../utils/location';
 import {
-  getStoredPositionsInDeltaAbsolute,
-  restoreStoredPositionsWithDeltaAbsolute,
-} from '../../utils/position';
+  getInsertDeltaLength,
+  invalidateDeltaCache,
+  yTextToInsertDelta,
+} from '../../utils/delta';
+import { getYTarget } from '../../utils/location';
 
 export function moveNode(
   sharedRoot: Y.XmlText,
@@ -29,12 +29,6 @@ export function moveNode(
   const target = getYTarget(sharedRoot, slateRoot, normalizedNewPath);
   const insertDelta = cloneInsertDeltaDeep(origin.targetDelta);
 
-  const storedPositions = getStoredPositionsInDeltaAbsolute(
-    sharedRoot,
-    origin.yParent,
-    origin.targetDelta
-  );
-
   origin.yParent.delete(
     origin.textRange.start,
     origin.textRange.end - origin.textRange.start
@@ -46,12 +40,6 @@ export function moveNode(
 
   target.yParent.applyDelta(applyDelta, { sanitize: false });
 
-  restoreStoredPositionsWithDeltaAbsolute(
-    sharedRoot,
-    target.yParent,
-    storedPositions,
-    insertDelta,
-    deltaApplyYOffset,
-    origin.textRange.start
-  );
+  invalidateDeltaCache(sharedRoot, origin.yParent);
+  invalidateDeltaCache(sharedRoot, target.yParent);
 }

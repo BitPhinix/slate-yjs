@@ -1,12 +1,12 @@
 import { Node, SplitNodeOperation, Text } from 'slate';
 import * as Y from 'yjs';
 import { cloneInsertDeltaDeep } from '../../utils/clone';
-import { sliceInsertDelta, yTextToInsertDelta } from '../../utils/delta';
-import { getSlateNodeYLength, getYTarget } from '../../utils/location';
 import {
-  getStoredPositionsInDeltaAbsolute,
-  restoreStoredPositionsWithDeltaAbsolute,
-} from '../../utils/position';
+  invalidateDeltaCache,
+  sliceInsertDelta,
+  yTextToInsertDelta,
+} from '../../utils/delta';
+import { getSlateNodeYLength, getYTarget } from '../../utils/location';
 
 export function splitNode(
   sharedRoot: Y.XmlText,
@@ -33,11 +33,14 @@ export function splitNode(
       }
     });
 
-    return target.yParent.format(
+    target.yParent.format(
       target.textRange.start,
       target.textRange.end - target.textRange.start,
       { ...unset, ...op.properties }
     );
+
+    invalidateDeltaCache(sharedRoot, target.yParent);
+    return;
   }
 
   if (Text.isText(target.slateTarget)) {
@@ -64,13 +67,6 @@ export function splitNode(
   );
   const clonedDelta = cloneInsertDeltaDeep(splitDelta);
 
-  const storedPositions = getStoredPositionsInDeltaAbsolute(
-    sharedRoot,
-    target.yTarget,
-    splitDelta,
-    ySplitOffset
-  );
-
   const toInsert = new Y.XmlText();
   toInsert.applyDelta(clonedDelta, {
     sanitize: false,
@@ -87,12 +83,5 @@ export function splitNode(
 
   target.yParent.insertEmbed(target.textRange.end, toInsert);
 
-  restoreStoredPositionsWithDeltaAbsolute(
-    sharedRoot,
-    toInsert,
-    storedPositions,
-    clonedDelta,
-    0,
-    ySplitOffset
-  );
+  invalidateDeltaCache(sharedRoot, target.yParent);
 }

@@ -1,5 +1,6 @@
 import { Node, RemoveNodeOperation } from 'slate';
 import * as Y from 'yjs';
+import { invalidateDeltaCache } from '../../utils/delta';
 import { getYTarget } from '../../utils/location';
 
 export function removeNode(
@@ -7,10 +8,7 @@ export function removeNode(
   slateRoot: Node,
   op: RemoveNodeOperation
 ): void {
-  const { yParent: parent, textRange } = getYTarget(
-    sharedRoot,
-    slateRoot,
-    op.path
-  );
-  parent.delete(textRange.start, textRange.end - textRange.start);
+  const { yParent, textRange } = getYTarget(sharedRoot, slateRoot, op.path);
+  yParent.delete(textRange.start, textRange.end - textRange.start);
+  invalidateDeltaCache(sharedRoot, yParent);
 }

@@ -2,6 +2,8 @@ import * as Y from 'yjs';
 import { DeltaInsert, InsertDelta } from '../model/types';
 import { deepEquals } from './object';
 
+const DELTA_CACHE = new WeakMap<Y.XmlText, WeakMap<Y.XmlText, InsertDelta>>();
+
 export function normalizeInsertDelta(delta: InsertDelta): InsertDelta {
   const normalized: InsertDelta = [];
 
@@ -36,8 +38,37 @@ export function normalizeInsertDelta(delta: InsertDelta): InsertDelta {
   return normalized;
 }
 
-export function yTextToInsertDelta(yText: Y.XmlText): InsertDelta {
-  return normalizeInsertDelta(yText.toDelta()) as InsertDelta;
+export function enableDeltaCache(sharedRoot: Y.XmlText) {
+  if (!DELTA_CACHE.has(sharedRoot)) {
+    DELTA_CACHE.set(sharedRoot, new WeakMap());
+  }
+}
+
+export function disableDeltaCache(sharedRoot: Y.XmlText) {
+  DELTA_CACHE.delete(sharedRoot);
+}
+
+export function invalidateDeltaCache(sharedRoot: Y.XmlText, yText: Y.XmlText) {
+  DELTA_CACHE.get(sharedRoot)?.delete(yText);
+}
+
+export function yTextToInsertDelta(
+  yText: Y.XmlText,
+  sharedRoot?: Y.XmlText
+): InsertDelta {
+  const cache = sharedRoot && DELTA_CACHE.get(sharedRoot);
+  if (!cache) {
+    return normalizeInsertDelta(yText.toDelta()) as InsertDelta;
+  }
+
+  const cachedDelta = cache.get(yText);
+  if (cachedDelta) {
+    return cachedDelta;
+  }
+
+  const delta = normalizeInsertDelta(yText.toDelta()) as InsertDelta;
+  cache.set(yText, delta);
+  return delta;
 }
 
 export function getInsertLength({ insert }: DeltaInsert): number {

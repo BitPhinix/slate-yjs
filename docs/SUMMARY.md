@@ -8,10 +8,6 @@
 - [Collaboration (Hocuspocus)](walkthroughs/collaboration-hocuspocus.md)
 - [Cursors (Overlay)](walkthroughs/cursors-overlay.md)
 
-## 💡 Concepts
-
-- [Stored positions](concepts/stored-positions.md)
-
 ## 🔧 API
 
 - [@slate-yjs/core](api/slate-yjs-core/README.md)

@@ -80,18 +80,6 @@ Apply a series of changes inside a synchronous `fn` inside the context of the sp
 
 Check whether the current origin context is local.
 
-**`storePosition(editor: YjsEditor, key: string, point: Point): void`**
-
-Create a [stored position](../../concepts/stored-positions.md) for a point under a key.
-
-**`position(editor: YjsEditor, key: string): Point | null | undefined`**
-
-Retrieve a [stored position](../../concepts/stored-positions.md) by key. `undefined` if the stored position doesn't exist, `null` if it isn't part of the document anymore.
-
-**`storedPositionsRelative(editor: YjsEditor): Record<string, Y.RelativePosition>`**
-
-Retrieve all [stored positions](../../concepts/stored-positions.md) as a object mapping from storage key to relative position.
-
 ### Instance methods
 
 Replace these methods to modify the original behavior of the yjs editor when building Plugins. When modifying behavior, call the original method when appropriate.
