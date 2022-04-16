@@ -19,8 +19,10 @@
   - [History Plugin](api/slate-yjs-core/history-plugin.md)
   - [Cursor Plugin](api/slate-yjs-core/cursor-plugin.md)
   - [Utils](api/slate-yjs-core/utils.md)
+  - [Changelog](https://github.com/BitPhinix/slate-yjs/blob/main/packages/core/CHANGELOG.md)
 - [@slate-yjs/react](api/slate-yjs-react/README.md)
   - [Cursor Overlay](api/slate-yjs-react/cursor-overlay.md)
+  - [Changelog](https://github.com/BitPhinix/slate-yjs/blob/main/packages/react/CHANGELOG.md)
 
 ## 🌎 External resources
 
