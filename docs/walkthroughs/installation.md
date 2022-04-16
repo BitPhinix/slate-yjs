@@ -143,8 +143,12 @@ const Editor = () => {
   const editor = useMemo(() => withYjs(withReact(createEditor()), sharedType), [])
   const [value, setValue] = useState([])
 
-  // Disconnect the binding on component unmount in order to free up resources
-  useEffect(() => () => YjsEditor.disconnect(editor), [])
+
+  // Connect editor in useEffect to comply with concurrent mode requirements.
+  useEffect(() => {
+    YjsEditor.connect(editor);
+    return () => YjsEditor.disconnect(editor);
+  }, [editor]);
 
   return (
     <Slate

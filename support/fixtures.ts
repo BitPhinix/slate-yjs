@@ -42,7 +42,6 @@ export function fixtures<P extends any[]>(...args: P) {
       ) {
         const name = basename(file, extname(file));
 
-        // This needs to be a non-arrow function to use `this.skip()`.
         it(`${name} `, async () => {
           const module = await import(p);
 
