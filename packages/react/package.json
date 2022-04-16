@@ -1,7 +1,7 @@
 {
   "name": "@slate-yjs/react",
   "sideEffects": false,
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "React specific components/utils for slate-yjs.",
   "keywords": [
     "slate",
