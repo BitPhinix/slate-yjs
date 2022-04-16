@@ -20,6 +20,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
+          cache: yarn
           node-version-file: '.nvmrc'
           registry-url: https://registry.npmjs.org/
 
@@ -33,3 +34,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

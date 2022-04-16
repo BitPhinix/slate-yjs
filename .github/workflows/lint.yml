@@ -21,6 +21,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
+          cache: yarn
           node-version-file: '.nvmrc'
           registry-url: https://registry.npmjs.org/
 
