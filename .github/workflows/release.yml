@@ -1,19 +1,18 @@
-name: test
+name: release
 
 on:
   push:
     branches:
-      - main
-  pull_request:
-    branches:
-      - main
+      - master
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
   release:
-    name: Test
+    name: Release
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout Repo
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
@@ -27,10 +26,10 @@ jobs:
       - name: Install Dependencies
         run: yarn --immutable
 
-      - name: Test
-        run: yarn run test --coverage
-
-      - name: Codecov
-        uses: codecov/codecov-action@v2
+      - name: Create Release Pull Request or Publish to npm
+        uses: changesets/action@v1
         with:
-          files: ./coverage/coverage-final.json
+          publish: yarn release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

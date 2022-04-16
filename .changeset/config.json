@@ -1,10 +1,13 @@
 {
   "$schema": "https://unpkg.com/@changesets/config@1.6.3/schema.json",
-  "changelog": "@changesets/cli/changelog",
+  "changelog": [
+    "@changesets/changelog-github",
+    { "repo": "BitPhinix/slate-yjs" }
+  ],
   "commit": false,
   "linked": [["@slate-yjs/core", "@slate-yjs/react"]],
-  "access": "restricted",
-  "baseBranch": "master",
+  "access": "public",
+  "baseBranch": "main",
   "updateInternalDependencies": "patch",
   "ignore": []
 }
