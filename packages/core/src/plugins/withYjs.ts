@@ -163,7 +163,7 @@ export function withYjs<T extends Editor>(
   {
     localOrigin,
     positionStorageOrigin,
-    autoConnect = true,
+    autoConnect = false,
   }: WithYjsOptions = {}
 ): T & YjsEditor {
   const e = editor as T & YjsEditor;

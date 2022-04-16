@@ -54,6 +54,7 @@ export function Editor() {
       new HocuspocusProvider({
         url: 'ws://127.0.0.1:1234',
         name: 'slate-yjs-demo',
+        connect: false,
       }),
     []
   );
@@ -63,9 +64,16 @@ export function Editor() {
     return withReact(withYHistory(withYjs(createEditor(), sharedType)));
   }, [provider.document]);
 
-  // Disconnect YjsEditor on unmount in order to free up resources
-  useEffect(() => () => YjsEditor.disconnect(editor), [editor]);
-  useEffect(() => () => provider.disconnect(), [provider]);
+  // Connect editor and provider in useEffect to comply with concurrent mode
+  // requirements.
+  useEffect(() => {
+    provider.connect();
+    return () => provider.disconnect();
+  }, [provider]);
+  useEffect(() => {
+    YjsEditor.connect(editor);
+    return () => YjsEditor.disconnect(editor);
+  }, [editor]);
 
   return (
     <Slate value={value} onChange={setValue} editor={editor}>

@@ -37,7 +37,7 @@ export async function withTestingElements(
     sharedType.applyDelta(slateNodesToInsertDelta(editor.children));
   }
 
-  const e = withYjs(editor, sharedType);
+  const e = withYjs(editor, sharedType, { autoConnect: true });
 
   // Wait for editor to be initialized
   await wait();
