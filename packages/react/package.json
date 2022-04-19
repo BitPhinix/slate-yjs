@@ -28,7 +28,7 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@slate-yjs/core": "workspace:^",
+    "@slate-yjs/core": "^0.2.3",
     "@types/react": "^17.0.34",
     "react": "^17.0.2",
     "slate": "~0.75.0",
@@ -37,7 +37,7 @@
     "yjs": "^13.5.29"
   },
   "peerDependencies": {
-    "@slate-yjs/core": "workspace:^",
+    "@slate-yjs/core": "^0.2.3",
     "react": ">=16.8.0",
     "slate": ">=0.70.0",
     "slate-react": ">=0.70.0",
