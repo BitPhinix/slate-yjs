@@ -15,7 +15,7 @@
   "dependencies": {
     "@hocuspocus/extension-logger": "^1.0.0-alpha.73",
     "@hocuspocus/server": "^1.0.0-alpha.99",
-    "@slate-yjs/core": "^0.2.3",
+    "@slate-yjs/core": "workspace:^",
     "yjs": "^13.5.29"
   }
 }

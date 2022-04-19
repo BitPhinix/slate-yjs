@@ -3064,7 +3064,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@slate-yjs/core@^0.2.3, @slate-yjs/core@workspace:packages/core":
+"@slate-yjs/core@^0.2.3, @slate-yjs/core@workspace:^, @slate-yjs/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@slate-yjs/core@workspace:packages/core"
   dependencies:
@@ -3086,7 +3086,7 @@ __metadata:
   dependencies:
     "@hocuspocus/extension-logger": ^1.0.0-alpha.73
     "@hocuspocus/server": ^1.0.0-alpha.99
-    "@slate-yjs/core": ^0.2.3
+    "@slate-yjs/core": "workspace:^"
     slate: ~0.75.0
     tsup: ^5.12.1
     yjs: ^13.5.29
@@ -3102,8 +3102,8 @@ __metadata:
     "@fortawesome/free-solid-svg-icons": ^6.0.0
     "@fortawesome/react-fontawesome": ^0.1.17
     "@hocuspocus/provider": ^1.0.0-alpha.35
-    "@slate-yjs/core": ^0.2.3
-    "@slate-yjs/react": ^0.2.3
+    "@slate-yjs/core": "workspace:^"
+    "@slate-yjs/react": "workspace:^"
     "@types/faker": ^5.5.9
     "@types/randomcolor": ^0
     "@types/react": ^17.0.34
@@ -3126,7 +3126,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@slate-yjs/react@^0.2.3, @slate-yjs/react@workspace:packages/react":
+"@slate-yjs/react@workspace:^, @slate-yjs/react@workspace:packages/react":
   version: 0.0.0-use.local
   resolution: "@slate-yjs/react@workspace:packages/react"
   dependencies:
