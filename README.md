@@ -22,6 +22,7 @@ Slate-yjs aims to be the goto collaboration solution for slate. Get started in s
   <a href="https://slate-yjs.dev"><strong>Live demo</strong></a> ·
   <a href="https://docs.slate-yjs.dev"><strong>Documentation</strong></a> ·
   <a href="#packages"><strong>Packages</strong></a> ·
+  <a href="#products"><strong>Products</strong></a> ·
   <a href="#questions"><strong>Questions</strong></a> ·
   <a href="#contributing"><strong>Contributing!</strong></a>
 </p>
@@ -105,6 +106,15 @@ Slate-yjs's codebase is monorepo managed with [yarn workspaces](https://yarnpkg.
 
 <br/>
 <br/>
+
+# Products
+
+These products use slate-yjs, and can give you an idea of what's possible:
+
+- [Dropdeck](https://dropdeck.com/)
+- [Hugo](https://hugo.team/)
+- [Living Spec](https://www.livingspec.com/)
+- [Sana](https://www.sanalabs.com/)
 
 ## Questions?
 
