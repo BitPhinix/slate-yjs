@@ -116,6 +116,9 @@ These products use slate-yjs, and can give you an idea of what's possible:
 - [Living Spec](https://www.livingspec.com/)
 - [Sana](https://www.sanalabs.com/)
 
+<br/>
+<br/>
+
 ## Questions?
 
 For questions around yjs, head over to the [Yjs Community](https://discuss.yjs.dev/). Trying to build a backend with [hocuspocus](https://www.hocuspocus.dev/) and have questions? Take a look at the #hocuspocus channel in the [TipTap Discord](https://discord.com/invite/WtJ49jGshW). Having issues with slate? There's a there's a [Slack](https://slate-slack.herokuapp.com/) for that as well.
