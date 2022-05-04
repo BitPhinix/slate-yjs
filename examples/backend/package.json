@@ -13,8 +13,9 @@
     "tsup": "^5.12.1"
   },
   "dependencies": {
-    "@hocuspocus/extension-logger": "^1.0.0-alpha.73",
-    "@hocuspocus/server": "^1.0.0-alpha.99",
+    "@hocuspocus/extension-logger": "^1.0.0-alpha.76",
+    "@hocuspocus/extension-sqlite": "^1.0.0-alpha.16",
+    "@hocuspocus/server": "^1.0.0-alpha.102",
     "@slate-yjs/core": "workspace:^",
     "slate": "0.75.0",
     "yjs": "^13.5.29"

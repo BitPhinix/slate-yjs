@@ -38,6 +38,5 @@ COPY --from=builder /app/examples/backend/dist ./examples/backend/dist
 USER node
 
 WORKDIR /app/examples/backend
-EXPOSE 1234
 
 CMD ["yarn", "run", "start"]
