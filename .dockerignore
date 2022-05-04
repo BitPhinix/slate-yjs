@@ -1,0 +1,40 @@
+# Ignore the compiled output.
+dist/
+
+# TypeScript incremental compilation cache
+*.tsbuildinfo
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Coverage (from Jest)
+coverage/
+
+# JUnit Reports (used mainly in CircleCI)
+reports/
+junit.xml
+
+# Node modules
+node_modules/
+
+# yarn without Zero-Installs
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# Mac OS
+.DS_Store
+
+# Intellij Configuration Files
+.idea/
+
+# Local Netlify folder
+.netlify

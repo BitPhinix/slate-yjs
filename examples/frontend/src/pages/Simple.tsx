@@ -7,7 +7,7 @@ import * as Y from 'yjs';
 import { ConnectionToggle } from '../components/ConnectionToggle/ConnectionToggle';
 import { CustomEditable } from '../components/CustomEditable/CustomEditable';
 import { FormatToolbar } from '../components/FormatToolbar/FormatToolbar';
-import { HOCUSPOCUS_ENDPOINT_URL, HOCUSPOCUS_WRITE_KEY } from '../config';
+import { HOCUSPOCUS_ENDPOINT_URL } from '../config';
 import { withMarkdown } from '../plugins/withMarkdown';
 
 export function SimplePage() {
@@ -18,7 +18,6 @@ export function SimplePage() {
     () =>
       new HocuspocusProvider({
         url: HOCUSPOCUS_ENDPOINT_URL,
-        parameters: { key: HOCUSPOCUS_WRITE_KEY },
         name: 'slate-yjs-demo',
         onConnect: () => setConnected(true),
         onDisconnect: () => setConnected(false),

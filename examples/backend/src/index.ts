@@ -7,7 +7,7 @@ import initialValue from './data/initialValue.json';
 // Minimal hocuspocus server setup with logging. For more in-depth examples
 // take a look at: https://github.com/ueberdosis/hocuspocus/tree/main/demos/backend
 const server = Server.configure({
-  port: 1234,
+  port: parseInt(process.env.PORT ?? '', 10) || 1234,
 
   extensions: [new Logger()],
 
