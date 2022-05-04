@@ -41,3 +41,6 @@ node_modules/
 
 # Local Netlify folder
 .netlify
+
+# SQLite DBs
+*.sqlite
