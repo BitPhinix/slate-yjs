@@ -10,7 +10,7 @@ import * as Y from 'yjs';
 import { ConnectionToggle } from '../../components/ConnectionToggle/ConnectionToggle';
 import { CustomEditable } from '../../components/CustomEditable/CustomEditable';
 import { FormatToolbar } from '../../components/FormatToolbar/FormatToolbar';
-import { HOCUSPOCUS_ENDPOINT_URL, HOCUSPOCUS_WRITE_KEY } from '../../config';
+import { HOCUSPOCUS_ENDPOINT_URL } from '../../config';
 import { withMarkdown } from '../../plugins/withMarkdown';
 import type { CursorData } from '../../types';
 import { RemoteCursorOverlay } from './Overlay';
@@ -23,7 +23,6 @@ export function RemoteCursorsOverlayPage() {
     () =>
       new HocuspocusProvider({
         url: HOCUSPOCUS_ENDPOINT_URL,
-        parameters: { key: HOCUSPOCUS_WRITE_KEY },
         name: 'slate-yjs-demo',
         onConnect: () => setConnected(true),
         onDisconnect: () => setConnected(false),
