@@ -10,7 +10,7 @@ The Yjs plugin facilitates the code yjs binding is acts as the baseline of all o
 
 **`autoConnect?: boolean`**
 
-Whether to automatically connect after plugin creation defaults to `true`.
+Whether to automatically connect after plugin creation defaults to `false`.
 
 **`localOrigin?: unkown`**
 
