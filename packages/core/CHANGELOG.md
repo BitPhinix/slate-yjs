@@ -1,5 +1,11 @@
 # @slate-yjs/core
 
+## 0.2.5
+
+### Patch Changes
+
+- [#350](https://github.com/BitPhinix/slate-yjs/pull/350) [`bc90d51`](https://github.com/BitPhinix/slate-yjs/commit/bc90d51b191ae2e13aac40ff986d2fe3c626eac3) Thanks [@AntonNiklasson](https://github.com/AntonNiklasson)! - Decode positions as binary in getStoredPositionsInDeltaAbsolute
+
 ## 0.2.3
 
 ### Patch Changes
