@@ -114,7 +114,7 @@ function getStoredPositionsAbsolute(sharedRoot: Y.XmlText) {
           [
             key.slice(STORED_POSITION_PREFIX.length),
             Y.createAbsolutePositionFromRelativePosition(
-              Y.createRelativePositionFromJSON(position),
+              Y.decodeRelativePosition(position),
               sharedRoot.doc
             ),
           ] as const
