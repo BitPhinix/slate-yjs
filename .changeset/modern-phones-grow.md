@@ -1,5 +1,5 @@
 ---
-"@slate-yjs/core": patch
+'@slate-yjs/core': patch
 ---
 
 Decode positions as binary in getStoredPositionsInDeltaAbsolute
