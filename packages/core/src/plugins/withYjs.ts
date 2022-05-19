@@ -84,10 +84,6 @@ export const YjsEditor = {
   },
 
   connect(editor: YjsEditor): void {
-    if (YjsEditor.connected(editor)) {
-      throw new Error('already connected');
-    }
-
     editor.connect();
   },
 
@@ -206,6 +202,10 @@ export function withYjs<T extends Editor>(
   }
 
   e.connect = () => {
+    if (YjsEditor.connected(e)) {
+      throw new Error('already connected');
+    }
+
     sharedRoot.observeDeep(handleYEvents);
     const content = yTextToSlateElement(e.sharedRoot);
     e.children = content.children;
