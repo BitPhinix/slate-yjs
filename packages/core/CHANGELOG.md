@@ -1,5 +1,11 @@
 # @slate-yjs/core
 
+## 0.2.6
+
+### Patch Changes
+
+- [#352](https://github.com/BitPhinix/slate-yjs/pull/352) [`3e172a6`](https://github.com/BitPhinix/slate-yjs/commit/3e172a63f6d0a298da26975cb2b6831a02f81f2b) Thanks [@BitPhinix](https://github.com/BitPhinix)! - Throw error in non-static connect call if editor is already connected
+
 ## 0.2.5
 
 ### Patch Changes
