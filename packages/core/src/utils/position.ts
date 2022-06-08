@@ -75,7 +75,13 @@ export function relativePositionToSlatePoint(
     sharedRoot.doc
   );
 
-  return absPos && absolutePositionToSlatePoint(sharedRoot, slateRoot, absPos);
+  try {
+    return (
+      absPos && absolutePositionToSlatePoint(sharedRoot, slateRoot, absPos)
+    );
+  } catch (error) {
+    return null;
+  }
 }
 
 export function getStoredPosition(
