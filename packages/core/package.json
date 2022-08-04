@@ -1,7 +1,7 @@
 {
   "name": "@slate-yjs/core",
   "sideEffects": false,
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "Yjs binding for Slate.",
   "keywords": [
     "slate",
