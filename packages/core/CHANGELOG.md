@@ -1,5 +1,11 @@
 # @slate-yjs/core
 
+## 0.2.7
+
+### Patch Changes
+
+- [#358](https://github.com/BitPhinix/slate-yjs/pull/358) [`27d39dd`](https://github.com/BitPhinix/slate-yjs/commit/27d39ddc3cf79797a878d0540f8b2605fcf38988) Thanks [@zarv1k](https://github.com/zarv1k)! - use editor.sharedRoot in connect/disconnect
+
 ## 0.2.6
 
 ### Patch Changes
