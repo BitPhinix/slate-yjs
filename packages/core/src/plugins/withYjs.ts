@@ -206,7 +206,7 @@ export function withYjs<T extends Editor>(
       throw new Error('already connected');
     }
 
-    sharedRoot.observeDeep(handleYEvents);
+    e.sharedRoot.observeDeep(handleYEvents);
     const content = yTextToSlateElement(e.sharedRoot);
     e.children = content.children;
     CONNECTED.add(e);
@@ -219,7 +219,7 @@ export function withYjs<T extends Editor>(
     }
 
     YjsEditor.flushLocalChanges(e);
-    sharedRoot.unobserveDeep(handleYEvents);
+    e.sharedRoot.unobserveDeep(handleYEvents);
     CONNECTED.delete(e);
   };
 
