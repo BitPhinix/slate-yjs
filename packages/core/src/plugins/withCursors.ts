@@ -181,12 +181,12 @@ export function withCursors<
   };
 
   e.sendCursorPosition = (range) => {
-    const localState = awareness.getLocalState();
+    const localState = e.awareness.getLocalState();
     const currentRange = localState?.[selectionStateField];
 
     if (!range) {
       if (currentRange) {
-        awareness.setLocalStateField(e.selectionStateField, null);
+        e.awareness.setLocalStateField(e.selectionStateField, null);
       }
 
       return;
@@ -199,7 +199,7 @@ export function withCursors<
       !Y.compareRelativePositions(anchor, currentRange) ||
       !Y.compareRelativePositions(focus, currentRange)
     ) {
-      awareness.setLocalStateField(e.selectionStateField, { anchor, focus });
+      e.awareness.setLocalStateField(e.selectionStateField, { anchor, focus });
     }
   };
 
@@ -233,7 +233,7 @@ export function withCursors<
 
     awarenessChangeListener({
       removed: [],
-      added: Array.from(awareness.getStates().keys()),
+      added: Array.from(e.awareness.getStates().keys()),
       updated: [],
     });
 
@@ -257,7 +257,7 @@ export function withCursors<
     e.awareness.off('change', awarenessChangeListener);
 
     awarenessChangeListener({
-      removed: Array.from(awareness.getStates().keys()),
+      removed: Array.from(e.awareness.getStates().keys()),
       added: [],
       updated: [],
     });
