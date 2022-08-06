@@ -1,5 +1,11 @@
 # @slate-yjs/core
 
+## 0.2.8
+
+### Patch Changes
+
+- [#360](https://github.com/BitPhinix/slate-yjs/pull/360) [`c3c7a44`](https://github.com/BitPhinix/slate-yjs/commit/c3c7a4428fd500a94796747537b87512d9ed3ca6) Thanks [@zarv1k](https://github.com/zarv1k)! - fix: use editor properties in plugin methods
+
 ## 0.2.7
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @slate-yjs/example-backend
 
+## 0.0.6
+
+### Patch Changes
+
+- Updated dependencies [[`c3c7a44`](https://github.com/BitPhinix/slate-yjs/commit/c3c7a4428fd500a94796747537b87512d9ed3ca6)]:
+  - @slate-yjs/core@0.2.8
+
 ## 0.0.5
 
 ### Patch Changes
