@@ -120,7 +120,7 @@ export function withYHistory<T extends YjsEditor>(
   }) => {
     // TODO: Change once https://github.com/yjs/yjs/issues/353 is resolved
     const inverseStack =
-      type === 'undo' ? undoManager.redoStack : undoManager.undoStack;
+      type === 'undo' ? e.undoManager.redoStack : e.undoManager.undoStack;
     const inverseItem = inverseStack[inverseStack.length - 1];
     if (inverseItem) {
       inverseItem.meta.set('selection', stackItem.meta.get('selectionBefore'));
@@ -152,15 +152,15 @@ export function withYHistory<T extends YjsEditor>(
   e.connect = () => {
     connect();
 
-    undoManager.on('stack-item-added', handleStackItemAdded);
-    undoManager.on('stack-item-popped', handleStackItemPopped);
-    undoManager.on('stack-item-updated', handleStackItemUpdated);
+    e.undoManager.on('stack-item-added', handleStackItemAdded);
+    e.undoManager.on('stack-item-popped', handleStackItemPopped);
+    e.undoManager.on('stack-item-updated', handleStackItemUpdated);
   };
 
   e.disconnect = () => {
-    undoManager.off('stack-item-added', handleStackItemAdded);
-    undoManager.off('stack-item-popped', handleStackItemPopped);
-    undoManager.off('stack-item-updated', handleStackItemUpdated);
+    e.undoManager.off('stack-item-added', handleStackItemAdded);
+    e.undoManager.off('stack-item-popped', handleStackItemPopped);
+    e.undoManager.off('stack-item-updated', handleStackItemUpdated);
 
     disconnect();
   };
