@@ -3,7 +3,7 @@ import { useCallback, useRef } from 'react';
 import { BaseRange, BaseText, NodeEntry, Range } from 'slate';
 import { getCursorRange } from '../utils/getCursorRange';
 import { useRemoteCursorEditor } from './useRemoteCursorEditor';
-import { useRemoteCursors } from './useRemoteCursors';
+import { useRemoteCursorStates } from './useRemoteCursorStates';
 
 export const REMOTE_CURSOR_DECORATION_PREFIX = 'remote-cursor-';
 
@@ -12,7 +12,8 @@ export type RemoteCursorDecoration<
 > = {
   [
     key: `${typeof REMOTE_CURSOR_DECORATION_PREFIX}${string}`
-  ]: CursorState<TCursorData> & { isCaret?: true };
+  ]: // eslint-disable-next-line @typescript-eslint/ban-types
+  CursorState<TCursorData> & ({ isCaret: true; isBackward: boolean } | {});
 };
 
 export type RemoteCursorDecoratedRange<
@@ -23,9 +24,9 @@ export type TextWithRemoteCursors<
   TCursorData extends Record<string, unknown> = Record<string, unknown>
 > = BaseText & RemoteCursorDecoration<TCursorData>;
 
-export function getRemoteCursorsOnText<
-  TText extends TextWithRemoteCursors<TCursorData>,
-  TCursorData extends Record<string, unknown> = Record<string, unknown>
+export function getRemoteCursorsOnLeaf<
+  TCursorData extends Record<string, unknown>,
+  TText extends TextWithRemoteCursors<TCursorData>
 >(text: TText): Record<string, CursorState<TCursorData>> {
   return Object.fromEntries(
     Object.entries(text).filter(([key]) =>
@@ -35,14 +36,31 @@ export function getRemoteCursorsOnText<
 }
 
 export type UseDecorateRemoteCursorsOptions = {
-  decorateCarets?: boolean;
+  carets?: boolean;
 };
+
+function getDecoration<TCursorData extends Record<string, unknown>>(
+  clientId: string,
+  state: CursorState<TCursorData>,
+  range: BaseRange,
+  caret: boolean
+): RemoteCursorDecoratedRange<TCursorData> {
+  const key = `${REMOTE_CURSOR_DECORATION_PREFIX}${clientId}`;
+  if (!caret) {
+    return { ...range, [key]: state };
+  }
+
+  return {
+    ...range,
+    [key]: { ...state, isBackward: Range.isBackward(range), isCaret: true },
+  };
+}
 
 export function useDecorateRemoteCursors<
   TCursorData extends Record<string, unknown> = Record<string, unknown>
->({ decorateCarets = true }: UseDecorateRemoteCursorsOptions = {}) {
+>({ carets = true }: UseDecorateRemoteCursorsOptions = {}) {
   const editor = useRemoteCursorEditor<TCursorData>();
-  const cursors = useRemoteCursors<TCursorData>();
+  const cursors = useRemoteCursorStates<TCursorData>();
 
   const cursorsRef = useRef(cursors);
   cursorsRef.current = cursors;
@@ -54,43 +72,26 @@ export function useDecorateRemoteCursors<
         return [];
       }
 
-      return Object.entries(cursorsRef.current).flatMap(([key, data]) => {
-        const range = getCursorRange(editor, data);
+      return Object.entries(cursorsRef.current).flatMap(([clientId, state]) => {
+        const range = getCursorRange(editor, state);
         if (!range) {
           return [];
         }
 
-        if (decorateCarets && Range.isCollapsed(range)) {
-          return {
-            ...range,
-            [`${REMOTE_CURSOR_DECORATION_PREFIX}${key}`]: {
-              ...data,
-              isCaret: true,
-            },
-          };
+        if (carets && Range.isCollapsed(range)) {
+          return getDecoration(clientId, state, range, true);
         }
 
-        const rangeDecoration: RemoteCursorDecoration<TCursorData> = {
-          ...range,
-          [`${REMOTE_CURSOR_DECORATION_PREFIX}${key}`]: data,
-        };
-
-        if (!decorateCarets) {
-          return [rangeDecoration];
+        if (!carets) {
+          return getDecoration(clientId, state, range, false);
         }
 
-        const caretDecoration = {
-          anchor: range.anchor,
-          focus: range.anchor,
-          [`${REMOTE_CURSOR_DECORATION_PREFIX}${key}`]: {
-            ...data,
-            isCaret: true,
-          },
-        };
-
-        return [rangeDecoration, caretDecoration];
+        return [
+          getDecoration(clientId, state, range, false),
+          getDecoration(clientId, state, range, true),
+        ];
       });
     },
-    [decorateCarets, editor]
+    [carets, editor]
   );
 }

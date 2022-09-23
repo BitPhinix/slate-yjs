@@ -7,6 +7,7 @@ import { Navigator } from './components/Navigator/Navigator';
 import { NotFound } from './pages/NotFound';
 import { RemoteCursorsOverlayPage } from './pages/RemoteCursorOverlay';
 import { SimplePage } from './pages/Simple';
+import { RemoteCursorDecorations } from './pages/RemoteCursorDecorations';
 
 ReactDOM.render(
   <StrictMode>
@@ -15,6 +16,10 @@ ReactDOM.render(
         <Route
           path="/remote-cursors-overlay"
           element={<RemoteCursorsOverlayPage />}
+        />
+        <Route
+          path="/remote-cursors-decorations"
+          element={<RemoteCursorDecorations />}
         />
         <Route path="/simple" element={<SimplePage />} />
         <Route path="/" element={<Navigate to="/remote-cursors-overlay" />} />

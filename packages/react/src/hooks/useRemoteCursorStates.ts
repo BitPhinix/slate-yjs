@@ -1,26 +1,26 @@
 import { CursorState } from '@slate-yjs/core';
-import { useSyncExternalStore } from 'use-sync-external-store';
+import { useSyncExternalStore } from 'use-sync-external-store/shim';
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector';
-import { useRemoteCursorStore } from './useRemoteCursorStore';
+import { useRemoteCursorStateStore } from './useRemoteCursorStateStore';
 
-export function useRemoteCursors<
+export function useRemoteCursorStates<
   TCursorData extends Record<string, unknown> = Record<string, unknown>
 >() {
-  const store = useRemoteCursorStore<TCursorData>();
-  return useSyncExternalStore(store.subscribe, store.getSnapshot);
+  const [subscribe, getSnapshot] = useRemoteCursorStateStore<TCursorData>();
+  return useSyncExternalStore(subscribe, getSnapshot);
 }
 
-export function useRemoteCursorSelector<
+export function useRemoteCursorStatesSelector<
   TCursorData extends Record<string, unknown> = Record<string, unknown>,
   TSelection = unknown
 >(
   selector: (cursors: Record<string, CursorState<TCursorData>>) => TSelection,
   isEqual?: (a: TSelection, b: TSelection) => boolean
 ): TSelection {
-  const store = useRemoteCursorStore<TCursorData>();
+  const [subscribe, getSnapshot] = useRemoteCursorStateStore<TCursorData>();
   return useSyncExternalStoreWithSelector(
-    store.subscribe,
-    store.getSnapshot,
+    subscribe,
+    getSnapshot,
     null,
     selector,
     isEqual

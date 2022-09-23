@@ -1,26 +1,22 @@
 import {
-  CaretPosition,
-  CursorOverlayState,
+  CursorOverlayData,
   useRemoteCursorOverlayPositions,
 } from '@slate-yjs/react';
 import clsx from 'clsx';
 import React, { CSSProperties, PropsWithChildren, useRef } from 'react';
 import { CursorData } from '../../types';
 
-type CaretProps = {
-  position: CaretPosition;
-  data: CursorData;
-};
+type CaretProps = Pick<CursorOverlayData<CursorData>, 'caretPosition' | 'data'>;
 
-function Caret({ position, data }: CaretProps) {
+function Caret({ caretPosition, data }: CaretProps) {
   const caretStyle: CSSProperties = {
-    ...position,
-    background: data.color,
+    ...caretPosition,
+    background: data?.color,
   };
 
   const labelStyle: CSSProperties = {
     transform: 'translateY(-100%)',
-    background: data.color,
+    background: data?.color,
   };
 
   return (
@@ -29,7 +25,7 @@ function Caret({ position, data }: CaretProps) {
         className="absolute text-xs text-white whitespace-nowrap top-0 rounded rounded-bl-none px-1.5 py-0.5"
         style={labelStyle}
       >
-        {data.name}
+        {data?.name}
       </div>
     </div>
   );
@@ -39,7 +35,7 @@ function RemoteSelection({
   data,
   selectionRects,
   caretPosition,
-}: CursorOverlayState<CursorData>) {
+}: CursorOverlayData<CursorData>) {
   if (!data) {
     return null;
   }
@@ -59,7 +55,7 @@ function RemoteSelection({
           key={i}
         />
       ))}
-      {caretPosition && <Caret position={caretPosition} data={data} />}
+      {caretPosition && <Caret caretPosition={caretPosition} data={data} />}
     </React.Fragment>
   );
 }
@@ -73,7 +69,7 @@ export function RemoteCursorOverlay({
   children,
 }: RemoteCursorsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { cursors } = useRemoteCursorOverlayPositions<CursorData>({
+  const [cursors] = useRemoteCursorOverlayPositions<CursorData>({
     containerRef,
   });
 

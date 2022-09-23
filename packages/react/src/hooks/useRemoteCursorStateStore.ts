@@ -3,22 +3,19 @@ import {
   CursorState,
   RemoteCursorChangeEventListener,
 } from '@slate-yjs/core';
-import { useState } from 'react';
 import { BaseEditor } from 'slate';
+import { Store } from '../types';
 import { useRemoteCursorEditor } from './useRemoteCursorEditor';
 
 export type CursorStore<
   TCursorData extends Record<string, unknown> = Record<string, unknown>
-> = {
-  subscribe: (onStoreChange: () => void) => () => void;
-  getSnapshot: () => Record<string, CursorState<TCursorData>>;
-};
+> = Store<Record<string, CursorState<TCursorData>>>;
 
 const EDITOR_TO_CURSOR_STORE: WeakMap<BaseEditor, CursorStore> = new WeakMap();
 
-function createRemoteCursorStore<TCursorData extends Record<string, unknown>>(
-  editor: CursorEditor<TCursorData>
-): CursorStore<TCursorData> {
+function createRemoteCursorStateStore<
+  TCursorData extends Record<string, unknown>
+>(editor: CursorEditor<TCursorData>): CursorStore<TCursorData> {
   let cursors: Record<string, CursorState<TCursorData>> = {};
 
   const changed = new Set<number>();
@@ -68,10 +65,10 @@ function createRemoteCursorStore<TCursorData extends Record<string, unknown>>(
     return cursors;
   };
 
-  return Object.freeze({ subscribe, getSnapshot });
+  return [subscribe, getSnapshot];
 }
 
-function getCursorStore<TCursorData extends Record<string, unknown>>(
+function getCursorStateStore<TCursorData extends Record<string, unknown>>(
   editor: CursorEditor<TCursorData>
 ): CursorStore<TCursorData> {
   const existing = EDITOR_TO_CURSOR_STORE.get(editor);
@@ -79,15 +76,14 @@ function getCursorStore<TCursorData extends Record<string, unknown>>(
     return existing as CursorStore<TCursorData>;
   }
 
-  const store = createRemoteCursorStore(editor);
+  const store = createRemoteCursorStateStore(editor);
   EDITOR_TO_CURSOR_STORE.set(editor, store);
   return store;
 }
 
-export function useRemoteCursorStore<
+export function useRemoteCursorStateStore<
   TCursorData extends Record<string, unknown> = Record<string, unknown>
 >() {
   const editor = useRemoteCursorEditor<TCursorData>();
-  const [store] = useState(() => getCursorStore(editor));
-  return store;
+  return getCursorStateStore(editor);
 }
