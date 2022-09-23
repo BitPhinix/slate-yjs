@@ -68,6 +68,17 @@ I'm currently looking for sponsors to found further development of slate-yjs. Th
 <br/>
 <br/>
 
+Hosting provided by:
+
+<p>
+  <a href="https://www.digitalocean.com/?utm_medium=opensource&utm_source=slate-yjs">
+    <img src="https://opensource.nyc3.cdn.digitaloceanspaces.com/attribution/assets/SVG/DO_Logo_horizontal_blue.svg" width="201px">
+  </a>
+</p>
+
+<br/>
+<br/>
+
 ## Why Yjs?
 
 Yjs offers a feature-rich rich text CRDT with best-in-class performance. It's used in production by multiple fortune 500 companies and is the core of many collaborative editing applications. Moreover, it offers a very mature ecosystem with server-side solutions like [hocuspocus](https://www.hocuspocus.dev/), enabling you to build robust and highly scalable collaborative/offline-first applications.
@@ -114,6 +125,7 @@ These products use slate-yjs, and can give you an idea of what's possible:
 - [Dropdeck](https://dropdeck.com/)
 - [Hugo](https://hugo.team/)
 - [Living Spec](https://www.livingspec.com/)
+- [Saga](https://saga.so/)
 - [Sana](https://www.sanalabs.com/)
 
 <br/>
