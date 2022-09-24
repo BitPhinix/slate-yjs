@@ -1,6 +1,7 @@
 import { HocuspocusProvider } from '@hocuspocus/provider';
 import { withCursors, withYHistory, withYjs, YjsEditor } from '@slate-yjs/core';
 import {
+  getRemoteCaretsOnLeaf,
   getRemoteCursorsOnLeaf,
   useDecorateRemoteCursors,
 } from '@slate-yjs/react';
@@ -15,14 +16,41 @@ import { Leaf } from '../components/Leaf/Leaf';
 import { HOCUSPOCUS_ENDPOINT_URL } from '../config';
 import { withMarkdown } from '../plugins/withMarkdown';
 import { CursorData } from '../types';
-import { randomCursorData } from '../utils';
+import { addAlpha, randomCursorData } from '../utils';
 
 function renderDecoratedLeaf(props: RenderLeafProps) {
-  const remoteCursors = getRemoteCursorsOnLeaf<CursorData, Text>(props.leaf);
-  Object.values(remoteCursors).forEach((remoteCursor) => {
-    if (remoteCursor.data) {
+  getRemoteCursorsOnLeaf<CursorData, Text>(props.leaf).forEach((cursor) => {
+    if (cursor.data) {
       props.children = (
-        <span style={{ backgroundColor: remoteCursor.data.color }}>
+        <span style={{ backgroundColor: addAlpha(cursor.data.color, 0.5) }}>
+          {props.children}
+        </span>
+      );
+    }
+  });
+
+  getRemoteCaretsOnLeaf<CursorData, Text>(props.leaf).forEach((caret) => {
+    if (caret.data) {
+      props.children = (
+        <span
+          style={{ backgroundColor: caret.data.color }}
+          className="relative"
+        >
+          <span
+            contentEditable={false}
+            className="absolute top-0 bottom-0 w-0.5"
+            style={{ backgroundColor: caret.data.color }}
+          />
+          <span
+            contentEditable={false}
+            className="absolute text-xs text-white whitespace-nowrap top-0 rounded rounded-bl-none px-1.5 py-0.5"
+            style={{
+              backgroundColor: caret.data.color,
+              transform: 'translateY(-100%)',
+            }}
+          >
+            {caret.data.name}
+          </span>
           {props.children}
         </span>
       );

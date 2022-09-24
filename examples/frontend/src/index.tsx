@@ -18,7 +18,7 @@ ReactDOM.render(
           element={<RemoteCursorsOverlayPage />}
         />
         <Route
-          path="/remote-cursors-decorations"
+          path="/remote-cursors-decoration"
           element={<RemoteCursorDecorations />}
         />
         <Route path="/simple" element={<SimplePage />} />

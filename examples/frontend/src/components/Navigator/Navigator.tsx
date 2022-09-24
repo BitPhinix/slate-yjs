@@ -41,7 +41,7 @@ export function Navigator() {
             <DropdownElement to="/remote-cursors-overlay">
               Remote cursors (overlay)
             </DropdownElement>
-            <DropdownElement to="/remote-cursors-decorations">
+            <DropdownElement to="/remote-cursors-decoration">
               Remote cursors (decorations)
             </DropdownElement>
           </ul>

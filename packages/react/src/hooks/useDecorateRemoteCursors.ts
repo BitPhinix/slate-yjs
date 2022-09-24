@@ -6,6 +6,16 @@ import { useRemoteCursorEditor } from './useRemoteCursorEditor';
 import { useRemoteCursorStates } from './useRemoteCursorStates';
 
 export const REMOTE_CURSOR_DECORATION_PREFIX = 'remote-cursor-';
+export const REMOTE_CURSOR_CARET_DECORATION_PREFIX = 'remote-caret-';
+
+export type RemoteCaretDecoration<
+  TCursorData extends Record<string, unknown> = Record<string, unknown>
+> = {
+  [
+    key: `${typeof REMOTE_CURSOR_CARET_DECORATION_PREFIX}${string}`
+  ]: // eslint-disable-next-line @typescript-eslint/ban-types
+  CursorState<TCursorData> & { isBackward: boolean };
+};
 
 export type RemoteCursorDecoration<
   TCursorData extends Record<string, unknown> = Record<string, unknown>
@@ -13,46 +23,66 @@ export type RemoteCursorDecoration<
   [
     key: `${typeof REMOTE_CURSOR_DECORATION_PREFIX}${string}`
   ]: // eslint-disable-next-line @typescript-eslint/ban-types
-  CursorState<TCursorData> & ({ isCaret: true; isBackward: boolean } | {});
+  CursorState<TCursorData>;
 };
 
 export type RemoteCursorDecoratedRange<
   TCursorData extends Record<string, unknown> = Record<string, unknown>
 > = BaseRange & RemoteCursorDecoration<TCursorData>;
 
+export type RemoteCaretDecoratedRange<
+  TCursorData extends Record<string, unknown> = Record<string, unknown>
+> = BaseRange & RemoteCaretDecoration<TCursorData>;
+
 export type TextWithRemoteCursors<
   TCursorData extends Record<string, unknown> = Record<string, unknown>
-> = BaseText & RemoteCursorDecoration<TCursorData>;
+> = BaseText &
+  RemoteCursorDecoration<TCursorData> &
+  RemoteCaretDecoration<TCursorData>;
 
 export function getRemoteCursorsOnLeaf<
   TCursorData extends Record<string, unknown>,
   TText extends TextWithRemoteCursors<TCursorData>
->(text: TText): Record<string, CursorState<TCursorData>> {
-  return Object.fromEntries(
-    Object.entries(text).filter(([key]) =>
-      key.startsWith(REMOTE_CURSOR_DECORATION_PREFIX)
-    )
-  );
+>(text: TText): CursorState<TCursorData>[] {
+  return Object.entries(text)
+    .filter(([key]) => key.startsWith(REMOTE_CURSOR_DECORATION_PREFIX))
+    .map(([, data]) => data);
+}
+
+export function getRemoteCaretsOnLeaf<
+  TCursorData extends Record<string, unknown>,
+  TText extends TextWithRemoteCursors<TCursorData>
+>(text: TText): (CursorState<TCursorData> & { isBackward: boolean })[] {
+  return Object.entries(text)
+    .filter(([key]) => key.startsWith(REMOTE_CURSOR_CARET_DECORATION_PREFIX))
+    .map(([, data]) => data);
 }
 
 export type UseDecorateRemoteCursorsOptions = {
   carets?: boolean;
 };
 
-function getDecoration<TCursorData extends Record<string, unknown>>(
+function getDecoration<
+  TCursorData extends Record<string, unknown>,
+  TCaret extends boolean
+>(
   clientId: string,
   state: CursorState<TCursorData>,
   range: BaseRange,
-  caret: boolean
-): RemoteCursorDecoratedRange<TCursorData> {
-  const key = `${REMOTE_CURSOR_DECORATION_PREFIX}${clientId}`;
+  caret: TCaret
+): TCaret extends true
+  ? RemoteCursorDecoratedRange<TCursorData>
+  : RemoteCaretDecoratedRange<TCursorData> {
   if (!caret) {
+    const key = `${REMOTE_CURSOR_DECORATION_PREFIX}${clientId}`;
     return { ...range, [key]: state };
   }
 
+  const key = `${REMOTE_CURSOR_CARET_DECORATION_PREFIX}${clientId}`;
   return {
     ...range,
-    [key]: { ...state, isBackward: Range.isBackward(range), isCaret: true },
+    anchor: range.focus,
+    [key]: state,
   };
 }
 

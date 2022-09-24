@@ -5,6 +5,7 @@ import {
 import clsx from 'clsx';
 import React, { CSSProperties, PropsWithChildren, useRef } from 'react';
 import { CursorData } from '../../types';
+import { addAlpha } from '../../utils';
 
 type CaretProps = Pick<CursorOverlayData<CursorData>, 'caretPosition' | 'data'>;
 
@@ -42,7 +43,7 @@ function RemoteSelection({
 
   const selectionStyle: CSSProperties = {
     // Add a opacity to the background color
-    backgroundColor: `${data.color}66`,
+    backgroundColor: addAlpha(data.color, 0.5),
   };
 
   return (

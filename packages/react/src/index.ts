@@ -1,9 +1,12 @@
 export {
-  RemoteCursorDecoratedRange,
   RemoteCursorDecoration,
+  RemoteCursorDecoratedRange,
+  RemoteCaretDecoration,
+  RemoteCaretDecoratedRange,
   TextWithRemoteCursors,
   UseDecorateRemoteCursorsOptions,
   getRemoteCursorsOnLeaf,
+  getRemoteCaretsOnLeaf,
   useDecorateRemoteCursors,
 } from './hooks/useDecorateRemoteCursors';
 

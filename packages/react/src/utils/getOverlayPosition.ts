@@ -65,7 +65,7 @@ export function getOverlayPosition(
       clientRects = domNode.getClientRects();
     }
 
-    const isCaret = isBackward ? isEndNode : isStartNode;
+    const isCaret = isBackward ? isStartNode : isEndNode;
     for (let i = 0; i < clientRects.length; i++) {
       const clientRect = clientRects.item(i);
       if (!clientRect) {

@@ -9,7 +9,6 @@
     "dev": "yarn build --watch --onSuccess \"yarn run start\""
   },
   "devDependencies": {
-    "slate": "~0.75.0",
     "tsup": "^5.12.1"
   },
   "dependencies": {
@@ -17,7 +16,7 @@
     "@hocuspocus/extension-sqlite": "^1.0.0-alpha.16",
     "@hocuspocus/server": "^1.0.0-alpha.102",
     "@slate-yjs/core": "workspace:^",
-    "slate": "0.75.0",
+    "slate": "0.82.1",
     "yjs": "^13.5.29"
   }
 }
