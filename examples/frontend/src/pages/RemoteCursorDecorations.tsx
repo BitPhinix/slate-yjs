@@ -32,18 +32,15 @@ function renderDecoratedLeaf(props: RenderLeafProps) {
   getRemoteCaretsOnLeaf<CursorData, Text>(props.leaf).forEach((caret) => {
     if (caret.data) {
       props.children = (
-        <span
-          style={{ backgroundColor: caret.data.color }}
-          className="relative"
-        >
+        <span className="relative">
           <span
             contentEditable={false}
-            className="absolute top-0 bottom-0 w-0.5"
+            className="absolute top-0 bottom-0 w-0.5 left-[-1px]"
             style={{ backgroundColor: caret.data.color }}
           />
           <span
             contentEditable={false}
-            className="absolute text-xs text-white whitespace-nowrap top-0 rounded rounded-bl-none px-1.5 py-0.5"
+            className="absolute text-xs text-white left-[-1px] top-0 whitespace-nowrap rounded rounded-bl-none px-1.5 py-0.5 select-none"
             style={{
               backgroundColor: caret.data.color,
               transform: 'translateY(-100%)',

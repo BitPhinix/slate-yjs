@@ -3108,7 +3108,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@slate-yjs/core@workspace:packages/core"
   dependencies:
-    slate: 0.75.0
+    slate: ^0.82.1
     slate-hyperscript: ^0.67.0
     tsup: ^5.12.1
     typescript: ^4.6.3
@@ -3128,7 +3128,7 @@ __metadata:
     "@hocuspocus/extension-sqlite": ^1.0.0-alpha.16
     "@hocuspocus/server": ^1.0.0-alpha.102
     "@slate-yjs/core": "workspace:^"
-    slate: 0.82.1
+    slate: ^0.82.1
     tsup: ^5.12.1
     yjs: ^13.5.29
   languageName: unknown
@@ -3175,7 +3175,7 @@ __metadata:
     "@types/react": ^17.0.34
     "@types/use-sync-external-store": ^0.0.3
     react: ^17.0.2
-    slate: ~0.75.0
+    slate: ^0.82.1
     tsup: ^5.12.1
     typescript: ^4.6.3
     use-sync-external-store: ^1.2.0
@@ -13889,18 +13889,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"slate@npm:0.75.0, slate@npm:~0.75.0":
-  version: 0.75.0
-  resolution: "slate@npm:0.75.0"
-  dependencies:
-    immer: ^9.0.6
-    is-plain-object: ^5.0.0
-    tiny-warning: ^1.0.3
-  checksum: cdffed1b1a1a0743dd3008c14f513a48eb6ef26126d659bc768800e75f36af50beb526edc7c4a691e89dc38cb7d783ec8aed72a3671a316f585cd0c89beb5aa3
-  languageName: node
-  linkType: hard
-
-"slate@npm:0.82.1, slate@npm:^0.82.1":
+"slate@npm:^0.82.1":
   version: 0.82.1
   resolution: "slate@npm:0.82.1"
   dependencies:

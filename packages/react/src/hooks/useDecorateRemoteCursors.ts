@@ -13,8 +13,7 @@ export type RemoteCaretDecoration<
 > = {
   [
     key: `${typeof REMOTE_CURSOR_CARET_DECORATION_PREFIX}${string}`
-  ]: // eslint-disable-next-line @typescript-eslint/ban-types
-  CursorState<TCursorData> & { isBackward: boolean };
+  ]: CursorState<TCursorData> & { isBackward: boolean };
 };
 
 export type RemoteCursorDecoration<
@@ -22,8 +21,7 @@ export type RemoteCursorDecoration<
 > = {
   [
     key: `${typeof REMOTE_CURSOR_DECORATION_PREFIX}${string}`
-  ]: // eslint-disable-next-line @typescript-eslint/ban-types
-  CursorState<TCursorData>;
+  ]: CursorState<TCursorData>;
 };
 
 export type RemoteCursorDecoratedRange<
@@ -42,18 +40,18 @@ export type TextWithRemoteCursors<
 
 export function getRemoteCursorsOnLeaf<
   TCursorData extends Record<string, unknown>,
-  TText extends TextWithRemoteCursors<TCursorData>
->(text: TText): CursorState<TCursorData>[] {
-  return Object.entries(text)
+  TLeaf extends TextWithRemoteCursors<TCursorData>
+>(leaf: TLeaf): CursorState<TCursorData>[] {
+  return Object.entries(leaf)
     .filter(([key]) => key.startsWith(REMOTE_CURSOR_DECORATION_PREFIX))
     .map(([, data]) => data);
 }
 
 export function getRemoteCaretsOnLeaf<
   TCursorData extends Record<string, unknown>,
-  TText extends TextWithRemoteCursors<TCursorData>
->(text: TText): (CursorState<TCursorData> & { isBackward: boolean })[] {
-  return Object.entries(text)
+  TLeaf extends TextWithRemoteCursors<TCursorData>
+>(leaf: TLeaf): (CursorState<TCursorData> & { isBackward: boolean })[] {
+  return Object.entries(leaf)
     .filter(([key]) => key.startsWith(REMOTE_CURSOR_CARET_DECORATION_PREFIX))
     .map(([, data]) => data);
 }
