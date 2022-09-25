@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { BaseRange, Path, Text } from 'slate';
+import { BaseRange, NodeMatch, Text } from 'slate';
 import { getCursorRange } from '../utils/getCursorRange';
 import {
   CaretPosition,
@@ -22,7 +22,7 @@ import { useOnResize, useRequestRerender } from './utils';
 const FROZEN_EMPTY_ARRAY = Object.freeze([]);
 
 export type UseRemoteCursorOverlayPositionsOptions<T extends HTMLElement> = {
-  shouldGenerateOverlay?: (node: Text, path: Path) => boolean;
+  shouldGenerateOverlay?: NodeMatch<Text>;
 } & (
   | {
       // Container the overlay will be rendered in. If set, all returned overlay positions

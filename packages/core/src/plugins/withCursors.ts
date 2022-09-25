@@ -44,7 +44,7 @@ export const CursorEditor = {
   isCursorEditor(value: unknown): value is CursorEditor {
     return (
       YjsEditor.isYjsEditor(value) &&
-      (value as CursorEditor).awareness instanceof Awareness &&
+      (value as CursorEditor).awareness &&
       typeof (value as CursorEditor).cursorDataField === 'string' &&
       typeof (value as CursorEditor).selectionStateField === 'string' &&
       typeof (value as CursorEditor).sendCursorPosition === 'function' &&

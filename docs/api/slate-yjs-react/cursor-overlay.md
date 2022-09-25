@@ -1,4 +1,6 @@
-# useRemoteCursorOverlayPositions
+# Cursor Overlay
+
+## useRemoteCursorOverlayPositions
 
 `useRemoteCursorOverlayPositions` provides a simple way to implement an editor overlay displaying remote cursors. Displaying remote cursors using overlays has a few tradeoffs to keep in mind:
 
@@ -7,7 +9,7 @@ Pros:
 - Since cursors overlays aren't part of the by slate rendered content, they don't change the underlying dom structure causing e.g. different line breaks when a remote user changes his selection.
 - They don't mess with autocorrect
 - Animating them is easier
-- They potentially provide better performance since they don't requite re-rendering of parts of the editor content on remote cursor change
+- They potentially provide better performance since they don't require re-rendering of parts of the editor content on remote cursor change
 
 Cons:
 
@@ -24,19 +26,24 @@ If set, all returned positions will be relative to the containers position.
 
 **`refreshOnResize`**
 
-Set whether the cursors overlay positions should be automatically refreshed on container (provided via containerRef) resize. Defaults to `true`.
+Set whether the cursors overlay positions should be automatically refreshed on container (provided via containerRef) resize. Defaults to `true`. If set to `'debounced'` the overlay positions will only be updated each animationFrame.
+
+**`shouldGenerateOverlay`**
+
+`NodeMatch` to filter out text nodes that should not be included when retuning overlay positions. Useful for handing the rendering of remote
+selections inside certain blocks yourself. If not set no nodes will be ignored.
 
 <br/>
 
-and returns and object containing:
+and returns and array containing:
+
+**`overlays: CursorOverlayState<TCursorData>[]`**
+
+The cursor overlay states that need to be painted.
 
 **`refresh(sync?: boolean): void`**
 
 Used to refresh the cursor overlay positions. If sync != true, calls to refresh will be batched into one until the next animation frame.
-
-**`cursors: CursorOverlayState<TCursorData>[]`**
-
-The cursor overlay states that need to be painted.
 
 <br/>
 
