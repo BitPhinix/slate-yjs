@@ -15,6 +15,8 @@ export {
   useRemoteCursorStates,
 } from './hooks/useRemoteCursorStates';
 
+export { useUnsetCursorPositionOnBlur } from './hooks/useUnsetCursorPositionOnBlur';
+
 export { getCursorRange } from './utils/getCursorRange';
 
 export {
