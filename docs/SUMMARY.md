@@ -28,6 +28,9 @@
   - [Changelog](https://github.com/BitPhinix/slate-yjs/blob/main/packages/core/CHANGELOG.md)
 - [@slate-yjs/react](api/slate-yjs-react/README.md)
   - [Cursor Overlay](api/slate-yjs-react/cursor-overlay.md)
+  - [Cursor Decorations](api/slate-yjs-react/cursor-decorations.md)
+  - [Cursor Selectors](api/slate-yjs-react/cursor-selectors.md)
+  - [Utilities](api/slate-yjs-react/utilities.md)
   - [Changelog](https://github.com/BitPhinix/slate-yjs/blob/main/packages/react/CHANGELOG.md)
 
 ## 🧑‍🚒 Contributing
