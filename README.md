@@ -142,6 +142,6 @@ Any questions about slate-yjs? Thead over to the #slate-yjs channel inside the [
 
 ## Contributing!
 
-All contributions are super welcome! Check out the Contributing instructions for more info!
+All contributions are super welcome! Check out the [contributing instructions](https://docs.slate-yjs.dev/contributing/contributing) for more info!
 
 Slate-yjs is [MIT-licensed](https://github.com/Bitphinix/slate-yjs/blob/main/LICENSE.md).
