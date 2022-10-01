@@ -14,18 +14,34 @@ export type CaretPosition = {
   left: number;
 };
 
-export function getSelectionRects(
+export type OverlayPosition = {
+  caretPosition: CaretPosition | null;
+  selectionRects: SelectionRect[];
+};
+
+export type GetSelectionRectsOptions = {
+  xOffset: number;
+  yOffset: number;
+  shouldGenerateOverlay?: (node: Text, path: Path) => boolean;
+};
+
+export function getOverlayPosition(
   editor: ReactEditor,
   range: BaseRange,
-  xOffset: number,
-  yOffset: number
-): SelectionRect[] {
+  { yOffset, xOffset, shouldGenerateOverlay }: GetSelectionRectsOptions
+): OverlayPosition {
   const [start, end] = Range.edges(range);
   const domRange = ReactEditor.toDOMRange(editor, range);
 
   const selectionRects: SelectionRect[] = [];
-  const nodeIterator = Editor.nodes(editor, { at: range, match: Text.isText });
+  const nodeIterator = Editor.nodes(editor, {
+    at: range,
+    match: (n, p) =>
+      Text.isText(n) && (!shouldGenerateOverlay || shouldGenerateOverlay(n, p)),
+  });
 
+  let caretPosition: CaretPosition | null = null;
+  const isBackward = Range.isBackward(range);
   for (const [node, path] of nodeIterator) {
     const domNode = ReactEditor.toDOMNode(editor, node);
 
@@ -49,39 +65,40 @@ export function getSelectionRects(
       clientRects = domNode.getClientRects();
     }
 
+    const isCaret = isBackward ? isStartNode : isEndNode;
     for (let i = 0; i < clientRects.length; i++) {
       const clientRect = clientRects.item(i);
       if (!clientRect) {
         continue;
       }
 
+      const isCaretRect =
+        isCaret && (isBackward ? i === 0 : i === clientRects.length - 1);
+
+      const top = clientRect.top - yOffset;
+      const left = clientRect.left - xOffset;
+
+      if (isCaretRect) {
+        caretPosition = {
+          height: clientRect.height,
+          top,
+          left:
+            left +
+            (isBackward || Range.isCollapsed(range) ? 0 : clientRect.width),
+        };
+      }
+
       selectionRects.push({
         width: clientRect.width,
         height: clientRect.height,
-        top: clientRect.top - yOffset,
-        left: clientRect.left - xOffset,
+        top,
+        left,
       });
     }
   }
 
-  return selectionRects;
-}
-
-export function getCaretPosition(
-  selectionRects: SelectionRect[],
-  range: BaseRange
-): CaretPosition | null {
-  const isCollapsed = range && Range.isCollapsed(range);
-  const isBackward = range && Range.isBackward(range);
-  const anchorRect = selectionRects[isBackward ? 0 : selectionRects.length - 1];
-
-  if (!anchorRect) {
-    return null;
-  }
-
   return {
-    height: anchorRect.height,
-    top: anchorRect.top,
-    left: anchorRect.left + (isBackward || isCollapsed ? 0 : anchorRect.width),
+    selectionRects,
+    caretPosition,
   };
 }

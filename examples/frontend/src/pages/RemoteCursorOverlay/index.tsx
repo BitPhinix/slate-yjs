@@ -1,7 +1,5 @@
 import { HocuspocusProvider } from '@hocuspocus/provider';
 import { withCursors, withYHistory, withYjs, YjsEditor } from '@slate-yjs/core';
-import { name } from 'faker';
-import randomColor from 'randomcolor';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import type { Descendant } from 'slate';
 import { createEditor } from 'slate';
@@ -12,7 +10,7 @@ import { CustomEditable } from '../../components/CustomEditable/CustomEditable';
 import { FormatToolbar } from '../../components/FormatToolbar/FormatToolbar';
 import { HOCUSPOCUS_ENDPOINT_URL } from '../../config';
 import { withMarkdown } from '../../plugins/withMarkdown';
-import type { CursorData } from '../../types';
+import { randomCursorData } from '../../utils';
 import { RemoteCursorOverlay } from './Overlay';
 
 export function RemoteCursorsOverlayPage() {
@@ -40,15 +38,6 @@ export function RemoteCursorsOverlayPage() {
   }, [provider, connected]);
 
   const editor = useMemo(() => {
-    const cursorData: CursorData = {
-      color: randomColor({
-        luminosity: 'dark',
-        alpha: 1,
-        format: 'hex',
-      }),
-      name: `${name.firstName()} ${name.lastName()}`,
-    };
-
     const sharedType = provider.document.get('content', Y.XmlText) as Y.XmlText;
 
     return withMarkdown(
@@ -58,7 +47,7 @@ export function RemoteCursorsOverlayPage() {
             withYjs(createEditor(), sharedType, { autoConnect: false }),
             provider.awareness,
             {
-              data: cursorData,
+              data: randomCursorData(),
             }
           )
         )

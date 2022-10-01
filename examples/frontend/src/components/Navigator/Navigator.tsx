@@ -33,13 +33,16 @@ export function Navigator() {
         <nav
           className={clsx(
             'navigation-dropdown-content border-2 bg-white invisible border-gray-800 rounded',
-            'w-60 absolute left-0 top-full transition-all opacity-0 mt-2 z-10'
+            'w-70 absolute left-0 top-full transition-all opacity-0 mt-2 z-10'
           )}
         >
           <ul className="py-1">
             <DropdownElement to="/simple">Simple</DropdownElement>
             <DropdownElement to="/remote-cursors-overlay">
               Remote cursors (overlay)
+            </DropdownElement>
+            <DropdownElement to="/remote-cursors-decoration">
+              Remote cursors (decorations)
             </DropdownElement>
           </ul>
         </nav>

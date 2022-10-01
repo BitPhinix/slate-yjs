@@ -1,15 +1,26 @@
-import {
-  useRemoteCursorOverlayPositions,
-  UseRemoteCursorOverlayPositionsOptions,
-  CursorOverlayState,
-} from './hooks/useRemoteCursorOverlayPositions';
-import { CaretPosition, SelectionRect } from './utils/selection';
+export {
+  RemoteCursorDecoration,
+  RemoteCursorDecoratedRange,
+  RemoteCaretDecoration,
+  RemoteCaretDecoratedRange,
+  TextWithRemoteCursors,
+  UseDecorateRemoteCursorsOptions,
+  getRemoteCursorsOnLeaf,
+  getRemoteCaretsOnLeaf,
+  useDecorateRemoteCursors,
+} from './hooks/useDecorateRemoteCursors';
 
 export {
-  // Remote cursor overlay
-  useRemoteCursorOverlayPositions,
+  useRemoteCursorStatesSelector,
+  useRemoteCursorStates,
+} from './hooks/useRemoteCursorStates';
+
+export { useUnsetCursorPositionOnBlur } from './hooks/useUnsetCursorPositionOnBlur';
+
+export { getCursorRange } from './utils/getCursorRange';
+
+export {
+  CursorOverlayData,
   UseRemoteCursorOverlayPositionsOptions,
-  CursorOverlayState,
-  CaretPosition,
-  SelectionRect,
-};
+  useRemoteCursorOverlayPositions,
+} from './hooks/useRemoteCursorOverlayPositions';

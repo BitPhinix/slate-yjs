@@ -7,9 +7,16 @@ import { Spinner } from '../Spinner/Spinner';
 type CustomEditableProps = Omit<
   ComponentProps<typeof Editable>,
   'renderElement' | 'renderLeaf'
->;
+> &
+  Partial<
+    Pick<ComponentProps<typeof Editable>, 'renderElement' | 'renderLeaf'>
+  >;
 
-export function CustomEditable(props: CustomEditableProps) {
+export function CustomEditable({
+  renderElement = Element,
+  renderLeaf = Leaf,
+  ...props
+}: CustomEditableProps) {
   const editor = useSlate();
 
   if (editor.sharedRoot.length === 0) {
@@ -20,8 +27,8 @@ export function CustomEditable(props: CustomEditableProps) {
     <Editable
       placeholder="Write something ..."
       {...props}
-      renderElement={Element}
-      renderLeaf={Leaf}
+      renderElement={renderElement}
+      renderLeaf={renderLeaf}
     />
   );
 }

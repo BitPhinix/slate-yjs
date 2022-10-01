@@ -3108,7 +3108,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@slate-yjs/core@workspace:packages/core"
   dependencies:
-    slate: 0.75.0
+    slate: ^0.82.1
     slate-hyperscript: ^0.67.0
     tsup: ^5.12.1
     typescript: ^4.6.3
@@ -3128,7 +3128,7 @@ __metadata:
     "@hocuspocus/extension-sqlite": ^1.0.0-alpha.16
     "@hocuspocus/server": ^1.0.0-alpha.102
     "@slate-yjs/core": "workspace:^"
-    slate: ~0.75.0
+    slate: ^0.82.1
     tsup: ^5.12.1
     yjs: ^13.5.29
   languageName: unknown
@@ -3158,8 +3158,8 @@ __metadata:
     react: ^17.0.2
     react-dom: ^17.0.2
     react-router-dom: ^6.0.1
-    slate: ^0.75.0
-    slate-react: ^0.75.0
+    slate: ^0.82.1
+    slate-react: ^0.83.0
     vite: ^2.6.13
     vite-plugin-windicss: ^1.8.3
     windicss: ^3.5.1
@@ -3173,10 +3173,12 @@ __metadata:
   dependencies:
     "@slate-yjs/core": ^0.2.3
     "@types/react": ^17.0.34
+    "@types/use-sync-external-store": ^0.0.3
     react: ^17.0.2
-    slate: ~0.75.0
+    slate: ^0.82.1
     tsup: ^5.12.1
     typescript: ^4.6.3
+    use-sync-external-store: ^1.2.0
     y-protocols: ^1.0.5
     yjs: ^13.5.29
   peerDependencies:
@@ -3562,6 +3564,13 @@ __metadata:
   version: 7.3.9
   resolution: "@types/semver@npm:7.3.9"
   checksum: 60bfcfdfa7f937be2c6f4b37ddb6714fb0f27b05fe4cbdfdd596a97d35ed95d13ee410efdd88e72a66449d0384220bf20055ab7d6b5df10de4990fbd20e5cbe0
+  languageName: node
+  linkType: hard
+
+"@types/use-sync-external-store@npm:^0.0.3":
+  version: 0.0.3
+  resolution: "@types/use-sync-external-store@npm:0.0.3"
+  checksum: 161ddb8eec5dbe7279ac971531217e9af6b99f7783213566d2b502e2e2378ea19cf5e5ea4595039d730aa79d3d35c6567d48599f69773a02ffcff1776ec2a44e
   languageName: node
   linkType: hard
 
@@ -13836,9 +13845,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"slate-react@npm:^0.75.0":
-  version: 0.75.0
-  resolution: "slate-react@npm:0.75.0"
+"slate-react@npm:^0.83.0":
+  version: 0.83.0
+  resolution: "slate-react@npm:0.83.0"
   dependencies:
     "@types/is-hotkey": ^0.1.1
     "@types/lodash": ^4.14.149
@@ -13852,7 +13861,7 @@ __metadata:
     react: ">=16.8.0"
     react-dom: ">=16.8.0"
     slate: ">=0.65.3"
-  checksum: b356c656b34b11deb2d457e013b25ac306588c945f2cd06ad2a45da8bbad4f86352ec99bd9633fab8dfcc326be92383e5bd1c08d30e98c685d571031e021f307
+  checksum: 1a648c276ad934a516ba769168a2d8231a7a6fa1c4536a41146284d7952784e087b72fd3bbc44567983986aee663c5414b02b0e73e8442e254cc75c18e031b79
   languageName: node
   linkType: hard
 
@@ -13880,14 +13889,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"slate@npm:0.75.0, slate@npm:^0.75.0, slate@npm:~0.75.0":
-  version: 0.75.0
-  resolution: "slate@npm:0.75.0"
+"slate@npm:^0.82.1":
+  version: 0.82.1
+  resolution: "slate@npm:0.82.1"
   dependencies:
     immer: ^9.0.6
     is-plain-object: ^5.0.0
     tiny-warning: ^1.0.3
-  checksum: cdffed1b1a1a0743dd3008c14f513a48eb6ef26126d659bc768800e75f36af50beb526edc7c4a691e89dc38cb7d783ec8aed72a3671a316f585cd0c89beb5aa3
+  checksum: 391e6be7c1e7865e6f3113b60ed98dcd5261cd80c053e670ecece0b969098d5bacfa3d875c3b38c3d79fc5d5b369e13f351292c968b3661d4957a36a1fd6e06f
   languageName: node
   linkType: hard
 
@@ -15456,6 +15465,15 @@ __metadata:
   version: 1.0.1
   resolution: "url-to-options@npm:1.0.1"
   checksum: 20e59f4578525fb0d30ffc22b13b5aa60bc9e57cefd4f5842720f5b57211b6dec54abeae2d675381ac4486fd1a2e987f1318725dea996e503ff89f8c8ce2c17e
+  languageName: node
+  linkType: hard
+
+"use-sync-external-store@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "use-sync-external-store@npm:1.2.0"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+  checksum: 5c639e0f8da3521d605f59ce5be9e094ca772bd44a4ce7322b055a6f58eeed8dda3c94cabd90c7a41fb6fa852210092008afe48f7038792fd47501f33299116a
   languageName: node
   linkType: hard
 
