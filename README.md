@@ -30,8 +30,6 @@ Slate-yjs aims to be the goto collaboration solution for slate. Get started in s
 <br/>
 
 <p align="center">
-<a href="https://codecov.io/gh/BitPhinix/slate-yjs" alt="Codecov">
-        <img src="https://codecov.io/gh/BitPhinix/slate-yjs/branch/main/graph/badge.svg?token=ZHUA26IWP0" /></a>
 <a href="https://github.com/BitPhinix/slate-yjs/graphs/commit-activity" alt="Maintenance">
         <img src="https://img.shields.io/badge/Maintained%3F-yes-brightgreen.svg" /></a>
 <a href="http://commitizen.github.io/cz-cli/" alt="Commitizen friendly">

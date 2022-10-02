@@ -29,9 +29,4 @@ jobs:
         run: yarn --immutable
 
       - name: Test
-        run: yarn run test --coverage
-
-      - name: Codecov
-        uses: codecov/codecov-action@v2
-        with:
-          files: ./coverage/coverage-final.json
+        run: yarn run test

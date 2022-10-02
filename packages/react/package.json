@@ -38,7 +38,7 @@
     "yjs": "^13.5.29"
   },
   "peerDependencies": {
-    "@slate-yjs/core": "^0.2.3",
+    "@slate-yjs/core": "^0.2.9",
     "react": ">=16.8.0",
     "slate": ">=0.70.0",
     "slate-react": ">=0.70.0",
