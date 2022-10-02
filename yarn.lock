@@ -3091,7 +3091,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@slate-yjs/core@^0.2.3, @slate-yjs/core@workspace:^, @slate-yjs/core@workspace:packages/core":
+"@slate-yjs/core@^0.3.0, @slate-yjs/core@workspace:^, @slate-yjs/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@slate-yjs/core@workspace:packages/core"
   dependencies:
@@ -3158,7 +3158,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@slate-yjs/react@workspace:packages/react"
   dependencies:
-    "@slate-yjs/core": ^0.2.3
+    "@slate-yjs/core": ^0.3.0
     "@types/react": ^17.0.34
     "@types/use-sync-external-store": ^0.0.3
     react: ^17.0.2
@@ -3169,7 +3169,7 @@ __metadata:
     y-protocols: ^1.0.5
     yjs: ^13.5.29
   peerDependencies:
-    "@slate-yjs/core": ^0.2.9
+    "@slate-yjs/core": ^0.3.0
     react: ">=16.8.0"
     slate: ">=0.70.0"
     slate-react: ">=0.70.0"
