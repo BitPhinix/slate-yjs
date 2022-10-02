@@ -1,5 +1,11 @@
 # @slate-yjs/core
 
+## 0.3.0
+
+### Patch Changes
+
+- [#363](https://github.com/BitPhinix/slate-yjs/pull/363) [`3710c48`](https://github.com/BitPhinix/slate-yjs/commit/3710c4887ee89946ace787ba24436d82d95bc856) Thanks [@BitPhinix](https://github.com/BitPhinix)! - Loosen `CursorEditor.isCursorEditor` to not check awareness instance.
+
 ## 0.2.8
 
 ### Patch Changes

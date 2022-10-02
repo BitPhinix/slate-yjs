@@ -1,5 +1,25 @@
 # @slate-yjs/react
 
+## 0.3.0
+
+### Minor Changes
+
+- [#363](https://github.com/BitPhinix/slate-yjs/pull/363) [`3710c48`](https://github.com/BitPhinix/slate-yjs/commit/3710c4887ee89946ace787ba24436d82d95bc856) Thanks [@BitPhinix](https://github.com/BitPhinix)! - Changed:
+
+  - Rewrite of `useRemoteCursorOverlayPositions` to provide stricter typings, make it react 18 safe and add new `shouldGenerateOverlay` option.
+
+  Added:
+
+  - Remote cursor decorations using the new `useDecorateRemoteCursors` hook
+  - Remote cursor data hooks `useRemoteCursorStatesSelector` and `useRemoteCursorStates`
+  - Utility hooks to un-send the current cursor position on window/editor blur: `useUnsetCursorPositionOnBlur`
+  - `getCursorRange` helper
+
+### Patch Changes
+
+- Updated dependencies [[`3710c48`](https://github.com/BitPhinix/slate-yjs/commit/3710c4887ee89946ace787ba24436d82d95bc856)]:
+  - @slate-yjs/core@0.3.0
+
 ## 0.2.4
 
 ### Patch Changes
