@@ -210,7 +210,11 @@ export function withYjs<T extends Editor>(
     const content = yTextToSlateElement(e.sharedRoot);
     e.children = content.children;
     CONNECTED.add(e);
-    e.onChange();
+
+    Editor.normalize(editor, { force: true });
+    if (!editor.operations.length) {
+      editor.onChange();
+    }
   };
 
   e.disconnect = () => {
