@@ -1,5 +1,11 @@
 # @slate-yjs/core
 
+## 0.3.1
+
+### Patch Changes
+
+- [#369](https://github.com/BitPhinix/slate-yjs/pull/369) [`aa10864`](https://github.com/BitPhinix/slate-yjs/commit/aa108641f44ca00559124cca8277a7c1e4354c00) Thanks [@BitPhinix](https://github.com/BitPhinix)! - Normalize editor on connect to avoid rendering denormalized state
+
 ## 0.3.0
 
 ### Patch Changes
