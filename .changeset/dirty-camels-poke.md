@@ -1,5 +1,5 @@
 ---
-"@slate-yjs/core": patch
+'@slate-yjs/core': patch
 ---
 
-fix: remove unnecessary assertion
+chore: remove unnecessary assertion
