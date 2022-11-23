@@ -42,7 +42,7 @@ server.listen();
 import { HocuspocusProvider } from '@hocuspocus/provider';
 import { withYHistory, withYjs, YjsEditor, withYHistory } from '@slate-yjs/core';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { createEditor, Descendant } from 'slate';
+import { createEditor, Descendant, Editor, Transforms } from 'slate';
 import { Editable, Slate, withReact } from 'slate-react';
 import * as Y from 'yjs';
 
@@ -61,7 +61,27 @@ export function Editor() {
 
   const editor = useMemo(() => {
     const sharedType = provider.document.get('content', Y.XmlText);
-    return withReact(withYHistory(withYjs(createEditor(), sharedType)));
+    const e = withReact(withYHistory(withYjs(createEditor(), sharedType)));
+
+    // Ensure editor always has at least 1 valid child
+    const { normalizeNode } = e;
+    e.normalizeNode = (entry) => {
+      const [node] = entry;
+      if (!Editor.isEditor(node) || node.children.length > 0) {
+        return normalizeNode(entry);
+      }
+
+      Transforms.insertNodes(
+        editor,
+        {
+          type: 'paragraph',
+          children: [{ text: '' }],
+        },
+        { at: [0] }
+      );
+    };
+
+    return e;
   }, [provider.document]);
 
   // Connect editor and provider in useEffect to comply with concurrent mode
