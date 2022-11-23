@@ -10,6 +10,7 @@ import { CustomEditable } from '../../components/CustomEditable/CustomEditable';
 import { FormatToolbar } from '../../components/FormatToolbar/FormatToolbar';
 import { HOCUSPOCUS_ENDPOINT_URL } from '../../config';
 import { withMarkdown } from '../../plugins/withMarkdown';
+import { withNormalize } from '../../plugins/withNormalize';
 import { randomCursorData } from '../../utils';
 import { RemoteCursorOverlay } from './Overlay';
 
@@ -41,14 +42,16 @@ export function RemoteCursorsOverlayPage() {
     const sharedType = provider.document.get('content', Y.XmlText) as Y.XmlText;
 
     return withMarkdown(
-      withReact(
-        withYHistory(
-          withCursors(
-            withYjs(createEditor(), sharedType, { autoConnect: false }),
-            provider.awareness,
-            {
-              data: randomCursorData(),
-            }
+      withNormalize(
+        withReact(
+          withYHistory(
+            withCursors(
+              withYjs(createEditor(), sharedType, { autoConnect: false }),
+              provider.awareness,
+              {
+                data: randomCursorData(),
+              }
+            )
           )
         )
       )

@@ -15,6 +15,7 @@ import { FormatToolbar } from '../components/FormatToolbar/FormatToolbar';
 import { Leaf } from '../components/Leaf/Leaf';
 import { HOCUSPOCUS_ENDPOINT_URL } from '../config';
 import { withMarkdown } from '../plugins/withMarkdown';
+import { withNormalize } from '../plugins/withNormalize';
 import { CursorData } from '../types';
 import { addAlpha, randomCursorData } from '../utils';
 
@@ -96,15 +97,17 @@ export function RemoteCursorDecorations() {
     const sharedType = provider.document.get('content', Y.XmlText) as Y.XmlText;
 
     return withMarkdown(
-      withReact(
-        withCursors(
-          withYHistory(
-            withYjs(createEditor(), sharedType, { autoConnect: false })
-          ),
-          provider.awareness,
-          {
-            data: randomCursorData(),
-          }
+      withNormalize(
+        withReact(
+          withCursors(
+            withYHistory(
+              withYjs(createEditor(), sharedType, { autoConnect: false })
+            ),
+            provider.awareness,
+            {
+              data: randomCursorData(),
+            }
+          )
         )
       )
     );

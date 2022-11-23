@@ -9,6 +9,7 @@ import { CustomEditable } from '../components/CustomEditable/CustomEditable';
 import { FormatToolbar } from '../components/FormatToolbar/FormatToolbar';
 import { HOCUSPOCUS_ENDPOINT_URL } from '../config';
 import { withMarkdown } from '../plugins/withMarkdown';
+import { withNormalize } from '../plugins/withNormalize';
 
 export function SimplePage() {
   const [value, setValue] = useState<Descendant[]>([]);
@@ -38,9 +39,11 @@ export function SimplePage() {
     const sharedType = provider.document.get('content', Y.XmlText) as Y.XmlText;
 
     return withMarkdown(
-      withReact(
-        withYHistory(
-          withYjs(createEditor(), sharedType, { autoConnect: false })
+      withNormalize(
+        withReact(
+          withYHistory(
+            withYjs(createEditor(), sharedType, { autoConnect: false })
+          )
         )
       )
     );
