@@ -46,16 +46,20 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
         const child = node.children[pathOffset];
         const childPath = [...slatePath, pathOffset];
 
+        if (!Text.isText(child)) {
+          // Ignore attribute updates on non-text nodes (which are backed by Y.XmlText)
+          // to be consistent with deltaInsertToSlateNode. Y.XmlText attributes don't show
+          // up in deltas but in key changes (YEvent.changes.keys).
+          continue;
+        }
+
         const newProperties = change.attributes;
         const properties = pick(
           node,
           ...(Object.keys(change.attributes) as Array<keyof Element>)
         );
 
-        if (
-          Text.isText(child) &&
-          (pathOffset === startPathOffset || pathOffset === endPathOffset)
-        ) {
+        if (pathOffset === startPathOffset || pathOffset === endPathOffset) {
           const start = pathOffset === startPathOffset ? startTextOffset : 0;
           const end =
             pathOffset === endPathOffset ? endTextOffset : child.text.length;
