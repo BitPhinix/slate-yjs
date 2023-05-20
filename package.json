@@ -36,5 +36,8 @@
     "slate-hyperscript": "^0.67.0",
     "typescript": "^4.6.3",
     "vitest": "^0.8.1"
+  },
+  "resolutions": {
+    "@changesets/assemble-release-plan@5.2.2": "patch:@changesets/assemble-release-plan@npm:5.2.2#.yarn/patches/@changesets-assemble-release-plan-npm-5.2.2-11f5894b70"
   }
 }
