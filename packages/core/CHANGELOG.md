@@ -1,15 +1,5 @@
 # @slate-yjs/core
 
-## 1.0.0
-
-### Minor Changes
-
-- [#392](https://github.com/BitPhinix/slate-yjs/pull/392) [`dbe9895`](https://github.com/BitPhinix/slate-yjs/commit/dbe9895692faa92283861f3cd7e0378004f8284c) Thanks [@ezeidman](https://github.com/ezeidman)! - ignore formatting attributes for non-text
-
-### Patch Changes
-
-- [#373](https://github.com/BitPhinix/slate-yjs/pull/373) [`d3aa78a`](https://github.com/BitPhinix/slate-yjs/commit/d3aa78ac96f2e59d1d69f1bf5f7944679f9458d8) Thanks [@bokuweb](https://github.com/bokuweb)! - chore: remove unnecessary assertion
-
 ## 0.3.1
 
 ### Patch Changes
