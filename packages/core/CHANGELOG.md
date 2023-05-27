@@ -1,5 +1,17 @@
 # @slate-yjs/core
 
+## 1.0.0
+
+### Minor Changes
+
+- [#395](https://github.com/BitPhinix/slate-yjs/pull/395) [`a6a27c8`](https://github.com/BitPhinix/slate-yjs/commit/a6a27c86678656e55ecbf0ba76852545605a0955) Thanks [@BitPhinix](https://github.com/BitPhinix)! - ignore formatting attributes for non-text
+
+- [#398](https://github.com/BitPhinix/slate-yjs/pull/398) [`72bbbf3`](https://github.com/BitPhinix/slate-yjs/commit/72bbbf3bb8a3f57762153cbd9a7f689d2b282f0c) Thanks [@gblaketx](https://github.com/gblaketx)! - Fix assoc calculation when creating relative position from a Slate point
+
+### Patch Changes
+
+- [#395](https://github.com/BitPhinix/slate-yjs/pull/395) [`a6a27c8`](https://github.com/BitPhinix/slate-yjs/commit/a6a27c86678656e55ecbf0ba76852545605a0955) Thanks [@BitPhinix](https://github.com/BitPhinix)! - chore: remove unnecessary assertion
+
 ## 0.3.1
 
 ### Patch Changes
