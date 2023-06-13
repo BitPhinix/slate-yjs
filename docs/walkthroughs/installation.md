@@ -202,7 +202,7 @@ const Editor = () => {
         { at: [0] }
       );
     };
-  });
+  }, []);
 
   const [value, setValue] = useState([])
 
