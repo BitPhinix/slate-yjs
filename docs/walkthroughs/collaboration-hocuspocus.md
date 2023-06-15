@@ -40,7 +40,7 @@ server.listen();
 
 ```javascript
 import { HocuspocusProvider } from '@hocuspocus/provider';
-import { withYHistory, withYjs, YjsEditor, withYHistory } from '@slate-yjs/core';
+import { withYjs, YjsEditor, withYHistory } from '@slate-yjs/core';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { createEditor, Descendant, Editor, Transforms } from 'slate';
 import { Editable, Slate, withReact } from 'slate-react';
