@@ -3,7 +3,7 @@ import randomColor from 'randomcolor';
 import { CursorData } from './types';
 
 const {
-  name: { firstName, lastName },
+  person: { firstName, lastName },
 } = faker;
 
 export function randomCursorData(): CursorData {
