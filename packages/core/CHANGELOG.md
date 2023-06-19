@@ -1,5 +1,11 @@
 # @slate-yjs/core
 
+## 1.0.1
+
+### Patch Changes
+
+- [#402](https://github.com/BitPhinix/slate-yjs/pull/402) [`c453baf`](https://github.com/BitPhinix/slate-yjs/commit/c453baf5c7a720436ee434eda3e93fe16e1482fc) Thanks [@juliankrispel](https://github.com/juliankrispel)! - Fix applyDelta to produce correct slate operations for adjacent text operations
+
 ## 1.0.0
 
 ### Minor Changes
