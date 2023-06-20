@@ -159,9 +159,38 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
       const childPath = [...slatePath, pathOffset];
 
       if (Text.isText(child)) {
+        const lastOp = ops[ops.length - 1];
+
+        /**
+         * The props that exist at the current path
+         * Since we're not actually using slate to update the node
+         * this is a simulation
+         */
+        const currentProps =
+          lastOp != null && lastOp.type === 'insert_node'
+            ? lastOp.node
+            : getProperties(child);
+
+        let lastPath: Path = [];
+
+        if (
+          lastOp != null &&
+          (lastOp.type === 'insert_node' ||
+            lastOp.type === 'insert_text' ||
+            lastOp.type === 'split_node' ||
+            lastOp.type === 'set_node')
+        ) {
+          lastPath = lastOp.path;
+        }
+
+        /**
+         * If the insert is a string and the attributes are the same as the
+         * props at the current path, we can just insert a text node
+         */
         if (
           typeof change.insert === 'string' &&
-          deepEquals(change.attributes ?? {}, getProperties(child))
+          deepEquals(change.attributes ?? {}, currentProps) &&
+          Path.equals(childPath, lastPath)
         ) {
           return ops.push({
             type: 'insert_text',
