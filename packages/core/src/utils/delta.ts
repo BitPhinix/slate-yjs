@@ -37,7 +37,7 @@ export function normalizeInsertDelta(delta: InsertDelta): InsertDelta {
 }
 
 export function yTextToInsertDelta(yText: Y.XmlText): InsertDelta {
-  return normalizeInsertDelta(yText.toDelta()) as InsertDelta;
+  return normalizeInsertDelta(yText.toDelta());
 }
 
 export function getInsertLength({ insert }: DeltaInsert): number {
