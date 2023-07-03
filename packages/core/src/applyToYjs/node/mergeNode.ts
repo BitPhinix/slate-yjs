@@ -27,18 +27,19 @@ export function mergeNode(
   }
 
   if (!prev.yTarget || !target.yTarget) {
-    const { yParent: parent, textRange } = target;
-
-    const previousSibling = Node.get(slateRoot, Path.previous(op.path));
-    if (!Text.isText(previousSibling)) {
-      throw new Error('Path points to a y text but not a slate node');
+    const { yParent: parent, textRange, slateTarget } = target;
+    if (!Text.isText(slateTarget)) {
+      throw new Error('Expected Slate target text node for merge op.');
     }
 
-    return parent.format(
-      textRange.start,
-      textRange.start - textRange.end,
-      getProperties(previousSibling)
-    );
+    const prevSibling = Node.get(slateRoot, Path.previous(op.path));
+    if (!Text.isText(prevSibling)) {
+      throw new Error('Path points to Y.Text but not a Slate text node.');
+    }
+
+    parent.delete(textRange.start, textRange.end - textRange.start);
+    parent.insert(textRange.start, slateTarget.text);
+    return;
   }
 
   const deltaApplyYOffset = prev.yTarget.length;

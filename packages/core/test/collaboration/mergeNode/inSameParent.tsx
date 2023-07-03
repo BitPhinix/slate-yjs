@@ -14,7 +14,7 @@ export const input = (
 
 export const expected = (
   <editor>
-    <unstyled>Welcome to Slate YJS!</unstyled>
+    <unstyled>Welcome to SlateYJS!</unstyled>
   </editor>
 );
 
