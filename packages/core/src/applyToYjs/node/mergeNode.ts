@@ -8,7 +8,6 @@ import {
   getStoredPositionsInDeltaAbsolute,
   restoreStoredPositionsWithDeltaAbsolute,
 } from '../../utils/position';
-import { getProperties } from '../../utils/slate';
 
 export function mergeNode(
   sharedRoot: Y.XmlText,
