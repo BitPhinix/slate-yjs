@@ -8,6 +8,7 @@ import {
   getStoredPositionsInDeltaAbsolute,
   restoreStoredPositionsWithDeltaAbsolute,
 } from '../../utils/position';
+import { getProperties } from '../../utils/slate';
 
 export function mergeNode(
   sharedRoot: Y.XmlText,
@@ -27,8 +28,8 @@ export function mergeNode(
 
   if (!prev.yTarget || !target.yTarget) {
     const { yParent: parent, textRange, slateTarget } = target;
-    if (!Text.isText(slateTarget)) {
-      throw new Error('Expected Slate target text node for merge op.');
+    if (!slateTarget) {
+      throw new Error('Expected Slate target node for merge op.');
     }
 
     const prevSibling = Node.get(slateRoot, Path.previous(op.path));
@@ -36,9 +37,17 @@ export function mergeNode(
       throw new Error('Path points to Y.Text but not a Slate text node.');
     }
 
-    parent.delete(textRange.start, textRange.end - textRange.start);
-    parent.insert(textRange.start, slateTarget.text);
-    return;
+    const targetProps = getProperties(slateTarget);
+    const prevSiblingProps = getProperties(prevSibling);
+    const unsetProps = Object.keys(targetProps).reduce((acc, key) => {
+      const prevSiblingHasProp = key in prevSiblingProps;
+      return prevSiblingHasProp ? acc : { ...acc, [key]: null };
+    }, {});
+
+    return parent.format(textRange.start, textRange.end - textRange.start, {
+      ...unsetProps,
+      ...prevSiblingProps,
+    });
   }
 
   const deltaApplyYOffset = prev.yTarget.length;
