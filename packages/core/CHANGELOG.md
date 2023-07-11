@@ -1,5 +1,11 @@
 # @slate-yjs/core
 
+## 1.0.2
+
+### Patch Changes
+
+- [#411](https://github.com/BitPhinix/slate-yjs/pull/411) [`117c9e5`](https://github.com/BitPhinix/slate-yjs/commit/117c9e504d826ea3ea4e69437f671ada8a44855f) Thanks [@BrentFarese](https://github.com/BrentFarese)! - Patch bug in mergeNode that causes getYTarget to error.
+
 ## 1.0.1
 
 ### Patch Changes
