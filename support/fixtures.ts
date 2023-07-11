@@ -41,8 +41,9 @@ export function fixtures<P extends any[]>(...args: P) {
         file !== 'index.js'
       ) {
         const name = basename(file, extname(file));
+        const testIt = p.toLowerCase().includes('only') ? it.only : it;
 
-        it(`${name} `, async () => {
+        testIt(`${name} `, async () => {
           const module = await import(p);
 
           if (

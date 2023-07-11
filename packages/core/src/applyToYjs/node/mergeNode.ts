@@ -27,18 +27,27 @@ export function mergeNode(
   }
 
   if (!prev.yTarget || !target.yTarget) {
-    const { yParent: parent, textRange } = target;
-
-    const previousSibling = Node.get(slateRoot, Path.previous(op.path));
-    if (!Text.isText(previousSibling)) {
-      throw new Error('Path points to a y text but not a slate node');
+    const { yParent: parent, textRange, slateTarget } = target;
+    if (!slateTarget) {
+      throw new Error('Expected Slate target node for merge op.');
     }
 
-    return parent.format(
-      textRange.start,
-      textRange.start - textRange.end,
-      getProperties(previousSibling)
-    );
+    const prevSibling = Node.get(slateRoot, Path.previous(op.path));
+    if (!Text.isText(prevSibling)) {
+      throw new Error('Path points to Y.Text but not a Slate text node.');
+    }
+
+    const targetProps = getProperties(slateTarget);
+    const prevSiblingProps = getProperties(prevSibling);
+    const unsetProps = Object.keys(targetProps).reduce((acc, key) => {
+      const prevSiblingHasProp = key in prevSiblingProps;
+      return prevSiblingHasProp ? acc : { ...acc, [key]: null };
+    }, {});
+
+    return parent.format(textRange.start, textRange.end - textRange.start, {
+      ...unsetProps,
+      ...prevSiblingProps,
+    });
   }
 
   const deltaApplyYOffset = prev.yTarget.length;
