@@ -24,10 +24,11 @@ export function slatePointToRelativePosition(
     );
   }
 
+  const index = textRange.start + point.offset;
   return Y.createRelativePositionFromTypeIndex(
     yParent,
-    textRange.start + point.offset,
-    point.offset === textRange.end ? -1 : 0
+    index,
+    index === textRange.end ? -1 : 0
   );
 }
 
