@@ -1,6 +1,6 @@
 import { BaseRange, Editor, Path, Range, Text } from 'slate';
 import { ReactEditor } from 'slate-react';
-import { reactEditorToDomRangeSafe } from "./react-editor-to-dom-range-safe";
+import { reactEditorToDomRangeSafe } from './react-editor-to-dom-range-safe';
 
 export type SelectionRect = {
   width: number;
