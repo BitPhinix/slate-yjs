@@ -28,13 +28,17 @@ export function getCursorRange<
 
   let range = cursorStates.get(cursorState);
   if (range === undefined) {
-    range = relativeRangeToSlateRange(
-      editor.sharedRoot,
-      editor,
-      cursorState.relativeSelection
-    );
+    try {
+      range = relativeRangeToSlateRange(
+        editor.sharedRoot,
+        editor,
+        cursorState.relativeSelection
+      );
 
-    cursorStates.set(cursorState, range);
+      cursorStates.set(cursorState, range);
+    } catch (e) {
+      return null;
+    }
   }
 
   return range;
