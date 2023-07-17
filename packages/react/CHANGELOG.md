@@ -1,5 +1,11 @@
 # @slate-yjs/react
 
+## 1.1.0
+
+### Minor Changes
+
+- [#412](https://github.com/BitPhinix/slate-yjs/pull/412) [`8ab46c0`](https://github.com/BitPhinix/slate-yjs/commit/8ab46c0bcdacdd18133b60b5fc885c915580c5f5) Thanks [@ilya2204](https://github.com/ilya2204)! - Add error handling to cursor overlay
+
 ## 1.0.0
 
 ### Patch Changes
