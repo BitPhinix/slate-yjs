@@ -10,7 +10,7 @@ export type FixtureModule = {
   module: {
     input: Editor;
     expected: Editor;
-    run: (e: Editor) => void;
+    run: (e: Editor) => any;
   };
 };
 
@@ -60,6 +60,14 @@ async function runCollaborationTest({ module }: FixtureModule) {
   expect(editor.children).toEqual(expectedEditor.children);
 }
 
+async function runUnitTest({ module }: FixtureModule) {
+  const { input, run, expected } = module;
+  const editor = await withTestingElements(input);
+  const runOutput = run(editor);
+  expect(runOutput).toEqual(expected);
+}
+
 describe('adapter', () => {
+  fixtures(__dirname, 'unit', runUnitTest);
   fixtures(__dirname, 'collaboration', runCollaborationTest);
 });

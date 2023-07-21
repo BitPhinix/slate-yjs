@@ -10,8 +10,9 @@ export function yTextToSlateElement(yText: Y.XmlText): Element {
   const children =
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     delta.length > 0 ? delta.map(deltaInsertToSlateNode) : [{ text: '' }];
+  const attributes = yText.getAttributes();
 
-  return { ...yText.getAttributes(), children };
+  return { ...attributes, children };
 }
 
 export function deltaInsertToSlateNode(insert: DeltaInsert): Node {
