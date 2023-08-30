@@ -52,7 +52,7 @@ function createRemoteCursorStateStore<
 
     changed.forEach((clientId) => {
       const state = CursorEditor.cursorState(editor, clientId);
-      if (state === null) {
+      if (state === null || state.relativeSelection === null) {
         delete cursors[clientId.toString()];
         return;
       }
