@@ -103,7 +103,7 @@ export function RemoteCursorDecorations() {
             withYHistory(
               withYjs(createEditor(), sharedType, { autoConnect: false })
             ),
-            provider.awareness,
+            provider.awareness!,
             {
               data: randomCursorData(),
             }

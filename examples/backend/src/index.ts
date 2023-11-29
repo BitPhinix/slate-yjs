@@ -5,6 +5,7 @@ import { slateNodesToInsertDelta } from '@slate-yjs/core';
 import * as Y from 'yjs';
 import initialValue from './data/initialValue.json';
 
+let date = new Date();
 // Minimal hocuspocus server setup with logging. For more in-depth examples
 // take a look at: https://github.com/ueberdosis/hocuspocus/tree/main/demos/backend
 const server = Server.configure({
@@ -17,7 +18,9 @@ const server = Server.configure({
     }),
   ],
 
+
   async onLoadDocument(data) {
+    date = new Date();
     if (data.document.isEmpty('content')) {
       const insertDelta = slateNodesToInsertDelta(initialValue);
       const sharedRoot = data.document.get(
