@@ -47,7 +47,7 @@ export function RemoteCursorsOverlayPage() {
           withYHistory(
             withCursors(
               withYjs(createEditor(), sharedType, { autoConnect: false }),
-              provider.awareness,
+              provider.awareness!,
               {
                 data: randomCursorData(),
               }
