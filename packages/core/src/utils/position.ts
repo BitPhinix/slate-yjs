@@ -99,7 +99,7 @@ export function getStoredPositions(
       .filter(([key]) => key.startsWith(STORED_POSITION_PREFIX))
       .map(([key, position]) => [
         key.slice(STORED_POSITION_PREFIX.length),
-        Y.createRelativePositionFromJSON(position),
+        Y.decodeRelativePosition(position),
       ])
   );
 }
