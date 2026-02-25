@@ -2,6 +2,7 @@ import { BasePoint, BaseRange, Node, Text } from 'slate';
 import * as Y from 'yjs';
 import { InsertDelta, RelativeRange, TextRange } from '../model/types';
 import { getInsertDeltaLength, yTextToInsertDelta } from './delta';
+import { isSyncSkewError } from './errors';
 import { getSlatePath, getYTarget, yOffsetToSlateOffsets } from './location';
 import { assertDocumentAttachment } from './yjs';
 
@@ -41,25 +42,30 @@ export function absolutePositionToSlatePoint(
     throw new Error('Absolute position points to a non-XMLText');
   }
 
-  const parentPath = getSlatePath(sharedRoot, slateRoot, type);
-  const parent = Node.get(slateRoot, parentPath);
+  try {
+    const parentPath = getSlatePath(sharedRoot, slateRoot, type);
+    const parent = Node.get(slateRoot, parentPath);
 
-  if (Text.isText(parent)) {
-    throw new Error(
-      "Absolute position doesn't match slateRoot, cannot descent into text"
-    );
+    if (Text.isText(parent)) {
+      return null;
+    }
+
+    const [pathOffset, textOffset] = yOffsetToSlateOffsets(parent, index, {
+      assoc,
+    });
+
+    const target = parent.children[pathOffset];
+    if (!Text.isText(target)) {
+      return null;
+    }
+
+    return { path: [...parentPath, pathOffset], offset: textOffset };
+  } catch (error) {
+    if (isSyncSkewError(error)) {
+      return null;
+    }
+    throw error;
   }
-
-  const [pathOffset, textOffset] = yOffsetToSlateOffsets(parent, index, {
-    assoc,
-  });
-
-  const target = parent.children[pathOffset];
-  if (!Text.isText(target)) {
-    return null;
-  }
-
-  return { path: [...parentPath, pathOffset], offset: textOffset };
 }
 
 export function relativePositionToSlatePoint(
