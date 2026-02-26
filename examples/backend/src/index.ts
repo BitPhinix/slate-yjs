@@ -1,7 +1,7 @@
 import { Logger } from '@hocuspocus/extension-logger';
 import { SQLite } from '@hocuspocus/extension-sqlite';
 import { Server } from '@hocuspocus/server';
-import { slateNodesToInsertDelta } from '@slate-yjs/core';
+import { slateNodesToInsertDelta } from '@getguru/slate-yjs-core';
 import * as Y from 'yjs';
 import initialValue from './data/initialValue.json';
 

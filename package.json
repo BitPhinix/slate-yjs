@@ -8,7 +8,7 @@
     "build": "yarn workspaces foreach -ipv --topological-dev run build",
     "dev": "yarn workspaces foreach -ipv run dev",
     "deploy": "yarn deploy:docs",
-    "deploy:docs": "yarn workspace @slate-yjs/example deploy",
+    "deploy:docs": "yarn workspace @getguru/slate-yjs-example deploy",
     "lint": "yarn lint:typescript && yarn lint:eslint && yarn lint:prettier",
     "lint:eslint": "eslint .",
     "lint:prettier": "prettier --check .",

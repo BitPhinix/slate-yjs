@@ -1,4 +1,4 @@
-import { CursorState } from '@slate-yjs/core';
+import { CursorState } from '@getguru/slate-yjs-core';
 import {
   RefObject,
   useCallback,

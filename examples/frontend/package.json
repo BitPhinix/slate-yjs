@@ -1,5 +1,5 @@
 {
-  "name": "@slate-yjs/example",
+  "name": "@getguru/slate-yjs-example",
   "version": "0.0.12",
   "private": true,
   "scripts": {
@@ -14,9 +14,9 @@
     "@fortawesome/free-regular-svg-icons": "^6.0.0",
     "@fortawesome/free-solid-svg-icons": "^6.0.0",
     "@fortawesome/react-fontawesome": "^0.1.17",
+    "@getguru/slate-yjs-core": "workspace:^",
+    "@getguru/slate-yjs-react": "workspace:^",
     "@hocuspocus/provider": "^1.0.0-alpha.36",
-    "@slate-yjs/core": "workspace:^",
-    "@slate-yjs/react": "workspace:^",
     "clsx": "^1.1.1",
     "randomcolor": "^0.6.2",
     "react": "^17.0.2",

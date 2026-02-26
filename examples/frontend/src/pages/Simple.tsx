@@ -1,5 +1,5 @@
 import { HocuspocusProvider } from '@hocuspocus/provider';
-import { withYHistory, withYjs, YjsEditor } from '@slate-yjs/core';
+import { withYHistory, withYjs, YjsEditor } from '@getguru/slate-yjs-core';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { createEditor, Descendant } from 'slate';
 import { Slate, withReact } from 'slate-react';

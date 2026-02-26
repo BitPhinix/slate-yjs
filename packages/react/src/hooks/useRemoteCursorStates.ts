@@ -1,4 +1,4 @@
-import { CursorState } from '@slate-yjs/core';
+import { CursorState } from '@getguru/slate-yjs-core';
 import { useSyncExternalStore } from 'use-sync-external-store/shim';
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/shim/with-selector';
 import { useRemoteCursorStateStore } from './useRemoteCursorStateStore';
