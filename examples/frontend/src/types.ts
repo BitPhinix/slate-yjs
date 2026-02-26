@@ -1,4 +1,8 @@
-import { CursorEditor, YHistoryEditor, YjsEditor } from '@getguru/slate-yjs-core';
+import {
+  CursorEditor,
+  YHistoryEditor,
+  YjsEditor,
+} from '@getguru/slate-yjs-core';
 import { Descendant } from 'slate';
 import { ReactEditor } from 'slate-react';
 

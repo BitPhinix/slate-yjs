@@ -1,9 +1,6 @@
 {
   "$schema": "https://unpkg.com/@changesets/config@2.1.1/schema.json",
-  "changelog": [
-    "@changesets/changelog-github",
-    { "repo": "guruhq/slate-yjs" }
-  ],
+  "changelog": ["@changesets/changelog-github", { "repo": "guruhq/slate-yjs" }],
   "commit": false,
   "linked": [["@getguru/slate-yjs-core", "@getguru/slate-yjs-react"]],
   "access": "public",

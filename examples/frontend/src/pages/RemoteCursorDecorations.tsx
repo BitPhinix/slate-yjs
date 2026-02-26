@@ -1,5 +1,10 @@
 import { HocuspocusProvider } from '@hocuspocus/provider';
-import { withCursors, withYHistory, withYjs, YjsEditor } from '@getguru/slate-yjs-core';
+import {
+  withCursors,
+  withYHistory,
+  withYjs,
+  YjsEditor,
+} from '@getguru/slate-yjs-core';
 import {
   getRemoteCaretsOnLeaf,
   getRemoteCursorsOnLeaf,
