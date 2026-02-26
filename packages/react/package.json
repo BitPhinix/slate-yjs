@@ -1,7 +1,7 @@
 {
-  "name": "@slate-yjs/react",
+  "name": "@getguru/slate-yjs-react",
   "sideEffects": false,
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "React specific components/utils for slate-yjs.",
   "keywords": [
     "slate",
@@ -24,11 +24,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/BitPhinix/slate-yjs.git"
+    "url": "https://github.com/guruhq/slate-yjs.git"
   },
   "license": "MIT",
   "devDependencies": {
-    "@slate-yjs/core": "^1.0.0",
+    "@getguru/slate-yjs-core": "^1.0.3",
     "@types/react": "^17.0.34",
     "@types/use-sync-external-store": "^0.0.3",
     "react": "^17.0.2",
@@ -38,16 +38,16 @@
     "yjs": "^13.5.29"
   },
   "peerDependencies": {
-    "@slate-yjs/core": "^1.0.0",
+    "@getguru/slate-yjs-core": "^1.0.3",
     "react": ">=16.8.0",
     "slate": ">=0.70.0",
     "slate-react": ">=0.70.0",
     "yjs": "^13.5.29"
   },
   "bugs": {
-    "url": "https://github.com/BitPhinix/slate-yjs/issues"
+    "url": "https://github.com/guruhq/slate-yjs/issues"
   },
-  "homepage": "https://github.com/BitPhinix/slate-yjs#readme",
+  "homepage": "https://github.com/guruhq/slate-yjs#readme",
   "dependencies": {
     "use-sync-external-store": "^1.2.0",
     "y-protocols": "^1.0.5"

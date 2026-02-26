@@ -1,7 +1,7 @@
 {
-  "name": "@slate-yjs/core",
+  "name": "@getguru/slate-yjs-core",
   "sideEffects": false,
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Yjs binding for Slate.",
   "keywords": [
     "slate",
@@ -23,7 +23,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/BitPhinix/slate-yjs.git"
+    "url": "https://github.com/guruhq/slate-yjs.git"
   },
   "license": "MIT",
   "devDependencies": {
@@ -38,9 +38,9 @@
     "yjs": "^13.5.29"
   },
   "bugs": {
-    "url": "https://github.com/BitPhinix/slate-yjs/issues"
+    "url": "https://github.com/guruhq/slate-yjs/issues"
   },
-  "homepage": "https://github.com/BitPhinix/slate-yjs#readme",
+  "homepage": "https://github.com/guruhq/slate-yjs#readme",
   "dependencies": {
     "y-protocols": "^1.0.5"
   }
