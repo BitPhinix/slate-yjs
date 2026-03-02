@@ -12,8 +12,8 @@ import { test, expect, Page } from '@playwright/test';
  * With the fix, the editor should recover by re-syncing from Yjs.
  */
 
-const EDITOR_1_SELECTOR = '[data-testid="editor-1"] [data-slate-editor="true"]';
-const EDITOR_2_SELECTOR = '[data-testid="editor-2"] [data-slate-editor="true"]';
+const EDITOR_1_SELECTOR = '[data-testid="editor-1"]';
+const EDITOR_2_SELECTOR = '[data-testid="editor-2"]';
 
 async function waitForEditors(page: Page) {
   await page.waitForSelector(EDITOR_1_SELECTOR, { timeout: 30000 });

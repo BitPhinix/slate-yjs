@@ -2,4 +2,8 @@
 import { defineConfig } from 'vitest/config';
 
 // eslint-disable-next-line import/no-default-export
-export default defineConfig({});
+export default defineConfig({
+  test: {
+    exclude: ['**/node_modules/**', '**/e2e/**'],
+  },
+});
