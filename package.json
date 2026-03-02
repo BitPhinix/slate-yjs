@@ -15,6 +15,8 @@
     "lint:typescript": "tsc --build ./ --force",
     "test": "yarn run vitest run",
     "test:watch": "yarn run vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
     "clean": "git clean -dfX",
     "prerelease": "yarn lint && yarn test && yarn build",
     "release": "yarn prerelease && yarn changeset publish"
@@ -22,6 +24,7 @@
   "devDependencies": {
     "@changesets/changelog-github": "^0.4.7",
     "@changesets/cli": "^2.25.0",
+    "@playwright/test": "^1.58.2",
     "@typescript-eslint/eslint-plugin": "^5.17.0",
     "@typescript-eslint/parser": "^5.17.0",
     "eslint": "^8.1.0",
