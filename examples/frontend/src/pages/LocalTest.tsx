@@ -1,5 +1,5 @@
 import { withYHistory, withYjs, YjsEditor } from '@getguru/slate-yjs-core';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { createEditor, Descendant } from 'slate';
 import { Slate, withReact } from 'slate-react';
 import * as Y from 'yjs';
@@ -10,33 +10,59 @@ import { withNormalize } from '../plugins/withNormalize';
 
 /**
  * A local-only test page for e2e testing.
- * This page creates two editors sharing the same Yjs document locally,
- * without requiring a websocket backend.
+ * This page creates two editors with separate Yjs documents that sync via updates,
+ * simulating real network collaboration without requiring a websocket backend.
  */
 export function LocalTestPage() {
   const [value1, setValue1] = useState<Descendant[]>([]);
   const [value2, setValue2] = useState<Descendant[]>([]);
 
-  // Shared Yjs document between both editors
-  const doc = useMemo(() => new Y.Doc(), []);
+  // Two separate Yjs documents that sync via updates (like real network sync)
+  const doc1 = useMemo(() => new Y.Doc(), []);
+  const doc2 = useMemo(() => new Y.Doc(), []);
 
   const editor1 = useMemo(() => {
-    const sharedType = doc.get('content', Y.XmlText) as Y.XmlText;
+    const sharedType = doc1.get('content', Y.XmlText) as Y.XmlText;
     return withMarkdown(
       withNormalize(
         withReact(withYHistory(withYjs(createEditor(), sharedType)))
       )
     );
-  }, [doc]);
+  }, [doc1]);
 
   const editor2 = useMemo(() => {
-    const sharedType = doc.get('content', Y.XmlText) as Y.XmlText;
+    const sharedType = doc2.get('content', Y.XmlText) as Y.XmlText;
     return withMarkdown(
       withNormalize(
         withReact(withYHistory(withYjs(createEditor(), sharedType)))
       )
     );
-  }, [doc]);
+  }, [doc2]);
+
+  // Set up bidirectional sync between the two documents
+  useEffect(() => {
+    // Sync doc1 changes to doc2
+    const syncDoc1ToDoc2 = (update: Uint8Array, origin: unknown) => {
+      // Skip if this update came from sync to avoid infinite loops
+      if (origin === 'sync') return;
+      Y.applyUpdate(doc2, update, 'sync');
+    };
+    
+    // Sync doc2 changes to doc1
+    const syncDoc2ToDoc1 = (update: Uint8Array, origin: unknown) => {
+      // Skip if this update came from sync to avoid infinite loops
+      if (origin === 'sync') return;
+      Y.applyUpdate(doc1, update, 'sync');
+    };
+
+    doc1.on('update', syncDoc1ToDoc2);
+    doc2.on('update', syncDoc2ToDoc1);
+
+    return () => {
+      doc1.off('update', syncDoc1ToDoc2);
+      doc2.off('update', syncDoc2ToDoc1);
+    };
+  }, [doc1, doc2]);
 
   useEffect(() => {
     YjsEditor.connect(editor1);
