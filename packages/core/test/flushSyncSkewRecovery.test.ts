@@ -77,4 +77,83 @@ describe('flush-path sync-skew recovery', () => {
     warn.mockRestore();
     YjsEditor.disconnect(editor);
   });
+
+  it('rethrows non-sync-skew errors from flush instead of swallowing them', async () => {
+    const doc = new Y.Doc();
+    const sharedRoot = doc.get('content', Y.XmlText) as Y.XmlText;
+    sharedRoot.applyDelta(
+      slateNodesToInsertDelta([
+        { type: 'paragraph', children: [{ text: 'hi' }] },
+      ])
+    );
+    const editor = withYjs(createEditor(), sharedRoot);
+    YjsEditor.connect(editor);
+    await wait(20);
+
+    // Force a NON-sync-skew failure inside the flush by making the Yjs
+    // transaction throw an unrelated error. flushLocalChanges must rethrow it.
+    const boom = new Error('totally unrelated failure');
+    const spy = vi
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      .spyOn(sharedRoot.doc!, 'transact')
+      .mockImplementation((() => {
+        throw boom;
+      }) as never);
+
+    editor.apply({ type: 'insert_text', path: [0, 0], offset: 0, text: 'x' });
+    expect(() => editor.flushLocalChanges()).toThrow(
+      'totally unrelated failure'
+    );
+
+    spy.mockRestore();
+    YjsEditor.disconnect(editor);
+  });
+
+  it('throttles reporting but still resyncs on every flush skew', async () => {
+    const doc = new Y.Doc();
+    const sharedRoot = doc.get('content', Y.XmlText) as Y.XmlText;
+    sharedRoot.applyDelta(
+      slateNodesToInsertDelta([
+        {
+          type: 'paragraph',
+          children: [
+            { text: 'A' },
+            { type: 'link', children: [{ text: 'B' }] },
+            { text: '' },
+          ],
+        },
+      ] as never)
+    );
+    const onSyncSkew = vi.fn();
+    const editor = withYjs(createEditor(), sharedRoot, { onSyncSkew });
+    editor.isInline = (el) => (el as { type?: string }).type === 'link';
+    YjsEditor.connect(editor);
+    await wait(20);
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    const skewOnce = () => {
+      editor.children = [
+        { type: 'paragraph', children: [{ text: 'AB' }] },
+      ] as never;
+      editor.apply({ type: 'insert_text', path: [0, 0], offset: 1, text: 'x' });
+      editor.flushLocalChanges();
+    };
+
+    skewOnce();
+    skewOnce(); // within the ~1s reporting window
+
+    // Reporting is throttled (module-level), so at most one report in the window.
+    expect(onSyncSkew.mock.calls.length).toBeLessThanOrEqual(1);
+    // But the editor recovered to a consistent state both times (link survived).
+    const para = editor.children[0] as unknown as {
+      children: { type?: string; children?: { text: string }[] }[];
+    };
+    const link = para.children.find((c) => c.type === 'link');
+    expect(link).toBeDefined();
+    expect(link?.children?.[0].text).toBe('B');
+
+    warn.mockRestore();
+    YjsEditor.disconnect(editor);
+  });
 });
