@@ -4,7 +4,8 @@ import { describe, expect, it, vi } from 'vitest';
 import * as Y from 'yjs';
 import { withYjs, YjsEditor, slateNodesToInsertDelta } from '../src';
 
-const wait = (ms = 0) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const wait = (ms = 0) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 /**
  * These tests verify that the sync-skew recovery mechanism works correctly.
@@ -34,7 +35,7 @@ describe('Sync Skew Recovery', () => {
   it('should recover when Slate state is desynced before applying Yjs event', async () => {
     // This is the key integration test that reproduces the real-world sync skew scenario
     // We use separate Y.Doc instances and sync them via updates (like real network sync)
-    
+
     // 1. Create doc1 with initial content
     const doc1 = new Y.Doc();
     const sharedRoot1 = doc1.get('content', Y.XmlText) as Y.XmlText;
@@ -58,7 +59,8 @@ describe('Sync Skew Recovery', () => {
     const sharedRoot2 = doc2.get('content', Y.XmlText) as Y.XmlText;
 
     // 4. Create editor2 with intercepted applyRemoteEvents
-    const editor2 = withYjs(createEditor(), sharedRoot2);
+    const onSyncSkew = vi.fn();
+    const editor2 = withYjs(createEditor(), sharedRoot2, { onSyncSkew });
     const originalApplyRemoteEvents = editor2.applyRemoteEvents.bind(editor2);
     let corruptionTriggered = false;
 
@@ -98,9 +100,16 @@ describe('Sync Skew Recovery', () => {
 
     // 8. Without the fix, the test would have thrown by now
     // With the fix, editor2 should have recovered via re-sync
-    
+
     // Verify editor2 is in a valid state
     expect(editor2.children.length).toBeGreaterThan(0);
+
+    // The remote-path recovery now routes its reporting through onSyncSkew.
+    if (onSyncSkew.mock.calls.length > 0) {
+      expect(onSyncSkew.mock.calls[0][1]).toEqual({
+        direction: 'applyToSlate',
+      });
+    }
 
     consoleSpy.mockRestore();
     YjsEditor.disconnect(editor1);
@@ -110,7 +119,7 @@ describe('Sync Skew Recovery', () => {
   it('should recover when multiple structural changes cause path mismatch', async () => {
     // Test a more complex scenario with multiple paragraphs and nested changes
     // Uses separate Y.Doc instances like real network sync
-    
+
     const doc1 = new Y.Doc();
     const sharedRoot1 = doc1.get('content', Y.XmlText) as Y.XmlText;
 
@@ -167,7 +176,7 @@ describe('Sync Skew Recovery', () => {
   it('should handle text deletion in desynced state', async () => {
     // Test text-level operations (not just node removal)
     // Uses separate Y.Doc instances like real network sync
-    
+
     const doc1 = new Y.Doc();
     const sharedRoot1 = doc1.get('content', Y.XmlText) as Y.XmlText;
 
@@ -203,7 +212,10 @@ describe('Sync Skew Recovery', () => {
 
     // Delete text that exists in Yjs but not in corrupted Slate
     Transforms.delete(editor1, {
-      at: { anchor: { path: [0, 0], offset: 0 }, focus: { path: [0, 0], offset: 5 } },
+      at: {
+        anchor: { path: [0, 0], offset: 0 },
+        focus: { path: [0, 0], offset: 5 },
+      },
     });
     editor1.onChange();
     await wait(50);
