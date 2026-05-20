@@ -1,12 +1,7 @@
-import { Editor, Operation, Transforms } from 'slate';
+import { Editor, Operation } from 'slate';
 import * as Y from 'yjs';
-import { RelativeRange } from '../model/types';
-import { yTextToSlateElement } from '../utils/convert';
 import { isSyncSkewError } from '../utils/errors';
-import {
-  relativeRangeToSlateRange,
-  slateRangeToRelativeRange,
-} from '../utils/position';
+import { reportSyncSkew, resyncFromYjs } from '../utils/sync';
 import { translateYTextEvent } from './textEvent';
 
 let lastResyncTime = 0;
@@ -29,45 +24,6 @@ export function translateYjsEvent(
   }
 
   throw new Error('Unexpected Y event type');
-}
-
-/**
- * Performs a full re-sync of the Slate editor from the Yjs shared root.
- * Preserves the user's selection if possible by converting to/from relative positions.
- */
-function resyncFromYjs(sharedRoot: Y.XmlText, editor: Editor): void {
-  let savedSelection: RelativeRange | null = null;
-
-  try {
-    if (editor.selection) {
-      savedSelection = slateRangeToRelativeRange(
-        sharedRoot,
-        editor,
-        editor.selection
-      );
-    }
-  } catch {
-    // Selection conversion failed; we'll lose the selection but continue with re-sync
-  }
-
-  const content = yTextToSlateElement(sharedRoot);
-  editor.children = content.children;
-  Editor.normalize(editor, { force: true });
-
-  if (savedSelection) {
-    try {
-      const newSelection = relativeRangeToSlateRange(
-        sharedRoot,
-        editor,
-        savedSelection
-      );
-      if (newSelection) {
-        Transforms.select(editor, newSelection);
-      }
-    } catch {
-      // Selection restoration failed; cursor position is lost but document is correct
-    }
-  }
 }
 
 /**
@@ -98,17 +54,14 @@ export function applyYjsEvents(
           const now = Date.now();
           if (now - lastResyncTime >= RESYNC_THROTTLE_MS) {
             lastResyncTime = now;
-            console.warn(
-              '[slate-yjs] Sync skew detected, re-syncing from Yjs:',
-              error instanceof Error ? error.message : error
-            );
             resyncFromYjs(sharedRoot, editor);
-          } else {
-            console.warn(
-              '[slate-yjs] Sync skew detected (throttled, skipping re-sync):',
-              error instanceof Error ? error.message : error
-            );
           }
+          reportSyncSkew(
+            (editor as { onSyncSkew?: import('../utils/sync').OnSyncSkew })
+              .onSyncSkew,
+            error,
+            { direction: 'applyToSlate' }
+          );
           return;
         }
         throw error;
