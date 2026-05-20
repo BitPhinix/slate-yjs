@@ -11,6 +11,7 @@ import {
   setStoredPosition,
   slatePointToRelativePosition,
 } from '../utils/position';
+import { OnSyncSkew } from '../utils/sync';
 import { assertDocumentAttachment } from '../utils/yjs';
 
 type LocalChange = {
@@ -31,6 +32,7 @@ export type YjsEditor = BaseEditor & {
 
   localOrigin: unknown;
   positionStorageOrigin: unknown;
+  onSyncSkew?: OnSyncSkew;
 
   applyRemoteEvents: (events: Y.YEvent<Y.XmlText>[], origin: unknown) => void;
 
@@ -151,6 +153,10 @@ export type WithYjsOptions = {
 
   // Origin used when storing positions
   positionStorageOrigin?: unknown;
+
+  // Invoked (throttled) when a sync-skew is detected and recovered, in either
+  // direction. Wire to your error reporter (e.g. Rollbar).
+  onSyncSkew?: OnSyncSkew;
 };
 
 export function withYjs<T extends Editor>(
@@ -160,6 +166,7 @@ export function withYjs<T extends Editor>(
     localOrigin,
     positionStorageOrigin,
     autoConnect = false,
+    onSyncSkew,
   }: WithYjsOptions = {}
 ): T & YjsEditor {
   const e = editor as T & YjsEditor;
@@ -169,6 +176,7 @@ export function withYjs<T extends Editor>(
   e.localOrigin = localOrigin ?? DEFAULT_LOCAL_ORIGIN;
   e.positionStorageOrigin =
     positionStorageOrigin ?? DEFAULT_POSITION_STORAGE_ORIGIN;
+  e.onSyncSkew = onSyncSkew;
 
   e.applyRemoteEvents = (events, origin) => {
     YjsEditor.flushLocalChanges(e);
