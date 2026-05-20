@@ -2,8 +2,13 @@ import { Editor, Operation } from 'slate';
 import * as Y from 'yjs';
 import { isSyncSkewError } from '../utils/errors';
 import { reportSyncSkew, resyncFromYjs } from '../utils/sync';
+import type { OnSyncSkew } from '../utils/sync';
 import { translateYTextEvent } from './textEvent';
 
+// Throttle for the remote-path resync itself (avoids resync storms during a
+// burst of remote events). Intentionally separate from the reporting throttle
+// inside reportSyncSkew: this one gates the expensive document rebuild, the
+// other gates telemetry/console noise. Do NOT collapse them.
 let lastResyncTime = 0;
 const RESYNC_THROTTLE_MS = 1000;
 
@@ -57,8 +62,7 @@ export function applyYjsEvents(
             resyncFromYjs(sharedRoot, editor);
           }
           reportSyncSkew(
-            (editor as { onSyncSkew?: import('../utils/sync').OnSyncSkew })
-              .onSyncSkew,
+            (editor as { onSyncSkew?: OnSyncSkew }).onSyncSkew,
             error,
             { direction: 'applyToSlate' }
           );
