@@ -12,6 +12,10 @@ export type SyncSkewContext = { direction: SyncSkewDirection };
 export type OnSyncSkew = (error: unknown, context: SyncSkewContext) => void;
 
 const REPORT_THROTTLE_MS = 1000;
+// Module-level (shared across all editor instances in the process). A skew in
+// one editor can suppress another's report for up to the throttle window. This
+// is an intentional trade-off to cap telemetry/console noise; do not switch to
+// per-editor state.
 let lastReportTime = 0;
 
 /**

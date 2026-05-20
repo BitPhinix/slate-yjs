@@ -20,7 +20,7 @@ import {
   slatePointToRelativePosition,
   slateRangeToRelativeRange,
 } from './utils/position';
-import { OnSyncSkew, SyncSkewContext } from './utils/sync';
+import { OnSyncSkew, SyncSkewContext, SyncSkewDirection } from './utils/sync';
 
 export {
   withYjs,
@@ -48,4 +48,5 @@ export {
   // Sync skew
   OnSyncSkew,
   SyncSkewContext,
+  SyncSkewDirection,
 };

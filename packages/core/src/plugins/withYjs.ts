@@ -289,10 +289,12 @@ export function withYjs<T extends Editor>(
           resyncFromYjs(e.sharedRoot, e);
         });
       } catch (resyncError) {
-        // Resync itself failed; swallow to avoid crashing the host app and let
-        // the report below surface it. The editor stays on its last state.
-        reportSyncSkew(e.onSyncSkew, resyncError, { direction: 'applyToYjs' });
-        return;
+        // Recovery itself failed (e.g. Y is genuinely unreadable). Surface the
+        // failure, but still report the original skew below — that is the
+        // signal explaining why recovery was attempted, and keeps telemetry
+        // consistent with the happy path.
+        // eslint-disable-next-line no-console
+        console.warn('[slate-yjs] Resync after sync skew failed:', resyncError);
       }
 
       reportSyncSkew(e.onSyncSkew, error, { direction: 'applyToYjs' });
