@@ -11,7 +11,8 @@ import {
   setStoredPosition,
   slatePointToRelativePosition,
 } from '../utils/position';
-import { OnSyncSkew } from '../utils/sync';
+import { isSyncSkewError } from '../utils/errors';
+import { OnSyncSkew, reportSyncSkew, resyncFromYjs } from '../utils/sync';
 import { assertDocumentAttachment } from '../utils/yjs';
 
 type LocalChange = {
@@ -22,6 +23,7 @@ type LocalChange = {
 
 const DEFAULT_LOCAL_ORIGIN = Symbol('slate-yjs-operation');
 const DEFAULT_POSITION_STORAGE_ORIGIN = Symbol('slate-yjs-position-storage');
+const RECOVERY_ORIGIN = Symbol('slate-yjs-recovery');
 
 const ORIGIN: WeakMap<Editor, unknown> = new WeakMap();
 const LOCAL_CHANGES: WeakMap<Editor, LocalChange[]> = new WeakMap();
@@ -259,16 +261,39 @@ export function withYjs<T extends Editor>(
       txGroups.push([change]);
     });
 
-    txGroups.forEach((txGroup) => {
-      assertDocumentAttachment(e.sharedRoot);
+    try {
+      txGroups.forEach((txGroup) => {
+        assertDocumentAttachment(e.sharedRoot);
 
-      e.sharedRoot.doc.transact(() => {
-        txGroup.forEach((change) => {
-          assertDocumentAttachment(e.sharedRoot);
-          applySlateOp(e.sharedRoot, { children: change.doc }, change.op);
+        e.sharedRoot.doc.transact(() => {
+          txGroup.forEach((change) => {
+            assertDocumentAttachment(e.sharedRoot);
+            applySlateOp(e.sharedRoot, { children: change.doc }, change.op);
+          });
+        }, txGroup[0].origin);
+      });
+    } catch (error) {
+      if (!isSyncSkewError(error)) {
+        throw error;
+      }
+
+      // A local op could not be translated to Y: the local Slate tree has
+      // diverged from Y.XmlText. Recover by rebuilding Slate from Y (source of
+      // truth). Run under a non-local origin so the resync's own ops are not
+      // re-queued as local changes that would flush back into this same path.
+      try {
+        YjsEditor.withOrigin(e, RECOVERY_ORIGIN, () => {
+          resyncFromYjs(e.sharedRoot, e);
         });
-      }, txGroup[0].origin);
-    });
+      } catch (resyncError) {
+        // Resync itself failed; swallow to avoid crashing the host app and let
+        // the report below surface it. The editor stays on its last state.
+        reportSyncSkew(e.onSyncSkew, resyncError, { direction: 'applyToYjs' });
+        return;
+      }
+
+      reportSyncSkew(e.onSyncSkew, error, { direction: 'applyToYjs' });
+    }
   };
 
   const { apply, onChange } = e;
