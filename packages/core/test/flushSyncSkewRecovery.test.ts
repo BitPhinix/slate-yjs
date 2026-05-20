@@ -60,12 +60,19 @@ describe('flush-path sync-skew recovery', () => {
     expect(onSyncSkew).toHaveBeenCalledTimes(1);
     expect(onSyncSkew.mock.calls[0][1]).toEqual({ direction: 'applyToYjs' });
 
-    // editor.children deep-equals the Y-derived content (1 paragraph; text + link present).
+    // The editor resynced to Y's content: 1 paragraph whose text + link survived.
     expect(editor.children.length).toBe(1);
-    const para = editor.children[0] as never as {
-      children: { type?: string; text?: string }[];
+    const para = editor.children[0] as unknown as {
+      children: {
+        type?: string;
+        text?: string;
+        children?: { text: string }[];
+      }[];
     };
-    expect(para.children.some((c) => c.type === 'link')).toBe(true);
+    expect(para.children.some((c) => c.text === 'A')).toBe(true);
+    const link = para.children.find((c) => c.type === 'link');
+    expect(link).toBeDefined();
+    expect(link?.children?.[0].text).toBe('B');
 
     warn.mockRestore();
     YjsEditor.disconnect(editor);
